@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caseboard • TV</title>
+<link rel="stylesheet" href="/static/styles.css">
+<style> body.hide-cursor{cursor:none} </style>
+</head>
+<body class="hide-cursor">
+<header class="header">
+  <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
+  <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
+  <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+</header>
+
+<div class="wrap">
+  <section id="casesCard" class="card" style="height:calc(100vh - 56px - 24px); overflow:hidden; display:flex; flex-direction:column;">
+    <div class="thead">
+      <div class="cell col-case">CASE #</div>
+      <div class="cell col-name">NAME</div>
+      <div class="cell col-type">TYPE</div>
+      <div class="cell col-stage">STAGE</div>
+      <div class="cell col-status">STATUS</div>
+      <div class="cell col-para">PARALEGAL</div>
+      <div class="cell col-focus">CURRENT FOCUS</div>
+      <div class="cell col-due">NEXT DUE</div>
+    </div>
+    <div id="scroll" style="flex:1; overflow:auto"><div id="rows"></div></div>
+  </section>
+</div>
+
+<script src="/static/tv.js"></script>
+<script>
+setInterval(()=>{ document.getElementById('clock').textContent =
+  new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); }, 1000);
+</script>
+</body></html>
