@@ -12,6 +12,7 @@ async function load(){
 }
 
 function renderList(){
+  console.log("Rendering cases:", CASES);
   const list = $('#list'); list.innerHTML='';
   const frag = document.createDocumentFragment();
   CASES.forEach(c=>{
@@ -33,10 +34,7 @@ function renderList(){
 function edit(id){
   const c = CASES.find(x=>x.id===id); if(!c) return;
   $('#id').value = c.id;
-  ['client_name','case_name','case_type','paralegal','stage','status',
-   'case_number','county','division','judge','opposing_counsel','opposing_firm']
-  .forEach(k=> { const el=$('#'+k); if(el) el.value = c[k] || ''; });
-  document.querySelectorAll("input[name='attn']").forEach(r=> r.checked = (r.value=== (c.attention||"")));
+  // Render focus log
   const fl = $('#focus_list'); fl.innerHTML='';
   (c.focus_log||[]).slice().reverse().forEach(f=>{
     const li = document.createElement('li');
@@ -44,7 +42,16 @@ function edit(id){
     li.textContent = `[${t}] ${f.author}: ${f.text}`;
     fl.appendChild(li);
   });
+  // Render deadlines
   renderDeadlines(c.deadlines||[]);
+  // Enable Edit Details button
+  const editBtn = document.getElementById('edit_details');
+  if (editBtn) {
+    editBtn.disabled = false;
+    editBtn.onclick = () => {
+      if (c.id) window.open(`/edit?id=${encodeURIComponent(c.id)}`, '_blank');
+    };
+  }
 }
 
 function renderDeadlines(dls){
@@ -109,6 +116,8 @@ $('#save').onclick = async ()=>{
   await load();
 };
 
-$('#new').onclick = ()=>{ document.getElementById('form').reset(); $('#id').value=''; $('#focus_list').innerHTML=''; $('#deadlines').innerHTML=''; };
+// Remove new case logic from main page
+if ($('#new')) $('#new').remove();
+if ($('#save')) $('#save').remove();
 
 load();

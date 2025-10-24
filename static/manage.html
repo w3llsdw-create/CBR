@@ -1,17 +1,21 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Caseboard • Manage</title>
-<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="/static/brand.css">
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <header class="header">
   <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
   <div class="brand">McMath Woods • David W. Wells • Caseboard Management</div>
-  <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+  <div class="live"><span id="date" class="date"></span><span id="dot" class="dot"></span><span id="clock"></span></div>
 </header>
 
 <div class="wrap" style="display:grid; grid-template-columns: 1.6fr 1fr; gap:12px; height:calc(100vh - 56px - 24px)">
+  <div style="grid-column:1/-1; margin-bottom:18px; text-align:right;">
+    <a href="/add" style="background:var(--accent,#2563eb);color:#fff;padding:8px 18px;border-radius:7px;text-decoration:none;font-weight:500;box-shadow:0 2px 8px rgba(60,72,88,.08);">+ New Case/Client</a>
+  </div>
   <!-- Cases table -->
   <section class="card" style="display:flex; flex-direction:column; overflow:hidden">
     <div class="thead">
@@ -26,76 +30,39 @@
   </section>
 
   <!-- Editor -->
-  <section class="card" style="padding:12px; overflow:auto">
-    <form id="form">
-      <input type="hidden" id="id">
-      <div class="small" style="margin-bottom:8px">Primary fields</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-        <label>Client<input id="client_name" style="width:100%"></label>
-        <label>Case name<input id="case_name" style="width:100%"></label>
-        <label>Type<select id="case_type" style="width:100%">
-          <option>MVA</option>
-          <option>Personal Injury</option>
-          <option>Intentional Tort</option>
-          <option>Probate</option>
-          <option>Domestic Relations</option>
-          <option>Catastrophic Injury</option>
-          <option>Wrongful Death</option>
-          <option>Medical Malpractice</option>
-          <option>Environmental</option>
-        </select></label>
-        <label>Paralegal<input id="paralegal" style="width:100%"></label>
-        <label>Stage<select id="stage" style="width:100%">
-          <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
-          <option>Pretrial</option><option>Trial</option><option>Closed</option>
-        </select></label>
-        <label>Status<select id="status" style="width:100%">
-          <option>Pre-Filling</option>
-          <option>Active</option>
-          <option>Settlement</option>
-          <option>Post-Trial</option>
-          <option>Appeal</option>
-        </select></label>
-      </div>
-
-      <div class="small" style="margin:12px 0 6px">Court metadata (optional until Filed)</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-        <label>Case #<input id="case_number" style="width:100%"></label>
-        <label>County<input id="county" style="width:100%"></label>
-        <label>Division<input id="division" style="width:100%"></label>
-        <label>Judge<input id="judge" style="width:100%"></label>
-        <label>Opposing counsel<input id="opposing_counsel" style="width:100%"></label>
-        <label>Opposing firm<input id="opposing_firm" style="width:100%"></label>
-      </div>
-
-      <div class="small" style="margin:12px 0 6px">Attention</div>
-      <div>
-        <label><input type="radio" name="attn" value="" checked> None</label>
-        <label style="margin-left:12px"><input type="radio" name="attn" value="needs_attention"> Needs attention</label>
-        <label style="margin-left:12px"><input type="radio" name="attn" value="waiting"> Waiting</label>
-      </div>
-
-      <div class="small" style="margin:12px 0 6px">Focus log</div>
-      <div style="display:flex; gap:8px">
-        <input id="focus_text" placeholder="Add focus entry…" style="flex:1">
-        <input id="focus_author" placeholder="Author" style="width:140px">
-        <button id="add_focus" type="button">Add</button>
-      </div>
-      <ul id="focus_list" style="margin-top:8px; padding-left:16px"></ul>
-
-      <div class="small" style="margin:12px 0 6px">Deadlines</div>
-      <div id="deadlines"></div>
-      <button id="add_deadline" type="button">Add deadline</button>
-
-      <div style="margin-top:12px; display:flex; gap:8px">
-        <button id="save" type="button">Save</button>
-        <button id="new" type="button">New case</button>
-      </div>
-    </form>
+  <section class="card" style="padding:18px; overflow:auto">
+    <input type="hidden" id="id">
+    <div class="small">Focus Log</div>
+    <ul id="focus_list" style="margin-bottom:12px; padding-left:16px"></ul>
+    <div style="display:flex; gap:8px; margin-bottom:18px;">
+      <input id="focus_text" placeholder="Add focus entry..." style="flex:1">
+      <input id="focus_author" placeholder="Author" style="width:140px">
+      <button id="add_focus" type="button">Add</button>
+    </div>
+    <div class="small">Deadlines</div>
+    <div id="deadlines" style="margin-bottom:12px;"></div>
+    <button id="add_deadline" type="button">Add deadline</button>
+    <div style="margin-top:24px; text-align:right;">
+      <button id="edit_details" type="button">Edit Details</button>
+    </div>
   </section>
 </div>
 
 <script src="/static/manage.js"></script>
-<script>setInterval(()=>{ document.getElementById('clock').textContent =
-  new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); },1000);</script>
+<script>
+function formatLongDate(d) {
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+function updateHeaderDate() {
+  document.getElementById('date').textContent = formatLongDate(new Date());
+}
+setInterval(()=>{
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
+  updateHeaderDate();
+}, 1000);
+updateHeaderDate();
+</script>
 </body></html>
+
+
+

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit Case • Caseboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="header">
+  <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
+  <div class="brand">McMath Woods • David W. Wells • Edit Case</div>
+  <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+</header>
+<div class="wrap">
+  <section class="card" style="max-width:600px;margin:40px auto;">
+    <form id="edit-form">
+      <div class="small">Edit Case or Client</div>
+      <input type="hidden" id="id">
+      <label>Client<input id="client_name" required></label>
+      <label>Case name<input id="case_name" required></label>
+      <label>Type<select id="case_type">
+        <option>MVA</option>
+        <option>Personal Injury</option>
+        <option>Intentional Tort</option>
+        <option>Probate</option>
+        <option>Domestic Relations</option>
+        <option>Catastrophic Injury</option>
+        <option>Wrongful Death</option>
+        <option>Medical Malpractice</option>
+        <option>Environmental</option>
+      </select></label>
+      <label>Paralegal<input id="paralegal"></label>
+      <label>Stage<select id="stage">
+        <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
+        <option>Pretrial</option><option>Trial</option><option>Closed</option>
+      </select></label>
+      <label>Status<select id="status">
+        <option>Pre-Filling</option>
+        <option>Active</option>
+        <option>Settlement</option>
+        <option>Post-Trial</option>
+        <option>Appeal</option>
+      </select></label>
+      <label>Case #<input id="case_number"></label>
+      <label>County<input id="county"></label>
+      <label>Division<input id="division"></label>
+      <label>Judge<input id="judge"></label>
+      <label>Opposing counsel<input id="opposing_counsel"></label>
+      <label>Opposing firm<input id="opposing_firm"></label>
+      <div style="margin-top:18px;display:flex;gap:12px;">
+        <button id="submit" type="submit">Save Changes</button>
+        <a href="/manage" style="align-self:center;">Cancel</a>
+      </div>
+    </form>
+    <div id="result" style="margin-top:18px;"></div>
+  </section>
+</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const caseId = params.get('id');
+if (!caseId) window.location = '/manage';
+async function loadCase() {
+  const r = await fetch(`/api/cases/${caseId}`);
+  if (!r.ok) return;
+  const c = await r.json();
+  document.getElementById('id').value = c.id;
+  document.getElementById('client_name').value = c.client_name;
+  document.getElementById('case_name').value = c.case_name;
+  document.getElementById('case_type').value = c.case_type;
+  document.getElementById('paralegal').value = c.paralegal;
+  document.getElementById('stage').value = c.stage;
+  document.getElementById('status').value = c.status;
+  document.getElementById('case_number').value = c.case_number || '';
+  document.getElementById('county').value = c.county || '';
+  document.getElementById('division').value = c.division || '';
+  document.getElementById('judge').value = c.judge || '';
+  document.getElementById('opposing_counsel').value = c.opposing_counsel || '';
+  document.getElementById('opposing_firm').value = c.opposing_firm || '';
+}
+loadCase();
+document.getElementById('edit-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const payload = {
+    id: document.getElementById('id').value,
+    client_name: document.getElementById('client_name').value,
+    case_name: document.getElementById('case_name').value,
+    case_type: document.getElementById('case_type').value,
+    paralegal: document.getElementById('paralegal').value,
+    stage: document.getElementById('stage').value,
+    status: document.getElementById('status').value,
+    case_number: document.getElementById('case_number').value,
+    county: document.getElementById('county').value,
+    division: document.getElementById('division').value,
+    judge: document.getElementById('judge').value,
+    opposing_counsel: document.getElementById('opposing_counsel').value,
+    opposing_firm: document.getElementById('opposing_firm').value
+  };
+  const r = await fetch(`/api/cases/${payload.id}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if(r.ok) {
+    document.getElementById('result').textContent = 'Case updated!';
+    setTimeout(()=>{ window.location = '/manage'; }, 1200);
+  } else {
+    document.getElementById('result').textContent = 'Failed to update case.';
+  }
+};
+setInterval(()=>{ document.getElementById('clock').textContent =
+  new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); },1000);
+</script>
+</body>
+</html>

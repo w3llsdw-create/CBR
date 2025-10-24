@@ -1,15 +1,16 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Caseboard • TV</title>
-<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="/static/brand.css">
+  <link rel="stylesheet" href="/static/styles.css">
 <style> body.hide-cursor{cursor:none} </style>
 </head>
 <body class="hide-cursor">
 <header class="header">
   <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
   <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
-  <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+  <div class="live"><span id="date" class="date"></span><span id="dot" class="dot"></span><span id="clock"></span></div>
 </header>
 
 <div class="wrap">
@@ -30,7 +31,19 @@
 
 <script src="/static/tv.js"></script>
 <script>
-setInterval(()=>{ document.getElementById('clock').textContent =
-  new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); }, 1000);
+function formatLongDate(d) {
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+function updateHeaderDate() {
+  document.getElementById('date').textContent = formatLongDate(new Date());
+}
+setInterval(()=>{
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
+  updateHeaderDate();
+}, 1000);
+updateHeaderDate();
 </script>
 </body></html>
+
+
+

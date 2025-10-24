@@ -1,0 +1,10 @@
+﻿@font-face{
+  font-family:"Argent CF";
+  src: url("/static/fonts/Spectral-VariableFont_wght.ttf") format("truetype");
+  font-weight:300 800; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Indivisible";
+  src: url("/static/fonts/InterVariable.woff2") format("woff2");
+  font-weight:100 900; font-style:normal; font-display:swap;
+}

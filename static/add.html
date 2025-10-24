@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add New Case • Caseboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="header">
+  <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
+  <div class="brand">McMath Woods • David W. Wells • Add New Case</div>
+  <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+</header>
+<div class="wrap">
+  <section class="card" style="max-width:600px;margin:40px auto;">
+    <form id="add-form" autocomplete="off">
+      <div class="small" style="margin-bottom:18px;">Add New Case or Client</div>
+      <div style="display:flex; gap:24px; align-items:center; margin-bottom:18px;">
+        <span style="font-weight:500;">Case type:</span>
+        <label style="margin-right:12px;"><input type="radio" name="filed" value="Pre-filing" checked> Pre-filed</label>
+        <label><input type="radio" name="filed" value="Filed"> Filed</label>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
+        <label>Client<input id="client_name" required></label>
+        <label>Case name<input id="case_name" required></label>
+        <label>Type<select id="case_type">
+          <option>MVA</option>
+          <option>Personal Injury</option>
+          <option>Intentional Tort</option>
+          <option>Probate</option>
+          <option>Domestic Relations</option>
+          <option>Catastrophic Injury</option>
+          <option>Wrongful Death</option>
+          <option>Medical Malpractice</option>
+          <option>Environmental</option>
+        </select></label>
+        <label>Paralegal<input id="paralegal"></label>
+  <label>Primary Attorney<input id="primary_attorney"></label>
+      </div>
+      <div id="filed-fields" style="display:none; margin-bottom:18px;">
+        <div class="small" style="margin-bottom:8px;">Filed Case Details</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+          <label>Case Number<input id="case_number"></label>
+          <label>County<input id="county"></label>
+          <label>Division<input id="division"></label>
+          <label>Judge<input id="judge"></label>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
+        <label>Stage<select id="stage">
+          <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
+          <option>Pretrial</option><option>Trial</option><option>Closed</option>
+        </select></label>
+        <label>Status<select id="status">
+          <option>Pre-Filling</option>
+          <option>Active</option>
+          <option>Settlement</option>
+          <option>Post-Trial</option>
+          <option>Appeal</option>
+        </select></label>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:12px;justify-content:flex-end;">
+        <button id="submit" type="submit">Add Case</button>
+        <a href="/manage" style="align-self:center;">Cancel</a>
+      </div>
+    </form>
+    <div id="result" style="margin-top:18px;"></div>
+  </section>
+</div>
+<script>
+document.getElementById('add-form').onsubmit = async function(e) {
+  e.preventDefault();
+  const filed = document.querySelector('input[name="filed"]:checked').value;
+  const payload = {
+    client_name: document.getElementById('client_name').value,
+    case_name: document.getElementById('case_name').value,
+    case_type: document.getElementById('case_type').value,
+    paralegal: document.getElementById('paralegal').value,
+    primary_attorney: document.getElementById('primary_attorney').value,
+    stage: document.getElementById('stage').value,
+    status: document.getElementById('status').value,
+    focus_log: [], deadlines: []
+  };
+  if (filed === 'Filed') {
+    payload.case_number = document.getElementById('case_number').value;
+    payload.county = document.getElementById('county').value;
+    payload.division = document.getElementById('division').value;
+    payload.judge = document.getElementById('judge').value;
+  }
+  const r = await fetch('/api/cases', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+  if(r.ok) {
+    document.getElementById('result').textContent = 'Case added!';
+    setTimeout(()=>{ window.location = '/manage'; }, 1200);
+  } else {
+    document.getElementById('result').textContent = 'Failed to add case.';
+  }
+};
+
+// Show/hide filed fields on radio toggle
+document.querySelectorAll('input[name="filed"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    document.getElementById('filed-fields').style.display = (this.value === 'Filed') ? '' : 'none';
+  });
+});
+// Set initial state
+document.getElementById('filed-fields').style.display = document.querySelector('input[name="filed"]:checked').value === 'Filed' ? '' : 'none';
+setInterval(()=>{ document.getElementById('clock').textContent =
+  new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); },1000);
+</script>
+</body>
+</html>

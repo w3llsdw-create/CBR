@@ -24,7 +24,7 @@ class Deadline(BaseModel):
     resolved: bool = False
 
 Stage = Literal["Pre-filing","Filed","Discovery","Pretrial","Trial","Closed"]
-Status = Literal["open","pre-filing","filed","closed"]
+Status = Literal["Pre-Filling","Active","Settlement","Post-Trial","Appeal"]
 
 class ExternalRef(BaseModel):
     # reserved for Filevine; not used yet
@@ -38,7 +38,7 @@ class Case(BaseModel):
     case_name: str                                   # e.g., "Smith v. Jones"
     case_type: str                                   # free text
     stage: Stage = "Pre-filing"
-    status: Status = "pre-filing"
+    status: Status = "Pre-Filling"
     attention: Literal["needs_attention","waiting",""] = ""
     paralegal: str = ""
     current_focus: str = ""                          # one-liner, last focus
@@ -50,6 +50,7 @@ class Case(BaseModel):
     county: Optional[str] = None
     division: Optional[str] = None
     judge: Optional[str] = None
+    primary_attorney: Optional[str] = None
     opposing_counsel: Optional[str] = None
     opposing_firm: Optional[str] = None
 
@@ -92,6 +93,16 @@ def recompute(case: Case) -> Case:
 # ---------- App ----------
 app = FastAPI(title="Caseboard")
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+
+# ----- Add New Case Page -----
+@app.get("/add")
+def add_page():
+    return FileResponse("static/add.html")
+
+# ----- Edit Case Page -----
+@app.get("/edit")
+def edit_page():
+    return FileResponse("static/edit.html")
 
 @app.get("/")
 def root():
