@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from datetime import datetime, date
-import json, uuid, os, shutil
+import json, uuid, os, shutil, csv, io
 
 DATA_DIR = "data"
 CASES_PATH = os.path.join(DATA_DIR, "cases.json")
@@ -63,6 +63,10 @@ class CaseFile(BaseModel):
     saved_at: datetime
     cases: List[Case] = Field(default_factory=list)
 
+
+class ImportPayload(BaseModel):
+    csv: str
+
 # ---------- Storage ----------
 def load() -> CaseFile:
     if not os.path.exists(CASES_PATH):
@@ -93,6 +97,127 @@ def recompute(case: Case) -> Case:
 # ---------- App ----------
 app = FastAPI(title="Caseboard")
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+
+VALID_STAGES = {stage.lower(): stage for stage in Stage.__args__}
+VALID_STATUSES = {status.lower(): status for status in Status.__args__}
+
+
+def normalize(text: Optional[str]) -> str:
+    if text is None:
+        return ""
+    return text.strip()
+
+
+def normalize_stage(raw: str) -> Optional[Stage]:
+    value = normalize(raw)
+    if not value:
+        return None
+    return VALID_STAGES.get(value.lower())
+
+
+def normalize_status(raw: str) -> Optional[Status]:
+    value = normalize(raw)
+    if not value:
+        return None
+    return VALID_STATUSES.get(value.lower())
+
+
+def apply_case_updates(original: Case, updates: dict) -> Case:
+    data = original.model_dump()
+    for field, value in updates.items():
+        if value is None:
+            continue
+        data[field] = value
+    return Case(**data)
+
+
+def import_cases_from_csv(content: str) -> dict:
+    stream = io.StringIO(content)
+    reader = csv.DictReader(stream)
+    if not reader.fieldnames:
+        raise ValueError("CSV file is missing a header row")
+    fieldnames = [name.strip() for name in reader.fieldnames if name]
+    reader.fieldnames = fieldnames
+    lookup = {name.lower(): name for name in fieldnames}
+    required = {"client_name", "case_name", "case_type"}
+    missing = [col for col in required if col not in lookup]
+    if missing:
+        raise ValueError(f"CSV is missing required columns: {', '.join(missing)}")
+
+    def cell(row, key):
+        actual = lookup.get(key)
+        return normalize(row.get(actual)) if actual else ""
+
+    model = load()
+    added = 0
+    updated = 0
+    errors: list[str] = []
+
+    def find_existing(case_number: Optional[str], client_name: str, case_name: str) -> Optional[int]:
+        number_key = (case_number or "").lower()
+        for idx, existing in enumerate(model.cases):
+            if number_key and (existing.case_number or "").lower() == number_key:
+                return idx
+        client_key = client_name.lower()
+        case_key = case_name.lower()
+        for idx, existing in enumerate(model.cases):
+            if existing.client_name.lower() == client_key and existing.case_name.lower() == case_key:
+                return idx
+        return None
+
+    for row_index, row in enumerate(reader, start=2):
+        client_name = cell(row, "client_name")
+        case_name = cell(row, "case_name")
+        case_type = cell(row, "case_type") or "Other"
+        if not client_name or not case_name:
+            errors.append(f"Row {row_index}: missing client_name or case_name")
+            continue
+
+        stage_value = normalize_stage(cell(row, "stage"))
+        status_value = normalize_status(cell(row, "status"))
+        paralegal = cell(row, "paralegal")
+        current_focus = cell(row, "current_focus")
+        case_number = cell(row, "case_number") or None
+
+        existing_index = find_existing(case_number, client_name, case_name)
+        if existing_index is not None:
+            existing = model.cases[existing_index]
+            updates = {
+                "client_name": client_name,
+                "case_name": case_name,
+                "case_type": case_type if case_type else None,
+                "paralegal": paralegal if paralegal else None,
+                "current_focus": current_focus if current_focus else None,
+                "case_number": case_number if case_number else None,
+            }
+            if stage_value:
+                updates["stage"] = stage_value
+            if status_value:
+                updates["status"] = status_value
+            updated_case = apply_case_updates(existing, updates)
+            model.cases[existing_index] = recompute(updated_case)
+            updated += 1
+            continue
+
+        stage_final = stage_value or "Pre-filing"
+        status_final = status_value or "Pre-Filling"
+        new_case = Case(
+            client_name=client_name,
+            case_name=case_name,
+            case_type=case_type,
+            stage=stage_final,
+            status=status_final,
+            paralegal=paralegal,
+            current_focus=current_focus,
+            case_number=case_number,
+        )
+        model.cases.append(recompute(new_case))
+        added += 1
+
+    if added or updated:
+        save(model)
+
+    return {"added": added, "updated": updated, "errors": errors}
 
 # ----- Add New Case Page -----
 @app.get("/add")
@@ -176,6 +301,16 @@ def api_set_attention(case_id: str, state: Literal["needs_attention","waiting","
             save(model)
             return model.cases[i]
     raise HTTPException(404, "Not found")
+
+
+@app.post("/api/cases/import")
+async def api_import_cases(payload: ImportPayload):
+    try:
+        summary = import_cases_from_csv(payload.csv)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+    return summary
 
 # ----- TV endpoint (read-only) -----
 @app.get("/tv/cases")
