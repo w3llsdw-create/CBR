@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "saved_at": "2025-10-24T20:27:43.345758",
+  "saved_at": "2025-10-24T21:32:38.819836",
   "cases": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -56,6 +56,32 @@
       "division": "k",
       "judge": "k",
       "primary_attorney": "k",
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "3b0b2203-4ce9-42a5-9894-c9895b4b3efa",
+      "client_name": "Jones, Hope",
+      "case_name": "Tronca v. Tronca",
+      "case_type": "Domestic Relations",
+      "stage": "Pretrial",
+      "status": "Active",
+      "attention": "",
+      "paralegal": "Andrew",
+      "current_focus": "",
+      "focus_log": [],
+      "deadlines": [],
+      "case_number": "23DR-25-1089",
+      "county": "Faulkner",
+      "division": "4th",
+      "judge": "Clark",
+      "primary_attorney": "David",
       "opposing_counsel": null,
       "opposing_firm": null,
       "next_due": null,

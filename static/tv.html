@@ -1,49 +1,44 @@
 ﻿<!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Caseboard • TV</title>
-<link rel="stylesheet" href="/static/brand.css">
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caseboard • TV</title>
+
+  <!-- Brand layer, then app styles -->
+  <link rel="stylesheet" href="/static/brand.css">
   <link rel="stylesheet" href="/static/styles.css">
-<style> body.hide-cursor{cursor:none} </style>
 </head>
-<body class="hide-cursor">
-<header class="header">
-  <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
-  <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
-  <div class="live"><span id="date" class="date"></span><span id="dot" class="dot"></span><span id="clock"></span></div>
-</header>
+<body class="dense">
+  <header class="header">
+    <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px;opacity:.9">
+    <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
+    <div class="live"><span class="dot"></span><span class="small">LIVE</span><span class="small" id="clock"></span></div>
+  </header>
 
-<div class="wrap">
-  <section id="casesCard" class="card" style="height:calc(100vh - 56px - 24px); overflow:hidden; display:flex; flex-direction:column;">
-    <div class="thead">
-      <div class="cell col-case">CASE #</div>
-      <div class="cell col-name">NAME</div>
-      <div class="cell col-type">TYPE</div>
-      <div class="cell col-stage">STAGE</div>
-      <div class="cell col-status">STATUS</div>
-      <div class="cell col-para">PARALEGAL</div>
-      <div class="cell col-focus">CURRENT FOCUS</div>
-      <div class="cell col-due">NEXT DUE</div>
-    </div>
-    <div id="scroll" style="flex:1; overflow:auto"><div id="rows"></div></div>
-  </section>
-</div>
+  <main class="wrap">
+    <section class="card" id="board" aria-label="Active Cases">
+      <div class="table" id="casesTable">
+        <div class="thead">
+          <div class="cell col-case">CASE #</div>
+          <div class="cell col-name">NAME</div>
+          <div class="cell col-type">TYPE</div>
+          <div class="cell col-stage">STAGE</div>
+          <div class="cell col-status">STATUS</div>
+          <div class="cell col-para">PARALEGAL</div>
+          <div class="cell col-focus">CURRENT FOCUS</div>
+          <div class="cell col-due">NEXT DUE</div>
+        </div>
+        <div id="rows"></div>
+      </div>
+      <!-- soft masks to hide auto-scroll start/end -->
+      <div class="scroll-veil top"></div>
+      <div class="scroll-veil bottom"></div>
+    </section>
+  </main>
 
-<script src="/static/tv.js"></script>
-<script>
-function formatLongDate(d) {
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-}
-function updateHeaderDate() {
-  document.getElementById('date').textContent = formatLongDate(new Date());
-}
-setInterval(()=>{
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});
-  updateHeaderDate();
-}, 1000);
-updateHeaderDate();
-</script>
-</body></html>
-
-
+  <script src="/static/tv.js" defer></script>
+</body>
+</html>
 
