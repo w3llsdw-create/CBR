@@ -12,40 +12,153 @@
   <div class="live"><span id="date" class="date"></span><span id="dot" class="dot"></span><span id="clock"></span></div>
 </header>
 
-<div class="wrap" style="display:grid; grid-template-columns: 1.6fr 1fr; gap:12px; height:calc(100vh - 56px - 24px)">
-  <div style="grid-column:1/-1; margin-bottom:18px; text-align:right;">
-    <a href="/add" style="background:var(--accent,#2563eb);color:#fff;padding:8px 18px;border-radius:7px;text-decoration:none;font-weight:500;box-shadow:0 2px 8px rgba(60,72,88,.08);">+ New Case/Client</a>
-  </div>
-  <!-- Cases table -->
-  <section class="card" style="display:flex; flex-direction:column; overflow:hidden">
-    <div class="thead">
-      <div class="cell col-name">Client / Case</div>
-      <div class="cell col-type">Type</div>
-      <div class="cell col-stage">Stage</div>
-      <div class="cell col-status">Status</div>
-      <div class="cell col-para">Paralegal</div>
-      <div class="cell col-due">Next Due</div>
+<div class="wrap manage-layout">
+  <section class="card toolbar" aria-label="Case tools">
+    <div class="toolbar-left">
+      <div>
+        <div class="small">Search</div>
+        <input id="search" type="search" placeholder="Search client, case, paralegal...">
+      </div>
+      <div>
+        <div class="small">Stage</div>
+        <select id="filter_stage">
+          <option value="all">All stages</option>
+          <option value="Pre-filing">Pre-filing</option>
+          <option value="Filed">Filed</option>
+          <option value="Discovery">Discovery</option>
+          <option value="Pretrial">Pretrial</option>
+          <option value="Trial">Trial</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+      <div>
+        <div class="small">Status</div>
+        <select id="filter_status">
+          <option value="all">All statuses</option>
+          <option value="Pre-Filling">Pre-Filling</option>
+          <option value="Active">Active</option>
+          <option value="Settlement">Settlement</option>
+          <option value="Post-Trial">Post-Trial</option>
+          <option value="Appeal">Appeal</option>
+        </select>
+      </div>
+      <div>
+        <div class="small">Attention</div>
+        <select id="filter_attention">
+          <option value="all">All</option>
+          <option value="needs_attention">Needs attention</option>
+          <option value="waiting">Waiting</option>
+          <option value="">None</option>
+        </select>
+      </div>
     </div>
-    <div id="list" style="flex:1; overflow:auto"></div>
+    <div class="toolbar-right">
+      <div class="small" id="result_count">0 cases</div>
+      <div class="toolbar-actions">
+        <button id="clear_filters" type="button" class="ghost">Clear</button>
+        <button id="import_cases" type="button">Import CSV</button>
+        <a class="button" href="/add">+ New Case/Client</a>
+      </div>
+    </div>
   </section>
 
-  <!-- Editor -->
-  <section class="card" style="padding:18px; overflow:auto">
-    <input type="hidden" id="id">
-    <div class="small">Focus Log</div>
-    <ul id="focus_list" style="margin-bottom:12px; padding-left:16px"></ul>
-    <div style="display:flex; gap:8px; margin-bottom:18px;">
-      <input id="focus_text" placeholder="Add focus entry..." style="flex:1">
-      <input id="focus_author" placeholder="Author" style="width:140px">
-      <button id="add_focus" type="button">Add</button>
-    </div>
-    <div class="small">Deadlines</div>
-    <div id="deadlines" style="margin-bottom:12px;"></div>
-    <button id="add_deadline" type="button">Add deadline</button>
-    <div style="margin-top:24px; text-align:right;">
-      <button id="edit_details" type="button">Edit Details</button>
-    </div>
-  </section>
+  <input id="import_file" type="file" accept=".csv,text/csv" hidden>
+  <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
+
+  <div class="board-grid">
+    <!-- Cases table -->
+    <section class="card list-card" aria-label="Case list">
+      <div class="thead">
+        <div class="cell col-name">Client / Case</div>
+        <div class="cell col-type">Type</div>
+        <div class="cell col-stage">Stage</div>
+        <div class="cell col-status">Status</div>
+        <div class="cell col-para">Paralegal</div>
+        <div class="cell col-due">Next Due</div>
+      </div>
+      <div id="list" class="list-body"></div>
+    </section>
+
+    <!-- Editor -->
+    <section class="card details-card" aria-live="polite">
+      <input type="hidden" id="id">
+      <header class="details-header">
+        <div>
+          <div class="small">Selected case</div>
+          <h2 id="detail_title">Choose a case to review</h2>
+          <p id="detail_subtitle" class="small"></p>
+        </div>
+        <div class="attention-group">
+          <button id="attention_needs" type="button" data-state="needs_attention" class="chip">Needs Attention</button>
+          <button id="attention_waiting" type="button" data-state="waiting" class="chip">Waiting</button>
+          <button id="attention_clear" type="button" data-state="" class="chip">Clear</button>
+        </div>
+      </header>
+
+      <form id="details_form" class="details-form">
+        <div class="field-grid">
+          <label>Client<input id="client_name" required disabled></label>
+          <label>Case name<input id="case_name" required disabled></label>
+          <label>Type<select id="case_type" disabled>
+            <option value="MVA">MVA</option>
+            <option value="Personal Injury">Personal Injury</option>
+            <option value="Intentional Tort">Intentional Tort</option>
+            <option value="Probate">Probate</option>
+            <option value="Domestic Relations">Domestic Relations</option>
+            <option value="Catastrophic Injury">Catastrophic Injury</option>
+            <option value="Wrongful Death">Wrongful Death</option>
+            <option value="Medical Malpractice">Medical Malpractice</option>
+            <option value="Environmental">Environmental</option>
+          </select></label>
+          <label>Paralegal<input id="paralegal" disabled></label>
+          <label>Stage<select id="stage" disabled>
+            <option value="Pre-filing">Pre-filing</option>
+            <option value="Filed">Filed</option>
+            <option value="Discovery">Discovery</option>
+            <option value="Pretrial">Pretrial</option>
+            <option value="Trial">Trial</option>
+            <option value="Closed">Closed</option>
+          </select></label>
+          <label>Status<select id="status" disabled>
+            <option value="Pre-Filling">Pre-Filling</option>
+            <option value="Active">Active</option>
+            <option value="Settlement">Settlement</option>
+            <option value="Post-Trial">Post-Trial</option>
+            <option value="Appeal">Appeal</option>
+          </select></label>
+          <label>Case #<input id="case_number" disabled></label>
+          <label>County<input id="county" disabled></label>
+          <label>Division<input id="division" disabled></label>
+          <label>Judge<input id="judge" disabled></label>
+          <label>Opposing counsel<input id="opposing_counsel" disabled></label>
+          <label>Opposing firm<input id="opposing_firm" disabled></label>
+        </div>
+        <div class="details-actions">
+          <button id="open_edit" type="button" class="ghost">Open full editor</button>
+          <div class="actions-right">
+            <button id="reset" type="reset" class="ghost">Reset</button>
+            <button id="save_case" type="submit" disabled>Save changes</button>
+          </div>
+        </div>
+      </form>
+
+      <section class="details-section">
+        <header><div class="small">Focus Log</div></header>
+        <ul id="focus_list" class="focus-list"></ul>
+        <div class="focus-new">
+          <input id="focus_text" placeholder="Add focus entry..." disabled>
+          <input id="focus_author" placeholder="Author" disabled>
+          <button id="add_focus" type="button" disabled>Add</button>
+        </div>
+      </section>
+
+      <section class="details-section">
+        <header><div class="small">Deadlines</div></header>
+        <div id="deadlines" class="deadline-list"></div>
+        <button id="add_deadline" type="button" disabled>Add deadline</button>
+      </section>
+    </section>
+  </div>
 </div>
 
 <script src="/static/manage.js"></script>
