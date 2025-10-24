@@ -46,8 +46,7 @@ let filters = {
 let activeId = null;
 
 function esc(s) {
-  const value = s == null ? '' : s;
-  return value.toString().replace(/[&<>"']/g, (m) => ({
+  return (s ?? '').toString().replace(/[&<>"']/g, (m) => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -141,11 +140,8 @@ function sortCases(list) {
     .slice()
     .sort((a, b) => {
       const attentionScore = { needs_attention: 0, waiting: 1, '': 2 };
-      const attAKey = a.attention == null ? '' : a.attention;
-      const attBKey = b.attention == null ? '' : b.attention;
-      const hasOwn = Object.prototype.hasOwnProperty;
-      const attA = hasOwn.call(attentionScore, attAKey) ? attentionScore[attAKey] : 3;
-      const attB = hasOwn.call(attentionScore, attBKey) ? attentionScore[attBKey] : 3;
+      const attA = attentionScore[a.attention ?? ''] ?? 3;
+      const attB = attentionScore[b.attention ?? ''] ?? 3;
       if (attA !== attB) return attA - attB;
       const dueA = a.next_due ? new Date(a.next_due) : null;
       const dueB = b.next_due ? new Date(b.next_due) : null;
@@ -291,7 +287,7 @@ function populateForm(caseData) {
     const el = document.getElementById(field);
     if (!el) return;
     const value = caseData[field];
-    el.value = value == null ? '' : value;
+    el.value = value ?? '';
   });
   renderFocusLog(caseData.focus_log || []);
   renderDeadlines(caseData.deadlines || []);
@@ -318,7 +314,7 @@ function markDirty() {
     ? deadlinesEl.dataset.json !== JSON.stringify(original.deadlines || [])
     : false;
   const dirty = FORM_FIELDS.some((field) => {
-    const originalVal = original[field] == null ? '' : original[field];
+    const originalVal = original[field] ?? '';
     return current[field] !== originalVal;
   });
   saveBtn.disabled = !(dirty || deadlinesChanged);
@@ -493,7 +489,7 @@ if (importBtn && importInput) {
   });
 
   importInput.addEventListener('change', async (event) => {
-    const file = event.target && event.target.files ? event.target.files[0] : null;
+    const file = event.target.files?.[0];
     if (!file) return;
     let csvText = '';
     try {
