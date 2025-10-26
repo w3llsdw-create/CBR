@@ -31,7 +31,7 @@
   --pad-y: clamp(3px, 0.6vh, 6px);
 
   --wrap-w: min(96vw, 1920px);
-  --list-columns: minmax(260px, 3fr) minmax(140px, 1.2fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(150px, 1.1fr) minmax(160px, 1.2fr);
+  --list-columns: minmax(220px, 2.2fr) minmax(220px, 2.2fr) minmax(140px, 1.2fr) minmax(120px, 1fr) minmax(120px, 1fr) minmax(150px, 1.1fr) minmax(160px, 1.2fr);
 }
 
 html,body{height:100%}
@@ -145,9 +145,8 @@ input:focus, select:focus, textarea:focus{
 .case-row .cell{display:flex; flex-direction:column; gap:4px; min-width:0; align-items:flex-start;}
 .case-row .cell strong{color:#F9D7B0; font-weight:600;}
 .case-row .cell .muted{font-size:.85rem; color:rgba(214,161,115,.78);}
-.case-row .col-name{white-space:normal; gap:2px;}
-.case-row .col-name .primary{font-weight:600; color:#FFE9D1;}
-.case-row .col-name .secondary{font-size:.92rem; color:rgba(214,161,115,.82); line-height:1.35;}
+.case-row .col-client{white-space:normal; font-weight:600; color:#FFE9D1;}
+.case-row .col-case-name{white-space:normal; color:rgba(214,161,115,.82); font-size:.95rem;}
 .empty-state{padding:32px 24px; text-align:center; color:var(--muted);}
 
 .details-card{display:flex; flex-direction:column; gap:18px; padding:24px; overflow:auto; background:linear-gradient(180deg,rgba(46,54,69,.92),rgba(25,30,40,.82)); min-height:320px; flex:1 1 0;}
@@ -197,8 +196,8 @@ input:focus, select:focus, textarea:focus{
 }
 
 /* Adaptive columns */
-.col-case{ width: clamp(8ch, 10vw, 12ch); }
-.col-name{ flex: 2 1 0; min-width: 24ch; }
+.col-client{ width: clamp(16ch, 20vw, 28ch); }
+.col-case-name{ width: clamp(16ch, 20vw, 28ch); }
 .col-type{ width: clamp(12ch, 14vw, 18ch); }
 .col-stage{ width: clamp(10ch, 12vw, 14ch); }
 .col-status{ width: clamp(10ch, 12vw, 14ch); }
@@ -207,12 +206,83 @@ input:focus, select:focus, textarea:focus{
 .col-due{ width: clamp(10ch, 12vw, 14ch); text-align:right; }
 
 /* Badges */
-.badge{padding:.15rem .45rem; border-radius:6px; font-size:.75rem; letter-spacing:.04em; background:rgba(214,161,115,.18); border:1px solid rgba(214,161,115,.35); color:#FFE4C7; text-transform:uppercase;}
-.badge.none{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.14); color:#E7ECF8;}
-.badge.open{background:#2a2f37; color:#e5edf8}
-.badge.pre-filing{background:#3a3442; color:#e2c6ff}
-.badge.filed{background:#1e3328; color:#b9f6cf}
-.badge.closed{background:#383f47; color:#cbd5e1}
+.badge{
+  --badge-bg: rgba(214,161,115,.18);
+  --badge-border: rgba(214,161,115,.35);
+  --badge-fg: #FFE4C7;
+  padding:.2rem .55rem;
+  border-radius:6px;
+  font-size:.72rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  background:var(--badge-bg);
+  border:1px solid var(--badge-border);
+  color:var(--badge-fg);
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  line-height:1.1;
+}
+.badge::before{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:999px;
+  background:currentColor;
+  opacity:.7;
+}
+.badge.none{
+  --badge-bg: rgba(148,163,184,.18);
+  --badge-border: rgba(148,163,184,.35);
+  --badge-fg: #E2E8F0;
+}
+.badge.pre-filing{
+  --badge-bg: rgba(59,130,246,.16);
+  --badge-border: rgba(59,130,246,.32);
+  --badge-fg: #CFE0FF;
+}
+.badge.active{
+  --badge-bg: rgba(34,197,94,.18);
+  --badge-border: rgba(34,197,94,.38);
+  --badge-fg: #CFF9DD;
+  box-shadow:0 0 0 1px rgba(34,197,94,.18);
+}
+.badge.filed{
+  --badge-bg: rgba(74,222,128,.12);
+  --badge-border: rgba(74,222,128,.3);
+  --badge-fg: #BAF7CF;
+}
+.badge.discovery{
+  --badge-bg: rgba(249,168,212,.14);
+  --badge-border: rgba(249,168,212,.32);
+  --badge-fg: #FFE0F1;
+}
+.badge.open{
+  --badge-bg: rgba(148,163,184,.2);
+  --badge-border: rgba(148,163,184,.36);
+  --badge-fg: #E4ECF8;
+}
+.badge.settlement{
+  --badge-bg: rgba(251,191,36,.16);
+  --badge-border: rgba(251,191,36,.35);
+  --badge-fg: #FDE6AE;
+}
+.badge.post-trial{
+  --badge-bg: rgba(147,197,253,.14);
+  --badge-border: rgba(147,197,253,.32);
+  --badge-fg: #E0EEFF;
+}
+.badge.appeal{
+  --badge-bg: rgba(129,140,248,.16);
+  --badge-border: rgba(129,140,248,.35);
+  --badge-fg: #E0E5FF;
+}
+.badge.closed{
+  --badge-bg: rgba(100,116,139,.18);
+  --badge-border: rgba(100,116,139,.38);
+  --badge-fg: #CBD5F5;
+}
 
 /* Attention accents */
 .trow::before{content:""; position:absolute; left:0; top:0; bottom:0; width:2px; opacity:.7}
