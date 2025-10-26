@@ -8,7 +8,7 @@
 <body>
 <header class="header">
   <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
-  <div class="brand">McMath Woods • David W. Wells • Caseboard Management</div>
+  <div class="brand">McMath Woods • David W. Wells</div>
   <div class="live"><span id="date" class="date"></span><span id="dot" class="dot"></span><span id="clock"></span></div>
 </header>
 
@@ -35,7 +35,7 @@
         <div class="small">Status</div>
         <select id="filter_status">
           <option value="all">All statuses</option>
-          <option value="Pre-Filling">Pre-Filling</option>
+          <option value="Pre-filing">Pre-filing</option>
           <option value="Active">Active</option>
           <option value="Settlement">Settlement</option>
           <option value="Post-Trial">Post-Trial</option>
@@ -93,69 +93,48 @@
           <button id="attention_waiting" type="button" data-state="waiting" class="chip">Waiting</button>
           <button id="attention_clear" type="button" data-state="" class="chip">Clear</button>
         </div>
+        <div class="header-actions">
+          <button id="open_edit" type="button" class="ghost" disabled>Open full editor</button>
+          <button id="delete_case" type="button" class="ghost danger" disabled>Delete case</button>
+        </div>
       </header>
 
-      <form id="details_form" class="details-form">
-        <div class="field-grid">
-          <label>Client<input id="client_name" required disabled></label>
-          <label>Case name<input id="case_name" required disabled></label>
-          <label>Type<select id="case_type" disabled>
-            <option value="MVA">MVA</option>
-            <option value="Personal Injury">Personal Injury</option>
-            <option value="Intentional Tort">Intentional Tort</option>
-            <option value="Probate">Probate</option>
-            <option value="Domestic Relations">Domestic Relations</option>
-            <option value="Catastrophic Injury">Catastrophic Injury</option>
-            <option value="Wrongful Death">Wrongful Death</option>
-            <option value="Medical Malpractice">Medical Malpractice</option>
-            <option value="Environmental">Environmental</option>
-          </select></label>
-          <label>Paralegal<input id="paralegal" disabled></label>
-          <label>Stage<select id="stage" disabled>
-            <option value="Pre-filing">Pre-filing</option>
-            <option value="Filed">Filed</option>
-            <option value="Discovery">Discovery</option>
-            <option value="Pretrial">Pretrial</option>
-            <option value="Trial">Trial</option>
-            <option value="Closed">Closed</option>
-          </select></label>
-          <label>Status<select id="status" disabled>
-            <option value="Pre-Filling">Pre-Filling</option>
-            <option value="Active">Active</option>
-            <option value="Settlement">Settlement</option>
-            <option value="Post-Trial">Post-Trial</option>
-            <option value="Appeal">Appeal</option>
-          </select></label>
-          <label>Case #<input id="case_number" disabled></label>
-          <label>County<input id="county" disabled></label>
-          <label>Division<input id="division" disabled></label>
-          <label>Judge<input id="judge" disabled></label>
-          <label>Opposing counsel<input id="opposing_counsel" disabled></label>
-          <label>Opposing firm<input id="opposing_firm" disabled></label>
+      <section class="details-overview" aria-label="Case overview">
+        <div class="details-grid">
+          <div class="detail-pair"><span class="detail-label">Client</span><span class="detail-value" id="detail_client_name">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Case</span><span class="detail-value" id="detail_case_name">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Type</span><span class="detail-value" id="detail_case_type">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Paralegal</span><span class="detail-value" id="detail_paralegal">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Stage</span><span class="detail-value" id="detail_stage">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Status</span><span class="detail-value" id="detail_status">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Case #</span><span class="detail-value" id="detail_case_number">—</span></div>
+          <div class="detail-pair"><span class="detail-label">County</span><span class="detail-value" id="detail_county">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Division</span><span class="detail-value" id="detail_division">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Judge</span><span class="detail-value" id="detail_judge">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Opposing counsel</span><span class="detail-value" id="detail_opposing_counsel">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Opposing firm</span><span class="detail-value" id="detail_opposing_firm">—</span></div>
         </div>
-        <div class="details-actions">
-          <button id="open_edit" type="button" class="ghost">Open full editor</button>
-          <div class="actions-right">
-            <button id="reset" type="reset" class="ghost">Reset</button>
-            <button id="save_case" type="submit" disabled>Save changes</button>
-          </div>
-        </div>
-      </form>
+      </section>
 
-      <section class="details-section">
-        <header><div class="small">Focus Log</div></header>
-        <ul id="focus_list" class="focus-list"></ul>
-        <div class="focus-new">
-          <input id="focus_text" placeholder="Add focus entry..." disabled>
-          <input id="focus_author" placeholder="Author" disabled>
-          <button id="add_focus" type="button" disabled>Add</button>
-        </div>
+      <section class="details-section current-focus">
+        <header><div class="small">Current focus</div></header>
+        <p id="current_focus_text" class="current-focus-text">Select a case to see the latest focus.</p>
       </section>
 
       <section class="details-section">
         <header><div class="small">Deadlines</div></header>
         <div id="deadlines" class="deadline-list"></div>
         <button id="add_deadline" type="button" disabled>Add deadline</button>
+      </section>
+
+      <section class="details-section focus-entry">
+        <header><div class="small">Log a new focus</div></header>
+        <input id="focus_entry" placeholder="Type a new focus and press Enter" disabled>
+      </section>
+
+      <section class="details-section">
+        <header><div class="small">Focus Log</div></header>
+        <ul id="focus_list" class="focus-list"></ul>
       </section>
     </section>
   </div>
