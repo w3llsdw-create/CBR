@@ -211,10 +211,8 @@ function renderList() {
     const statusText = displayStatus(c.status);
     const statusClassName = statusText === '—' ? 'none' : statusClass(statusText);
     row.innerHTML = `
-      <div class="cell col-name">
-        <span class="primary">${esc(clientName)}</span>
-        <span class="secondary">${esc(caseName)}</span>
-      </div>
+      <div class="cell col-client">${esc(clientName)}</div>
+      <div class="cell col-case-name">${esc(caseName)}</div>
       <div class="cell col-type">${esc(c.case_type || '—')}</div>
       <div class="cell col-stage">${esc(c.stage || '—')}</div>
       <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
