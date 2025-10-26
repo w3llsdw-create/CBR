@@ -1,5 +1,5 @@
 from __future__ import annotations
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -267,6 +267,16 @@ def api_update_case(case_id: str, patch: Case):
             model.cases[i] = recompute(case)
             save(model)
             return model.cases[i]
+    raise HTTPException(404, "Not found")
+
+@app.delete("/api/cases/{case_id}", status_code=204)
+def api_delete_case(case_id: str):
+    model = load()
+    for i, c in enumerate(model.cases):
+        if c.id == case_id:
+            model.cases.pop(i)
+            save(model)
+            return Response(status_code=204)
     raise HTTPException(404, "Not found")
 
 @app.post("/api/cases/{case_id}/focus", response_model=Case)

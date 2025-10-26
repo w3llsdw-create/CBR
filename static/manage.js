@@ -5,14 +5,11 @@ const listEl = $('#list');
 const resultCountEl = $('#result_count');
 const detailTitleEl = $('#detail_title');
 const detailSubtitleEl = $('#detail_subtitle');
-const detailForm = $('#details_form');
-const saveBtn = $('#save_case');
-const resetBtn = $('#reset');
 const openEditBtn = $('#open_edit');
+const deleteCaseBtn = $('#delete_case');
 const focusListEl = $('#focus_list');
-const focusTextEl = $('#focus_text');
-const focusAuthorEl = $('#focus_author');
-const addFocusBtn = $('#add_focus');
+const focusEntryInput = $('#focus_entry');
+const currentFocusEl = $('#current_focus_text');
 const deadlinesEl = $('#deadlines');
 const addDeadlineBtn = $('#add_deadline');
 const hiddenId = $('#id');
@@ -20,21 +17,20 @@ const attentionButtons = $$('.attention-group .chip');
 const importBtn = $('#import_cases');
 const importInput = $('#import_file');
 const importFeedback = $('#import_feedback');
-
-const FORM_FIELDS = [
-  'client_name',
-  'case_name',
-  'case_type',
-  'paralegal',
-  'stage',
-  'status',
-  'case_number',
-  'county',
-  'division',
-  'judge',
-  'opposing_counsel',
-  'opposing_firm',
-];
+const detailFields = {
+  client_name: $('#detail_client_name'),
+  case_name: $('#detail_case_name'),
+  case_type: $('#detail_case_type'),
+  paralegal: $('#detail_paralegal'),
+  stage: $('#detail_stage'),
+  status: $('#detail_status'),
+  case_number: $('#detail_case_number'),
+  county: $('#detail_county'),
+  division: $('#detail_division'),
+  judge: $('#detail_judge'),
+  opposing_counsel: $('#detail_opposing_counsel'),
+  opposing_firm: $('#detail_opposing_firm'),
+};
 
 let CASES = [];
 let filters = {
@@ -44,6 +40,7 @@ let filters = {
   attention: 'all',
 };
 let activeId = null;
+let activeCase = null;
 
 function esc(s) {
   return (s ?? '').toString().replace(/[&<>"']/g, (m) => ({
@@ -98,29 +95,47 @@ function attentionLabel(att) {
   return 'Normal';
 }
 
-function setFormEnabled(enabled) {
-  FORM_FIELDS.forEach((field) => {
-    const el = document.getElementById(field);
-    if (el) el.disabled = !enabled;
+function normalizeStatus(status) {
+  if (!status) return status;
+  return status === 'Pre-Filling' ? 'Pre-filing' : status;
+}
+
+function displayStatus(status) {
+  const normalized = normalizeStatus(status);
+  if (!normalized) return '—';
+  return normalized;
+}
+
+function clearDetails() {
+  Object.values(detailFields).forEach((el) => {
+    if (el) el.textContent = '—';
   });
-  [focusTextEl, focusAuthorEl, addFocusBtn, addDeadlineBtn, saveBtn, resetBtn, openEditBtn].forEach((el) => {
+  if (currentFocusEl) currentFocusEl.textContent = 'Select a case to see the latest focus.';
+  focusListEl.innerHTML = '';
+  deadlinesEl.innerHTML = '';
+  focusListEl.appendChild(emptyState('Select a case to view the focus log.'));
+  deadlinesEl.appendChild(emptyState('Select a case to manage deadlines.'));
+}
+
+function setDetailsEnabled(enabled) {
+  [focusEntryInput, addDeadlineBtn, openEditBtn, deleteCaseBtn].forEach((el) => {
     if (el) el.disabled = !enabled;
   });
   attentionButtons.forEach((btn) => {
     btn.disabled = !enabled;
   });
   if (!enabled) {
-    focusListEl.innerHTML = '';
-    deadlinesEl.innerHTML = '';
-    deadlinesEl.dataset.json = JSON.stringify([]);
+    hiddenId.value = '';
     detailTitleEl.textContent = 'Choose a case to review';
     detailSubtitleEl.textContent = '';
+    clearDetails();
+    activeCase = null;
   }
 }
 
 function filtersMatch(caseData) {
   if (filters.stage !== 'all' && caseData.stage !== filters.stage) return false;
-  if (filters.status !== 'all' && caseData.status !== filters.status) return false;
+  if (filters.status !== 'all' && normalizeStatus(caseData.status) !== filters.status) return false;
   if (filters.attention !== 'all' && caseData.attention !== filters.attention) return false;
   if (!filters.search) return true;
   const haystack = [
@@ -190,15 +205,20 @@ function renderList() {
     row.type = 'button';
     row.className = `trow case-row ${dueClass(c)} ${c.attention === 'needs_attention' ? 'needs' : ''}`;
     row.dataset.id = c.id;
+    const paralegalName = (c.paralegal || '').trim();
+    const clientName = c.client_name && c.client_name.trim() ? c.client_name : '—';
+    const caseName = c.case_name && c.case_name.trim() ? c.case_name : '—';
+    const statusText = displayStatus(c.status);
+    const statusClassName = statusText === '—' ? 'none' : statusClass(statusText);
     row.innerHTML = `
       <div class="cell col-name">
-        <strong>${esc(c.client_name)}</strong>
-        <span class="muted">• ${esc(c.case_name)}</span>
+        <span class="primary">${esc(clientName)}</span>
+        <span class="secondary">${esc(caseName)}</span>
       </div>
       <div class="cell col-type">${esc(c.case_type || '—')}</div>
       <div class="cell col-stage">${esc(c.stage || '—')}</div>
-      <div class="cell col-status"><span class="badge ${statusClass(c.status)}">${esc(c.status || '—')}</span></div>
-      <div class="cell col-para">${esc(c.paralegal || '—')}</div>
+      <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
+      <div class="cell col-para">${esc(paralegalName || '—')}</div>
       <div class="cell col-due">
         <div>${fmtDate(c.next_due)}</div>
         <div class="micro muted">${relativeDue(c.next_due)}</div>
@@ -242,61 +262,72 @@ function renderFocusLog(entries) {
 
 function renderDeadlines(dls) {
   deadlinesEl.innerHTML = '';
-  if (!dls || !dls.length) {
+  const list = Array.isArray(dls) ? dls : [];
+  if (!list.length) {
     deadlinesEl.appendChild(emptyState('No deadlines set.'));
-  } else {
-    dls.forEach((d, i) => {
-      const row = document.createElement('div');
-      row.className = 'deadline-row';
-      row.innerHTML = `
-        <input type="date" value="${d.due_date || ''}">
-        <input type="text" placeholder="Description" value="${escAttr(d.description || '')}">
-        <label class="small checkbox"><input type="checkbox" ${d.resolved ? 'checked' : ''}> Resolved</label>
-        <button type="button" class="icon" aria-label="Remove deadline">×</button>`;
-      const [dateInput, textInput, checkLabel, removeBtn] = row.children;
-      const checkbox = checkLabel.querySelector('input');
-      const commit = () => {
-        const next = JSON.parse(deadlinesEl.dataset.json || '[]');
-        next[i] = {
-          due_date: dateInput.value || null,
-          description: textInput.value || '',
-          resolved: checkbox.checked,
-        };
-        deadlinesEl.dataset.json = JSON.stringify(next);
-        markDirty();
-      };
-      dateInput.addEventListener('change', commit);
-      textInput.addEventListener('input', commit);
-      checkbox.addEventListener('change', commit);
-      removeBtn.addEventListener('click', () => {
-        const next = JSON.parse(deadlinesEl.dataset.json || '[]');
-        next.splice(i, 1);
-        deadlinesEl.dataset.json = JSON.stringify(next);
-        renderDeadlines(next);
-        markDirty();
-      });
-      deadlinesEl.appendChild(row);
-    });
+    return;
   }
-  deadlinesEl.dataset.json = JSON.stringify(dls || []);
+  list.forEach((d, index) => {
+    const row = document.createElement('div');
+    row.className = 'deadline-row';
+    row.innerHTML = `
+      <input type="date" value="${d.due_date || ''}">
+      <input type="text" placeholder="Description" value="${escAttr(d.description || '')}">
+      <label class="small checkbox"><input type="checkbox" ${d.resolved ? 'checked' : ''}> Resolved</label>
+      <button type="button" class="icon" aria-label="Remove deadline">×</button>`;
+    const [dateInput, textInput, checkLabel, removeBtn] = row.children;
+    const checkbox = checkLabel.querySelector('input');
+    const commit = () => {
+      if (!activeCase) return;
+      const next = (activeCase.deadlines || []).map((item, i) =>
+        i === index
+          ? {
+              due_date: dateInput.value || null,
+              description: textInput.value.trim(),
+              resolved: checkbox.checked,
+            }
+          : item
+      );
+      activeCase.deadlines = next;
+      persistDeadlines(next);
+    };
+    dateInput.addEventListener('change', commit);
+    textInput.addEventListener('blur', commit);
+    checkbox.addEventListener('change', commit);
+    removeBtn.addEventListener('click', () => {
+      if (!activeCase) return;
+      const next = (activeCase.deadlines || []).slice();
+      next.splice(index, 1);
+      activeCase.deadlines = next;
+      persistDeadlines(next);
+    });
+    deadlinesEl.appendChild(row);
+  });
 }
 
-function populateForm(caseData) {
-  hiddenId.value = caseData.id;
-  FORM_FIELDS.forEach((field) => {
-    const el = document.getElementById(field);
+function normalizeCase(caseData) {
+  if (!caseData) return caseData;
+  return { ...caseData, status: normalizeStatus(caseData.status) };
+}
+
+function populateDetails(caseData) {
+  if (!caseData) return;
+  activeCase = JSON.parse(JSON.stringify(normalizeCase(caseData)));
+  hiddenId.value = activeCase.id;
+  Object.entries(detailFields).forEach(([field, el]) => {
     if (!el) return;
-    const value = caseData[field];
-    el.value = value ?? '';
+    const raw = field === 'status' ? displayStatus(activeCase.status) : activeCase[field];
+    el.textContent = raw && raw !== '' ? raw : '—';
   });
-  renderFocusLog(caseData.focus_log || []);
-  renderDeadlines(caseData.deadlines || []);
-  detailTitleEl.textContent = `${caseData.client_name}`;
-  detailSubtitleEl.textContent = `${caseData.case_name} • ${attentionLabel(caseData.attention)}`;
-  focusTextEl.value = '';
-  focusAuthorEl.value = '';
-  updateAttentionButtons(caseData.attention);
-  saveBtn.disabled = true;
+  detailTitleEl.textContent = `${activeCase.client_name}`;
+  detailSubtitleEl.textContent = `${activeCase.case_name} • ${attentionLabel(activeCase.attention)}`;
+  if (currentFocusEl) {
+    currentFocusEl.textContent = activeCase.current_focus ? activeCase.current_focus : 'No current focus recorded.';
+  }
+  renderDeadlines(activeCase.deadlines || []);
+  renderFocusLog(activeCase.focus_log || []);
+  updateAttentionButtons(activeCase.attention);
+  if (focusEntryInput) focusEntryInput.value = '';
 }
 
 function updateAttentionButtons(state) {
@@ -305,28 +336,71 @@ function updateAttentionButtons(state) {
   });
 }
 
-function markDirty() {
-  if (!activeId) return;
-  const current = collectForm();
-  const original = CASES.find((c) => c.id === activeId);
-  if (!original) return;
-  const deadlinesChanged = deadlinesEl.dataset.json
-    ? deadlinesEl.dataset.json !== JSON.stringify(original.deadlines || [])
-    : false;
-  const dirty = FORM_FIELDS.some((field) => {
-    const originalVal = original[field] ?? '';
-    return current[field] !== originalVal;
-  });
-  saveBtn.disabled = !(dirty || deadlinesChanged);
+function applyCaseUpdate(updatedCase) {
+  if (!updatedCase) return;
+  const normalized = normalizeCase(updatedCase);
+  CASES = CASES.map((c) => (c.id === normalized.id ? normalized : c));
+  renderList();
+  if (activeId === normalized.id) {
+    populateDetails(normalized);
+    highlightRow(activeId);
+  }
 }
 
-function collectForm() {
-  const data = {};
-  FORM_FIELDS.forEach((field) => {
-    const el = document.getElementById(field);
-    data[field] = el ? el.value : '';
-  });
-  return data;
+async function persistDeadlines(next) {
+  if (!activeCase) return;
+  try {
+    const r = await fetch(`/api/cases/${activeCase.id}/deadlines`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(next),
+    });
+    if (!r.ok) throw new Error('Failed to update deadlines');
+    const updated = await r.json();
+    applyCaseUpdate(updated);
+  } catch (err) {
+    console.error(err);
+    alert('Unable to update deadlines.');
+    await load({ keepSelection: true });
+  }
+}
+
+async function addFocusEntry(text) {
+  if (!activeCase) {
+    alert('Select a case first.');
+    return;
+  }
+  const author = activeCase.paralegal && activeCase.paralegal.trim() ? activeCase.paralegal : 'DW';
+  try {
+    const r = await fetch(`/api/cases/${activeCase.id}/focus`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ at: new Date().toISOString(), author, text }),
+    });
+    if (!r.ok) throw new Error('Failed to add focus');
+    const updated = await r.json();
+    applyCaseUpdate(updated);
+  } catch (err) {
+    console.error(err);
+    alert('Unable to add focus entry.');
+  }
+}
+
+async function deleteActiveCase() {
+  if (!activeCase) return;
+  const confirmed = window.confirm('Delete this case? This action cannot be undone.');
+  if (!confirmed) return;
+  try {
+    const r = await fetch(`/api/cases/${activeCase.id}`, { method: 'DELETE' });
+    if (!r.ok && r.status !== 204) throw new Error('Failed to delete case');
+    activeId = null;
+    activeCase = null;
+    await load();
+    setDetailsEnabled(false);
+  } catch (err) {
+    console.error(err);
+    alert('Unable to delete this case.');
+  }
 }
 
 async function edit(id) {
@@ -334,8 +408,8 @@ async function edit(id) {
   if (!caseData) return;
   activeId = id;
   highlightRow(id);
-  setFormEnabled(true);
-  populateForm(caseData);
+  setDetailsEnabled(true);
+  populateDetails(caseData);
 }
 
 async function setAttention(state) {
@@ -343,7 +417,8 @@ async function setAttention(state) {
   try {
     const r = await fetch(`/api/cases/${activeId}/attention/${state}`, { method: 'POST' });
     if (!r.ok) throw new Error('Failed to update attention');
-    await load({ keepSelection: true });
+    const updated = await r.json();
+    applyCaseUpdate(updated);
   } catch (err) {
     console.error(err);
     alert('Unable to update attention state.');
@@ -354,7 +429,7 @@ async function load(options = {}) {
   try {
     const r = await fetch('/api/cases', { cache: 'no-store' });
     const data = await r.json();
-    CASES = data.cases || [];
+    CASES = (data.cases || []).map(normalizeCase);
     renderList();
     if (options.keepSelection && activeId) {
       const exists = CASES.some((c) => c.id === activeId);
@@ -362,10 +437,10 @@ async function load(options = {}) {
         edit(activeId);
       } else {
         activeId = null;
-        setFormEnabled(false);
+        setDetailsEnabled(false);
       }
     } else if (!activeId) {
-      setFormEnabled(false);
+      setDetailsEnabled(false);
     }
   } catch (err) {
     console.error('Failed to load cases', err);
@@ -403,75 +478,43 @@ function attachFilterListeners() {
   $('#clear_filters').addEventListener('click', clearFilters);
 }
 
-function attachFormListeners() {
-  detailForm.addEventListener('input', markDirty);
-  detailForm.addEventListener('change', markDirty);
-  resetBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (!activeId) return;
-    const original = CASES.find((c) => c.id === activeId);
-    if (!original) return;
-    populateForm(original);
-    saveBtn.disabled = true;
-  });
-  detailForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!activeId) return;
-    const original = CASES.find((c) => c.id === activeId);
-    if (!original) return;
-    const payload = {
-      ...original,
-      ...collectForm(),
-      deadlines: JSON.parse(deadlinesEl.dataset.json || '[]'),
-    };
-    try {
-      const r = await fetch(`/api/cases/${activeId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!r.ok) throw new Error('Failed to save');
-      await load({ keepSelection: true });
-      saveBtn.disabled = true;
-    } catch (err) {
-      console.error(err);
-      alert('Unable to save changes.');
-    }
-  });
-  openEditBtn.addEventListener('click', () => {
-    if (!activeId) return;
-    window.open(`/edit?id=${encodeURIComponent(activeId)}`, '_blank');
-  });
-}
-
-addDeadlineBtn.addEventListener('click', () => {
-  const next = JSON.parse(deadlinesEl.dataset.json || '[]');
-  next.push({ due_date: new Date().toISOString().slice(0, 10), description: '', resolved: false });
-  deadlinesEl.dataset.json = JSON.stringify(next);
-  renderDeadlines(next);
-  markDirty();
-});
-
-addFocusBtn.addEventListener('click', async () => {
-  if (!activeId) return alert('Select a case first.');
-  const text = focusTextEl.value.trim();
-  if (!text) return;
-  const author = focusAuthorEl.value.trim() || 'DW';
-  try {
-    const r = await fetch(`/api/cases/${activeId}/focus`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ at: new Date().toISOString(), author, text }),
+function attachDetailListeners() {
+  if (openEditBtn) {
+    openEditBtn.addEventListener('click', () => {
+      if (!activeId) return;
+      window.open(`/edit?id=${encodeURIComponent(activeId)}`, '_blank');
     });
-    if (!r.ok) throw new Error('Failed to add focus');
-    focusTextEl.value = '';
-    focusAuthorEl.value = '';
-    await load({ keepSelection: true });
-  } catch (err) {
-    console.error(err);
-    alert('Unable to add focus entry.');
   }
-});
+  if (addDeadlineBtn) {
+    addDeadlineBtn.addEventListener('click', () => {
+      if (!activeCase) {
+        alert('Select a case first.');
+        return;
+      }
+      const next = (activeCase.deadlines || []).slice();
+      next.push({ due_date: new Date().toISOString().slice(0, 10), description: '', resolved: false });
+      activeCase.deadlines = next;
+      renderDeadlines(next);
+      persistDeadlines(next);
+    });
+  }
+  if (focusEntryInput) {
+    focusEntryInput.addEventListener('keydown', async (e) => {
+      if (e.key !== 'Enter' || e.shiftKey) return;
+      e.preventDefault();
+      const text = focusEntryInput.value.trim();
+      if (!text) return;
+      await addFocusEntry(text);
+      if (focusEntryInput) {
+        focusEntryInput.value = '';
+        focusEntryInput.focus();
+      }
+    });
+  }
+  if (deleteCaseBtn) {
+    deleteCaseBtn.addEventListener('click', deleteActiveCase);
+  }
+}
 
 attentionButtons.forEach((btn) => {
   btn.addEventListener('click', () => setAttention(btn.dataset.state));
@@ -530,7 +573,7 @@ if (importBtn && importInput) {
   });
 }
 
-setFormEnabled(false);
+setDetailsEnabled(false);
 attachFilterListeners();
-attachFormListeners();
+attachDetailListeners();
 load();
