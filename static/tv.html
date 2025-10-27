@@ -10,15 +10,54 @@
   <link rel="stylesheet" href="/static/brand.css">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="dense">
-  <header class="header">
-    <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px;opacity:.9">
-    <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
-    <div class="live"><span class="dot"></span><span class="small">LIVE</span><span class="small" id="clock"></span></div>
+<body class="page-tv dense">
+  <header class="header header-tv">
+    <div class="header-left">
+      <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" class="header-logo">
+      <div class="brand">McMath Woods • David W. Wells • Caseboard Command Center</div>
+    </div>
+    <div class="header-right">
+      <div class="clock-block">
+        <div class="small">Updated</div>
+        <div class="clock-time" id="clock"></div>
+      </div>
+      <div class="live" aria-live="polite"><span class="dot" aria-hidden="true"></span><span class="small">LIVE</span></div>
+    </div>
   </header>
 
   <main class="wrap">
-    <section class="card" id="board" aria-label="Active Cases">
+    <section class="glance" aria-label="Case status overview">
+      <article class="glance-card overdue">
+        <span class="glance-label">Overdue</span>
+        <span class="glance-value" id="metricOverdue">0</span>
+        <span class="glance-hint">Needs immediate action</span>
+      </article>
+      <article class="glance-card today">
+        <span class="glance-label">Due Today</span>
+        <span class="glance-value" id="metricToday">0</span>
+        <span class="glance-hint">Wrap before close of business</span>
+      </article>
+      <article class="glance-card soon">
+        <span class="glance-label">This Week</span>
+        <span class="glance-value" id="metricWeek">0</span>
+        <span class="glance-hint">Next 7 day deadlines</span>
+      </article>
+      <article class="glance-card total">
+        <span class="glance-label">Active Cases</span>
+        <span class="glance-value" id="metricTotal">0</span>
+        <span class="glance-hint">Tracking on this board</span>
+      </article>
+    </section>
+
+    <section class="priority-panel" aria-label="Urgent focus">
+      <div class="priority-header">
+        <h2 class="priority-title">Urgent Focus</h2>
+        <span class="priority-subtitle">Top approaching deadlines</span>
+      </div>
+      <div class="priority-list" id="priorityList" role="list"></div>
+    </section>
+
+    <section class="card board-card" id="board" aria-label="Active Cases">
       <div class="table" id="casesTable">
         <div class="thead">
           <div class="cell col-case">CASE #</div>
