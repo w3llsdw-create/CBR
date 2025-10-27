@@ -17,6 +17,25 @@ const attentionButtons = $$('.attention-group .chip');
 const importBtn = $('#import_cases');
 const importInput = $('#import_file');
 const importFeedback = $('#import_feedback');
+const paralegalFilter = $('#filter_paralegal');
+const searchInput = $('#search');
+const stageFilter = $('#filter_stage');
+const statusFilter = $('#filter_status');
+const attentionFilter = $('#filter_attention');
+const clearFiltersBtn = $('#clear_filters');
+const metrics = {
+  total: $('#metric_total'),
+  attention: $('#metric_attention'),
+  dueSoon: $('#metric_due_soon'),
+  staleFocus: $('#metric_stale_focus'),
+};
+const metricHints = {
+  total: $('#metric_total_hint'),
+  attention: $('#metric_attention_hint'),
+  dueSoon: $('#hint_due_soon'),
+  stale: $('#hint_stale_focus'),
+};
+const quickFilterButtons = $$('.insight-card.actionable');
 const detailFields = {
   client_name: $('#detail_client_name'),
   case_name: $('#detail_case_name'),
@@ -38,6 +57,9 @@ let filters = {
   stage: 'all',
   status: 'all',
   attention: 'all',
+  paralegal: 'all',
+  due: 'all',
+  staleFocus: false,
 };
 let activeId = null;
 let activeCase = null;
@@ -72,6 +94,39 @@ function relativeDue(dateValue) {
   if (diff === 1) return 'Due tomorrow';
   if (diff < 7) return `Due in ${diff} days`;
   return due.toLocaleDateString();
+}
+
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+function daysUntilDue(caseData) {
+  if (!caseData || !caseData.next_due) return null;
+  const due = new Date(caseData.next_due + 'T00:00:00');
+  const today = new Date();
+  return Math.floor((due - today) / MS_PER_DAY);
+}
+
+function isDueSoon(caseData) {
+  const days = daysUntilDue(caseData);
+  if (days === null) return false;
+  return days <= 7;
+}
+
+function isOverdue(caseData) {
+  const days = daysUntilDue(caseData);
+  if (days === null) return false;
+  return days < 0;
+}
+
+function hasStaleFocus(caseData, thresholdDays = 14) {
+  if (!caseData) return false;
+  if (!Array.isArray(caseData.focus_log) || !caseData.focus_log.length) return true;
+  const lastEntry = caseData.focus_log[caseData.focus_log.length - 1];
+  if (!lastEntry || !lastEntry.at) return true;
+  const last = new Date(lastEntry.at);
+  if (Number.isNaN(last.getTime())) return true;
+  const now = new Date();
+  const diffDays = Math.floor((now - last) / MS_PER_DAY);
+  return diffDays >= thresholdDays;
 }
 
 function dueClass(caseData) {
@@ -137,6 +192,13 @@ function filtersMatch(caseData) {
   if (filters.stage !== 'all' && caseData.stage !== filters.stage) return false;
   if (filters.status !== 'all' && normalizeStatus(caseData.status) !== filters.status) return false;
   if (filters.attention !== 'all' && caseData.attention !== filters.attention) return false;
+  if (filters.paralegal && filters.paralegal !== 'all') {
+    const para = (caseData.paralegal || '').trim().toLowerCase();
+    if (para !== filters.paralegal.toLowerCase()) return false;
+  }
+  if (filters.due === 'soon' && !isDueSoon(caseData)) return false;
+  if (filters.due === 'overdue' && !isOverdue(caseData)) return false;
+  if (filters.staleFocus && !hasStaleFocus(caseData)) return false;
   if (!filters.search) return true;
   const haystack = [
     caseData.client_name,
@@ -178,6 +240,75 @@ function updateResultCount(count) {
   resultCountEl.textContent = `${count} case${count === 1 ? '' : 's'}`;
 }
 
+function updateInsights(visibleCount) {
+  if (!metrics.total) return;
+  const total = CASES.length;
+  metrics.total.textContent = total;
+  if (metricHints.total) {
+    if (visibleCount === total) {
+      metricHints.total.textContent = total ? 'Showing all cases' : 'No cases yet';
+    } else {
+      metricHints.total.textContent = `Showing ${visibleCount} of ${total}`;
+    }
+  }
+
+  const needsAttention = CASES.filter((c) => c.attention === 'needs_attention').length;
+  const waiting = CASES.filter((c) => c.attention === 'waiting').length;
+  if (metrics.attention) metrics.attention.textContent = needsAttention;
+  if (metricHints.attention) {
+    metricHints.attention.textContent = waiting ? `${waiting} waiting` : 'Tap to show only urgent matters';
+  }
+
+  const dueSoonCount = CASES.filter(isDueSoon).length;
+  const overdueCount = CASES.filter(isOverdue).length;
+  if (metrics.dueSoon) metrics.dueSoon.textContent = dueSoonCount;
+  if (metricHints.dueSoon) {
+    metricHints.dueSoon.textContent = dueSoonCount
+      ? `${overdueCount} overdue, ${Math.max(dueSoonCount - overdueCount, 0)} upcoming`
+      : 'Next 7 days';
+  }
+
+  const staleCount = CASES.filter((c) => hasStaleFocus(c)).length;
+  const neverLogged = CASES.filter((c) => !c.focus_log || !c.focus_log.length).length;
+  if (metrics.staleFocus) metrics.staleFocus.textContent = staleCount;
+  if (metricHints.stale) {
+    if (!staleCount) {
+      metricHints.stale.textContent = 'All cases recently updated';
+    } else if (neverLogged) {
+      metricHints.stale.textContent = `${staleCount} need updates (${neverLogged} with no log)`;
+    } else {
+      metricHints.stale.textContent = `${staleCount} need updates`;
+    }
+  }
+}
+
+function updateQuickFiltersUI() {
+  quickFilterButtons.forEach((btn) => {
+    const type = btn.dataset.filter;
+    const value = btn.dataset.value;
+    let active = false;
+    if (type === 'attention') {
+      active = filters.attention === value;
+    } else if (type === 'due') {
+      active = filters.due === value;
+    } else if (type === 'stale') {
+      active = filters.staleFocus;
+    }
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  if (metricHints.attention && filters.attention === 'needs_attention') {
+    metricHints.attention.textContent = 'Filter applied';
+  }
+  if (metricHints.dueSoon && filters.due !== 'all') {
+    metricHints.dueSoon.textContent = 'Filter applied';
+  }
+  if (metricHints.stale && filters.staleFocus) {
+    metricHints.stale.textContent = 'Filter applied';
+  }
+}
+
 function highlightRow(id) {
   $$('.case-row').forEach((row) => {
     row.classList.toggle('active', row.dataset.id === id);
@@ -191,10 +322,49 @@ function emptyState(message) {
   return wrapper;
 }
 
+function populateParalegalOptions(list) {
+  if (!paralegalFilter) return;
+  const selected = filters.paralegal;
+  const unique = Array.from(
+    new Set(
+      (list || [])
+        .map((c) => (c.paralegal || '').trim())
+        .filter((name) => !!name)
+    )
+  ).sort((a, b) => a.localeCompare(b));
+
+  const frag = document.createDocumentFragment();
+  const defaultOption = document.createElement('option');
+  defaultOption.value = 'all';
+  defaultOption.textContent = 'All paralegals';
+  frag.appendChild(defaultOption);
+  unique.forEach((name) => {
+    const option = document.createElement('option');
+    option.value = name;
+    option.textContent = name;
+    frag.appendChild(option);
+  });
+  paralegalFilter.innerHTML = '';
+  paralegalFilter.appendChild(frag);
+
+  if (selected && selected !== 'all') {
+    const match = unique.find((name) => name.toLowerCase() === selected.toLowerCase());
+    if (match) {
+      paralegalFilter.value = match;
+      filters.paralegal = match;
+      return;
+    }
+  }
+  paralegalFilter.value = 'all';
+  filters.paralegal = 'all';
+}
+
 function renderList() {
   const cases = applyFilters();
   listEl.innerHTML = '';
   updateResultCount(cases.length);
+  updateInsights(cases.length);
+  updateQuickFiltersUI();
   if (!cases.length) {
     listEl.appendChild(emptyState('No cases match your filters.'));
     highlightRow(null);
@@ -338,6 +508,7 @@ function applyCaseUpdate(updatedCase) {
   if (!updatedCase) return;
   const normalized = normalizeCase(updatedCase);
   CASES = CASES.map((c) => (c.id === normalized.id ? normalized : c));
+  populateParalegalOptions(CASES);
   renderList();
   if (activeId === normalized.id) {
     populateDetails(normalized);
@@ -428,6 +599,7 @@ async function load(options = {}) {
     const r = await fetch('/api/cases', { cache: 'no-store' });
     const data = await r.json();
     CASES = (data.cases || []).map(normalizeCase);
+    populateParalegalOptions(CASES);
     renderList();
     if (options.keepSelection && activeId) {
       const exists = CASES.some((c) => c.id === activeId);
@@ -448,32 +620,55 @@ async function load(options = {}) {
 }
 
 function clearFilters() {
-  filters = { search: '', stage: 'all', status: 'all', attention: 'all' };
+  filters = {
+    search: '',
+    stage: 'all',
+    status: 'all',
+    attention: 'all',
+    paralegal: 'all',
+    due: 'all',
+    staleFocus: false,
+  };
   $('#search').value = '';
   $('#filter_stage').value = 'all';
   $('#filter_status').value = 'all';
   $('#filter_attention').value = 'all';
+  if (paralegalFilter) paralegalFilter.value = 'all';
   renderList();
 }
 
 function attachFilterListeners() {
-  $('#search').addEventListener('input', (e) => {
-    filters.search = e.target.value.trim();
-    renderList();
-  });
-  $('#filter_stage').addEventListener('change', (e) => {
-    filters.stage = e.target.value;
-    renderList();
-  });
-  $('#filter_status').addEventListener('change', (e) => {
-    filters.status = e.target.value;
-    renderList();
-  });
-  $('#filter_attention').addEventListener('change', (e) => {
-    filters.attention = e.target.value;
-    renderList();
-  });
-  $('#clear_filters').addEventListener('click', clearFilters);
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      filters.search = e.target.value.trim();
+      renderList();
+    });
+  }
+  if (stageFilter) {
+    stageFilter.addEventListener('change', (e) => {
+      filters.stage = e.target.value;
+      renderList();
+    });
+  }
+  if (statusFilter) {
+    statusFilter.addEventListener('change', (e) => {
+      filters.status = e.target.value;
+      renderList();
+    });
+  }
+  if (attentionFilter) {
+    attentionFilter.addEventListener('change', (e) => {
+      filters.attention = e.target.value;
+      renderList();
+    });
+  }
+  if (paralegalFilter) {
+    paralegalFilter.addEventListener('change', (e) => {
+      filters.paralegal = e.target.value;
+      renderList();
+    });
+  }
+  if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
 }
 
 function attachDetailListeners() {
@@ -513,6 +708,23 @@ function attachDetailListeners() {
     deleteCaseBtn.addEventListener('click', deleteActiveCase);
   }
 }
+
+quickFilterButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.filter;
+    const value = btn.dataset.value;
+    if (type === 'attention') {
+      const next = filters.attention === value ? 'all' : value;
+      filters.attention = next;
+      if (attentionFilter) attentionFilter.value = next;
+    } else if (type === 'due') {
+      filters.due = filters.due === value ? 'all' : value;
+    } else if (type === 'stale') {
+      filters.staleFocus = !filters.staleFocus;
+    }
+    renderList();
+  });
+});
 
 attentionButtons.forEach((btn) => {
   btn.addEventListener('click', () => setAttention(btn.dataset.state));
