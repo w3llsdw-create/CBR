@@ -153,7 +153,8 @@ function attentionLabel(att) {
 
 function normalizeStatus(status) {
   if (!status) return status;
-  return status === 'Pre-Filling' ? 'Pre-filing' : status;
+  if (/^pre[-\s]?fil/i.test(status)) return 'Pre-filing';
+  return status;
 }
 
 function displayStatus(status) {
@@ -382,12 +383,17 @@ function renderList() {
     const caseName = c.case_name && c.case_name.trim() ? c.case_name : '—';
     const statusText = displayStatus(c.status);
     const statusClassName = statusText === '—' ? 'none' : statusClass(statusText);
-      row.innerHTML = `
+    const focusText = (c.current_focus || '').trim();
+    const focusHtml = focusText
+      ? `<span class="focus-text">${esc(focusText)}</span>`
+      : '<span class="muted focus-text">No focus logged</span>';
+    row.innerHTML = `
         <div class="cell col-client">${esc(clientName)}</div>
         <div class="cell col-case-name">${esc(caseName)}</div>
         <div class="cell col-type">${esc(c.case_type || '—')}</div>
         <div class="cell col-stage">${esc(c.stage || '—')}</div>
         <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
+        <div class="cell col-focus">${focusHtml}</div>
         <div class="cell col-para">${esc(paralegalName || '—')}</div>
         <div class="cell col-due">
           <div class="due-inline">

@@ -47,17 +47,10 @@
           <label>Judge<input id="judge"></label>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
+      <div style="display:grid; grid-template-columns:1fr; gap:18px; margin-bottom:18px;">
         <label>Stage<select id="stage">
           <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
           <option>Pretrial</option><option>Trial</option><option>Closed</option>
-        </select></label>
-        <label>Status<select id="status">
-          <option>Pre-Filling</option>
-          <option>Active</option>
-          <option>Settlement</option>
-          <option>Post-Trial</option>
-          <option>Appeal</option>
         </select></label>
       </div>
       <div style="margin-top:18px;display:flex;gap:12px;justify-content:flex-end;">
@@ -79,7 +72,6 @@ document.getElementById('add-form').onsubmit = async function(e) {
     paralegal: document.getElementById('paralegal').value,
     primary_attorney: document.getElementById('primary_attorney').value,
     stage: document.getElementById('stage').value,
-    status: document.getElementById('status').value,
     focus_log: [], deadlines: []
   };
   if (filed === 'Filed') {
