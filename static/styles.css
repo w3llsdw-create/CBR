@@ -186,6 +186,9 @@ input:focus, select:focus, textarea:focus{
 
 .current-focus-text{margin:0; padding:16px 18px; border-radius:12px; background:linear-gradient(135deg, rgba(214,161,115,.16), rgba(214,161,115,.04)); color:#FFEBD6; line-height:1.5;}
 .focus-entry input{width:100%;}
+.focus-entry-controls{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.focus-entry-controls label{margin:0;}
+.focus-entry-controls select{min-width:120px;}
 .focus-entry::after{content:"Press Enter to save"; display:block; font-size:.8rem; color:var(--muted); margin-top:6px;}
 
 .details-section{display:flex; flex-direction:column; gap:12px;}
@@ -222,6 +225,15 @@ input:focus, select:focus, textarea:focus{
 .col-para{ width: clamp(10ch, 12vw, 14ch); }
 .col-focus{ flex: 3 1 0; min-width: 28ch; }
 .col-due{ width: clamp(10ch, 12vw, 14ch); text-align:right; }
+.col-due .due-inline{
+  display:inline-flex;
+  justify-content:flex-end;
+  align-items:baseline;
+  gap:.5rem;
+  width:100%;
+}
+.col-due .due-date{ font-variant-numeric:tabular-nums; }
+.col-due .due-relative{ white-space:nowrap; }
 
 /* Badges */
 .badge{
