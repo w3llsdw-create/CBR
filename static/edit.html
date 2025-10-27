@@ -35,13 +35,6 @@
         <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
         <option>Pretrial</option><option>Trial</option><option>Closed</option>
       </select></label>
-      <label>Status<select id="status">
-        <option>Pre-Filling</option>
-        <option>Active</option>
-        <option>Settlement</option>
-        <option>Post-Trial</option>
-        <option>Appeal</option>
-      </select></label>
       <label>Case #<input id="case_number"></label>
       <label>County<input id="county"></label>
       <label>Division<input id="division"></label>
@@ -70,7 +63,6 @@ async function loadCase() {
   document.getElementById('case_type').value = c.case_type;
   document.getElementById('paralegal').value = c.paralegal;
   document.getElementById('stage').value = c.stage;
-  document.getElementById('status').value = c.status;
   document.getElementById('case_number').value = c.case_number || '';
   document.getElementById('county').value = c.county || '';
   document.getElementById('division').value = c.division || '';
@@ -88,7 +80,6 @@ document.getElementById('edit-form').onsubmit = async function(e) {
     case_type: document.getElementById('case_type').value,
     paralegal: document.getElementById('paralegal').value,
     stage: document.getElementById('stage').value,
-    status: document.getElementById('status').value,
     case_number: document.getElementById('case_number').value,
     county: document.getElementById('county').value,
     division: document.getElementById('division').value,

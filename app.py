@@ -24,7 +24,7 @@ class Deadline(BaseModel):
     resolved: bool = False
 
 Stage = Literal["Pre-filing","Filed","Discovery","Pretrial","Trial","Closed"]
-Status = Literal["Pre-Filling","Active","Settlement","Post-Trial","Appeal"]
+Status = Literal["Pre-Filing","Pre-Filling","Active","Settlement","Post-Trial","Appeal"]
 
 class ExternalRef(BaseModel):
     # reserved for Filevine; not used yet
@@ -32,13 +32,16 @@ class ExternalRef(BaseModel):
     filevine_number: Optional[str] = None
     linked_at: Optional[datetime] = None
 
+SPECIAL_STATUSES: set[str] = {"Settlement", "Post-Trial", "Appeal"}
+
+
 class Case(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))  # primary key
     client_name: str
     case_name: str                                   # e.g., "Smith v. Jones"
     case_type: str                                   # free text
     stage: Stage = "Pre-filing"
-    status: Status = "Pre-Filling"
+    status: Status = "Pre-Filing"
     attention: Literal["needs_attention","waiting",""] = ""
     paralegal: str = ""
     current_focus: str = ""                          # one-liner, last focus
@@ -92,6 +95,9 @@ def recompute(case: Case) -> Case:
     # current_focus from latest focus entry
     if case.focus_log:
         case.current_focus = case.focus_log[-1].text
+    has_case_number = bool((case.case_number or "").strip())
+    if case.status not in SPECIAL_STATUSES:
+        case.status = "Active" if has_case_number else "Pre-Filing"
     return case
 
 # ---------- App ----------
@@ -192,7 +198,7 @@ def import_cases_from_csv(content: str) -> dict:
             }
             if stage_value:
                 updates["stage"] = stage_value
-            if status_value:
+            if status_value and status_value in SPECIAL_STATUSES:
                 updates["status"] = status_value
             updated_case = apply_case_updates(existing, updates)
             model.cases[existing_index] = recompute(updated_case)
@@ -200,17 +206,19 @@ def import_cases_from_csv(content: str) -> dict:
             continue
 
         stage_final = stage_value or "Pre-filing"
-        status_final = status_value or "Pre-Filling"
-        new_case = Case(
+        status_final = status_value if status_value in SPECIAL_STATUSES else None
+        new_case_kwargs = dict(
             client_name=client_name,
             case_name=case_name,
             case_type=case_type,
             stage=stage_final,
-            status=status_final,
             paralegal=paralegal,
             current_focus=current_focus,
             case_number=case_number,
         )
+        if status_final:
+            new_case_kwargs["status"] = status_final
+        new_case = Case(**new_case_kwargs)
         model.cases.append(recompute(new_case))
         added += 1
 
