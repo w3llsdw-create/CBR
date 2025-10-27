@@ -1,7 +1,28 @@
 from __future__ import annotations
-from dotenv import load_dotenv
 
-load_dotenv()
+import importlib
+import importlib.util
+
+
+def _load_env_from_dotenv() -> None:
+    """Load variables from a `.env` file when python-dotenv is available.
+
+    The production environment already installs python-dotenv via
+    `requirements.txt`, but local setups may occasionally miss it. Rather than
+    crashing the whole application with a ModuleNotFoundError, we opportunistically
+    load the helper if it can be imported.
+    """
+
+    if importlib.util.find_spec("dotenv") is None:
+        return
+
+    module = importlib.import_module("dotenv")
+    load = getattr(module, "load_dotenv", None)
+    if callable(load):
+        load()
+
+
+_load_env_from_dotenv()
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, HTTPException, Response

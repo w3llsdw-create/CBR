@@ -168,10 +168,14 @@ function clearDetails() {
     if (el) el.textContent = '—';
   });
   if (currentFocusEl) currentFocusEl.textContent = 'Select a case to see the latest focus.';
-  focusListEl.innerHTML = '';
-  deadlinesEl.innerHTML = '';
-  focusListEl.appendChild(emptyState('Select a case to view the focus log.'));
-  deadlinesEl.appendChild(emptyState('Select a case to manage deadlines.'));
+  if (focusListEl) {
+    focusListEl.innerHTML = '';
+    focusListEl.appendChild(emptyState('Select a case to view the focus log.'));
+  }
+  if (deadlinesEl) {
+    deadlinesEl.innerHTML = '';
+    deadlinesEl.appendChild(emptyState('Select a case to manage deadlines.'));
+  }
 }
 
 function setDetailsEnabled(enabled) {
@@ -420,6 +424,7 @@ function setImportFeedback(message, tone = 'info') {
 }
 
 function renderFocusLog(entries) {
+  if (!focusListEl) return;
   focusListEl.innerHTML = '';
   if (!entries || !entries.length) {
     focusListEl.appendChild(emptyState('No focus entries yet.'));
@@ -439,6 +444,7 @@ function renderFocusLog(entries) {
 }
 
 function renderDeadlines(dls) {
+  if (!deadlinesEl) return;
   deadlinesEl.innerHTML = '';
   const list = Array.isArray(dls) ? dls : [];
   if (!list.length) {
