@@ -23,6 +23,15 @@ const TEXT_FIXES = [
 ];
 const HTML_ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" };
 
+// === CFB ticker config ===
+const CFB_API = '/tv/cfb';
+const CFB_CYCLE_MS = 20_000;
+const CFB_POLL_MS = 60_000;
+let cfbData = null;
+let cfbMode = 'prev';
+let cfbCycleTimer = null;
+let cfbPollTimer = null;
+
 const GROUPS = [
   { key: 'overdue', label: 'Overdue', order: 0 },
   { key: 'today',   label: 'Due Today', order: 1 },
@@ -39,6 +48,132 @@ function display(v,f='—'){ const s=normalizeText(v); return s? s : f; }
 function escapeHtml(v){ return display(v,'').replace(/[&<>'"]/g,ch=>HTML_ESC[ch]); }
 function escapeAttr(v){ return escapeHtml(v).replace(/`/g,'&#96;'); }
 function fmtDate(dt){ if(!dt) return '—'; const d=new Date(dt); if(Number.isNaN(d)) return '—'; return d.toLocaleDateString(undefined,{month:'short',day:'2-digit',year:'numeric'}); }
+
+async function loadCFB(){
+  const wrap = document.getElementById('cfbTicker');
+  try{
+    const res = await fetch(CFB_API, { cache: 'no-store' });
+    if(!res.ok) throw new Error(`cfb ${res.status}`);
+    const payload = await res.json();
+    if(payload){
+      cfbData = payload;
+      cfbMode = 'prev';
+      renderCFBTicker(true);
+    }
+  }catch(err){
+    if(!cfbData && wrap){
+      wrap.setAttribute('hidden','');
+      const track = document.getElementById('cfbTrack');
+      if(track) track.textContent = '';
+    }
+  }
+}
+
+function ensureCFBTimers(){
+  if(!cfbCycleTimer){
+    cfbCycleTimer = setInterval(()=>{
+      cfbMode = cfbMode === 'prev' ? 'next' : 'prev';
+      renderCFBTicker(true);
+    }, CFB_CYCLE_MS);
+  }
+  if(!cfbPollTimer){
+    cfbPollTimer = setInterval(loadCFB, CFB_POLL_MS);
+  }
+}
+
+function renderCFBTicker(resetAnim=false){
+  const wrap = document.getElementById('cfbTicker');
+  const track = document.getElementById('cfbTrack');
+  if(!wrap || !track || !cfbData) return;
+
+  const prevLane = Array.isArray(cfbData.prev) ? cfbData.prev : [];
+  const nextLane = Array.isArray(cfbData.next) ? cfbData.next : [];
+  let lane = cfbMode === 'next' ? nextLane : prevLane;
+
+  if(!lane.length){
+    if(cfbMode === 'prev' && nextLane.length){
+      cfbMode = 'next';
+      lane = nextLane;
+    }else if(cfbMode === 'next' && prevLane.length){
+      cfbMode = 'prev';
+      lane = prevLane;
+    }else{
+      wrap.setAttribute('hidden','');
+      track.textContent = '';
+      return;
+    }
+  }
+
+  wrap.removeAttribute('hidden');
+  const labels = cfbData.labels || {};
+  const labelText = cfbMode === 'next' ? (labels.next || 'Kickoffs') : (labels.prev || 'Finals');
+  const labelSafe = escapeHtml(labelText);
+  const tagClass = cfbMode === 'next' ? 'kick' : 'final';
+
+  const chips = lane.map(game=>{
+    if(cfbMode === 'prev'){
+      const awayScore = game.away_score ?? '—';
+      const homeScore = game.home_score ?? '—';
+      return `<span class="cfb-chip">
+        <span class="tag ${tagClass}">${labelSafe}</span>
+        <span>${escapeHtml(game.away)} ${escapeHtml(String(awayScore))} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)} ${escapeHtml(String(homeScore))}</span>
+      </span>`;
+    }
+
+    let kickoff = 'TBD';
+    if(game.start){
+      const dt = new Date(game.start);
+      if(!Number.isNaN(dt)){
+        kickoff = dt.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+      }
+    }
+    const infoParts = [kickoff];
+    if(game.network){ infoParts.push(game.network); }
+    if(game.odds){
+      const odds = game.odds;
+      if(odds.fav){
+        let favText = odds.fav;
+        if(odds.spread !== null && odds.spread !== undefined){
+          const spreadVal = Number(odds.spread);
+          if(Number.isFinite(spreadVal)){
+            const sign = spreadVal > 0 ? '+' : '';
+            favText = `${favText} ${sign}${spreadVal}`;
+          }else{
+            favText = `${favText} ${odds.spread}`;
+          }
+        }
+        infoParts.push(favText.trim());
+      }
+      if(odds.ml !== null && odds.ml !== undefined){
+        const mlVal = Number(odds.ml);
+        if(Number.isFinite(mlVal)){
+          const sign = mlVal > 0 ? '+' : '';
+          infoParts.push(`ML ${sign}${mlVal}`);
+        }else{
+          infoParts.push(`ML ${odds.ml}`);
+        }
+      }
+      if(odds.ou !== null && odds.ou !== undefined){
+        const ouVal = Number(odds.ou);
+        infoParts.push(Number.isFinite(ouVal) ? `O/U ${ouVal}` : `O/U ${odds.ou}`);
+      }
+    }
+    const meta = infoParts.length ? `<span class="meta">• ${infoParts.map(part=>escapeHtml(part)).join(' • ')}</span>` : '';
+    return `<span class="cfb-chip">
+      <span class="tag ${tagClass}">${labelSafe}</span>
+      <span>${escapeHtml(game.away)} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)}</span>
+      ${meta}
+    </span>`;
+  }).join('');
+
+  track.innerHTML = chips + chips;
+
+  if(resetAnim){
+    track.style.animation = 'none';
+    void track.offsetHeight;
+    track.style.animation = '';
+  }
+}
 
 function badge(status){
   const normalized = normalizeText(status);
@@ -231,6 +366,8 @@ function onResize(){ sizeBoard(); }
 function init(){
   tickClock(); setInterval(tickClock,1000);
   load(); setInterval(load, POLL_MS);
+  ensureCFBTimers();
+  loadCFB();
   window.addEventListener('resize', onResize);
   rafId = requestAnimationFrame(autoScroll);
 }

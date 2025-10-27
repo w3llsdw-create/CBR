@@ -1,0 +1,16 @@
+{
+  "generated_at": "2025-10-27T22:10:00Z",
+  "labels": { "prev": "Week 8 Finals", "next": "Week 9 Kickoffs" },
+  "prev": [
+    { "away": "#12 LSU", "home": "#3 Alabama", "away_score": 24, "home_score": 31, "status": "FINAL" }
+  ],
+  "next": [
+    {
+      "away": "Michigan",
+      "home": "Ohio State",
+      "start": "2025-11-02T17:00:00Z",
+      "network": "FOX",
+      "odds": { "fav": "Ohio State", "spread": -3.5, "ml": -165, "ou": 48.5 }
+    }
+  ]
+}
