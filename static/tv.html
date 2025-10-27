@@ -1,16 +1,15 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="Cache-Control" content="no-store" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Caseboard • TV</title>
-
-  <!-- Brand layer, then app styles -->
+  <link rel="icon" href="/static/favicon.ico">
   <link rel="stylesheet" href="/static/brand.css">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="page-tv">
+<body class="page-tv dense">
   <header class="header header-tv">
     <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" class="header-logo">
     <div class="brand-block">
@@ -26,6 +25,7 @@
   </header>
 
   <main class="wrap manage-layout tv-layout">
+    <!-- metrics row, read-only -->
     <section class="insights-grid tv-insights" aria-label="Case highlights">
       <article class="insight-card accent-overdue">
         <span class="metric-label">Overdue</span>
@@ -50,6 +50,7 @@
     </section>
 
     <div class="board-grid tv-board-grid">
+      <!-- list panel -->
       <section class="card list-card board-card tv-list" aria-label="Active cases">
         <header class="card-header">
           <div>
@@ -58,6 +59,7 @@
           </div>
           <div class="count" id="metricTotalLabel">0 cases</div>
         </header>
+
         <div class="table">
           <div class="thead">
             <div class="cell col-client">Client</div>
@@ -73,10 +75,12 @@
             <div id="rows"></div>
           </div>
         </div>
+
         <div class="scroll-veil top"></div>
         <div class="scroll-veil bottom"></div>
       </section>
 
+      <!-- priority panel -->
       <section class="card priority-card" aria-label="Urgent focus">
         <header class="card-header">
           <div>
@@ -92,4 +96,3 @@
   <script src="/static/tv.js" defer></script>
 </body>
 </html>
-

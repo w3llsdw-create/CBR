@@ -5,12 +5,42 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from datetime import datetime, date
-import json, uuid, os, shutil, csv, io
+import json, uuid, os, shutil, csv, io, base64
 
 DATA_DIR = "data"
 CASES_PATH = os.path.join(DATA_DIR, "cases.json")
 BACKUP_DIR = os.path.join(DATA_DIR, "backups")
 os.makedirs(DATA_DIR, exist_ok=True); os.makedirs(BACKUP_DIR, exist_ok=True)
+
+FAVICON_PATH = os.path.join("static", "favicon.ico")
+FAVICON_BASE64 = (
+    "AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAC0eCb/sHwo/6yAKv+ohCz/pIgu/6CMM"
+    "P+ckDL/mJQ0/5SYNv+QnDj/jKA6/4ikPP+EqD7/gKxA/3ywQv94tET/uHQk/7R4Jv+wfCj/rIAq/6iELP+kiC7/oIww/5yQMv+YlDT/lJg2/5CcOP"
+    "+MoDr/4ikPP+EqD7/gKxA/3ywQv+8cCL/uHQk/7R4Jv+wfCj/rIAq/6iELP+kiC7/oIww/5yQMv+YlDT/lJg2/5CcOP+MoDr/iKQ8/8hkHP/EaB7/wG"
+    "wg/7xwIv+4dCT/tHgm/7B8KP+sgCr/qIQs/6SILv+gjDD/nJAy/5iUNP+UmDb/kJw4/4ygOv+IpDz/hKg+/4CsQP/AbCD/vHAi/7h0JP+0eCb/sHwo"
+    "/6yAKv+ohCz/pIgu/6CMM/+ckDL/mJQ0/5SYNv+QnDj/jKA6/4ikPP+EqD7/xGge/8BsIP+8cCL/uHQk/7R4Jv+wfCj/rIAq/6iELP+kiC7/oIww/5y"
+    "QMv+YlDT/lJg2/5CcOP+MoDr/iKQ8/8hkHP/EaB7/wGwg/7xwIv+4dCT/tHgm/7B8KP+sgCr/qIQs/6SILv+gjDD/nJAy/5iUNP+UmDb/kJw4/4ygOv"
+    "/MYBr/yGQc/8RoHv/AbCD/vHAi/7h0JP+0eCb/sHwo/6yAKv+ohCz/pIgu/6CMM/+ckDL/mJQ0/5SYNv+QnDj/0FwY/8xgGv/IZBz/xGge/8BsIP+8c"
+    "CL/uHQk/7R4Jv+wfCj/rIAq/6iELP+kiC7/oIww/5yQMv+YlDT/lJg2/9RYFv/QXBj/zGAa/8hkHP/EaB7/wGwg/7xwIv+4dCT/tHgm/7B8KP+sgCr/"
+    "qIQs/6SILv+gjDD/nJAy/5iUNP/YVBT/1FgW/9BcGP/MYBr/yGQc/8RoHv/AbCD/vHAi/7h0JP+0eCb/sHwo/6yAKv+ohCz/pIgu/6CMM/+ckDL/3FA"
+    "S/9hUFP/UWBb/0FwY/8xgGv/IZBz/xGge/8BsIP+8cCL/uHQk/7R4Jv+wfCj/rIAq/6iELP+kiC7/oIww/+BMEP/cUBL/2FQU/9RYFv/QXBj/zGAa/8"
+    "hkHP/EaB7/wGwg/7xwIv+4dCT/tHgm/7B8KP+sgCr/qIQs/6SILv/kSA7/4EwQ/9xQEv/YVBT/1FgW/9BcGP/MYBr/yGQc/8RoHv/AbCD/vHAi/7h0J"
+    "P+0eCb/sHwo/6yAKv+ohCz/6EQM/+RIDv/gTBD/3FAS/9hUFP/UWBb/0FwY/8xgGv/IZBz/xGge/8BsIP+8cCL/uHQk/7R4Jv+wfCj/rIAq/+xACv/o"
+    "RAz/5EgO/+BMEP/cUBL/2FQU/9RYFv/QXBj/zGAa/8hkHP/EaB7/wGwg/7xwIv+4dCT/tHgm/7B8KP/wPAj/7EAK/+hEDP/kSA7/4EwQ/9xQEv/YVBT/"
+    "1FgW/9BcGP/MYBr/yGQc/8RoHv/AbCD/vHAi/7h0JP+0eCb/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    "AAAAAAAAAAAAAAAAAA=="
+)
+
+
+def ensure_favicon():
+    if os.path.exists(FAVICON_PATH):
+        return
+    data = base64.b64decode(FAVICON_BASE64)
+    with open(FAVICON_PATH, "wb") as icon:
+        icon.write(data)
+
+
+ensure_favicon()
 
 # ---------- Models ----------
 class FocusEntry(BaseModel):
