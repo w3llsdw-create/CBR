@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/static/brand.css">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
+<body class="page-manage">
 <header class="header">
   <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
   <div class="brand">McMath Woods • David W. Wells</div>
@@ -51,6 +51,12 @@
           <option value="">None</option>
         </select>
       </div>
+      <div>
+        <div class="small">Paralegal</div>
+        <select id="filter_paralegal">
+          <option value="all">All paralegals</option>
+        </select>
+      </div>
     </div>
     <div class="toolbar-right">
       <div class="small" id="result_count">0 cases</div>
@@ -59,11 +65,34 @@
         <button id="import_cases" type="button">Import CSV</button>
         <a class="button" href="/add">+ New Case/Client</a>
       </div>
+      <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
     </div>
   </section>
 
   <input id="import_file" type="file" accept=".csv,text/csv" hidden>
-  <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
+
+  <section class="insights-grid" aria-label="Case insights">
+    <article class="insight-card" aria-live="polite">
+      <div class="metric-label">Active cases</div>
+      <div class="metric-value" id="metric_total">0</div>
+      <div class="metric-hint" id="metric_total_hint">Showing all cases</div>
+    </article>
+    <button type="button" class="insight-card actionable" data-filter="attention" data-value="needs_attention">
+      <div class="metric-label">Needs attention</div>
+      <div class="metric-value" id="metric_attention">0</div>
+      <div class="metric-hint" id="metric_attention_hint">Tap to show only urgent matters</div>
+    </button>
+    <button type="button" class="insight-card actionable" data-filter="due" data-value="soon">
+      <div class="metric-label">Due soon</div>
+      <div class="metric-value" id="metric_due_soon">0</div>
+      <div class="metric-hint" id="hint_due_soon">Next 7 days</div>
+    </button>
+    <button type="button" class="insight-card actionable" data-filter="stale" data-value="14">
+      <div class="metric-label">Stale focus</div>
+      <div class="metric-value" id="metric_stale_focus">0</div>
+      <div class="metric-hint" id="hint_stale_focus">No update in 14+ days</div>
+    </button>
+  </section>
 
   <div class="board-grid">
     <!-- Cases table -->
