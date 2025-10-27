@@ -4,7 +4,12 @@ import time
 import datetime as dt
 from typing import Any, Dict, List, Optional
 
-import httpx
+# httpx is optional; if missing, we fall back to static payloads and skip live fetches
+try:  # pragma: no cover - optional dependency
+    import httpx  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    httpx = None  # type: ignore
+
 
 CFBD_KEY = os.getenv("CFBD_API_KEY", "")
 ODDS_KEY = os.getenv("ODDS_API_KEY", "")
@@ -37,7 +42,7 @@ def cfb_week(today: Optional[dt.date] = None) -> int:
 
 
 def cfbd_games(year: int, week: int) -> List[Dict[str, Any]]:
-    if not CFBD_KEY:
+    if not CFBD_KEY or httpx is None:
         return []
     url = "https://api.collegefootballdata.com/games"
     params = {"year": year, "seasonType": "regular", "week": week}
@@ -48,7 +53,10 @@ def cfbd_games(year: int, week: int) -> List[Dict[str, Any]]:
         return r.json()
 
 
+
 def espn_day_scores(date_yyyymmdd: str) -> Dict[str, Any]:
+    if httpx is None:
+        return {}
     url = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard"
     params = {"dates": date_yyyymmdd, "groups": "80"}
     with httpx.Client(timeout=20) as client:
@@ -57,8 +65,9 @@ def espn_day_scores(date_yyyymmdd: str) -> Dict[str, Any]:
         return r.json()
 
 
+
 def odds_next_week() -> Dict[str, Any]:
-    if not ODDS_KEY:
+    if not ODDS_KEY or httpx is None:
         return {}
     url = "https://api.the-odds-api.com/v4/sports/americanfootball_ncaaf/odds"
     params = {
@@ -72,6 +81,7 @@ def odds_next_week() -> Dict[str, Any]:
         r = client.get(url, params=params)
         r.raise_for_status()
         return {"games": r.json(), "remaining": r.headers.get("x-requests-remaining")}
+
 
 
 def _team_label(team: str, rank: Optional[int]) -> str:
