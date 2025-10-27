@@ -9,6 +9,7 @@ const openEditBtn = $('#open_edit');
 const deleteCaseBtn = $('#delete_case');
 const focusListEl = $('#focus_list');
 const focusEntryInput = $('#focus_entry');
+const focusAuthorSelect = $('#focus_author');
 const currentFocusEl = $('#current_focus_text');
 const deadlinesEl = $('#deadlines');
 const addDeadlineBtn = $('#add_deadline');
@@ -173,7 +174,7 @@ function clearDetails() {
 }
 
 function setDetailsEnabled(enabled) {
-  [focusEntryInput, addDeadlineBtn, openEditBtn, deleteCaseBtn].forEach((el) => {
+  [focusEntryInput, focusAuthorSelect, addDeadlineBtn, openEditBtn, deleteCaseBtn].forEach((el) => {
     if (el) el.disabled = !enabled;
   });
   attentionButtons.forEach((btn) => {
@@ -185,6 +186,7 @@ function setDetailsEnabled(enabled) {
     detailSubtitleEl.textContent = '';
     clearDetails();
     activeCase = null;
+    if (focusAuthorSelect) focusAuthorSelect.value = 'DW';
   }
 }
 
@@ -380,17 +382,19 @@ function renderList() {
     const caseName = c.case_name && c.case_name.trim() ? c.case_name : '—';
     const statusText = displayStatus(c.status);
     const statusClassName = statusText === '—' ? 'none' : statusClass(statusText);
-    row.innerHTML = `
-      <div class="cell col-client">${esc(clientName)}</div>
-      <div class="cell col-case-name">${esc(caseName)}</div>
-      <div class="cell col-type">${esc(c.case_type || '—')}</div>
-      <div class="cell col-stage">${esc(c.stage || '—')}</div>
-      <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
-      <div class="cell col-para">${esc(paralegalName || '—')}</div>
-      <div class="cell col-due">
-        <div>${fmtDate(c.next_due)}</div>
-        <div class="micro muted">${relativeDue(c.next_due)}</div>
-      </div>`;
+      row.innerHTML = `
+        <div class="cell col-client">${esc(clientName)}</div>
+        <div class="cell col-case-name">${esc(caseName)}</div>
+        <div class="cell col-type">${esc(c.case_type || '—')}</div>
+        <div class="cell col-stage">${esc(c.stage || '—')}</div>
+        <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
+        <div class="cell col-para">${esc(paralegalName || '—')}</div>
+        <div class="cell col-due">
+          <div class="due-inline">
+            <span class="due-date">${fmtDate(c.next_due)}</span>
+            <span class="micro muted due-relative">${relativeDue(c.next_due)}</span>
+          </div>
+        </div>`;
     row.addEventListener('click', () => edit(c.id));
     row.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -539,7 +543,7 @@ async function addFocusEntry(text) {
     alert('Select a case first.');
     return;
   }
-  const author = activeCase.paralegal && activeCase.paralegal.trim() ? activeCase.paralegal : 'DW';
+  const author = focusAuthorSelect && focusAuthorSelect.value ? focusAuthorSelect.value : 'DW';
   try {
     const r = await fetch(`/api/cases/${activeCase.id}/focus`, {
       method: 'POST',
