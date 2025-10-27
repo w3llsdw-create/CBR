@@ -1,11 +1,18 @@
 from __future__ import annotations
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, HTTPException, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from datetime import datetime, date
 import json, uuid, os, shutil, csv, io, base64
+
+from backend.cfb import get_cached_payload, refresh_cache
 
 DATA_DIR = "data"
 CASES_PATH = os.path.join(DATA_DIR, "cases.json")
@@ -133,6 +140,34 @@ def recompute(case: Case) -> Case:
 # ---------- App ----------
 app = FastAPI(title="Caseboard")
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+
+@app.on_event("startup")
+def _startup():
+    try:
+        refresh_cache()
+    except Exception:
+        pass
+    if getattr(app.state, "scheduler", None):
+        return
+    scheduler = BackgroundScheduler(timezone="UTC")
+    scheduler.add_job(
+        refresh_cache,
+        "interval",
+        seconds=90,
+        id="cfb-refresh",
+        max_instances=1,
+        coalesce=True,
+    )
+    scheduler.start()
+    app.state.scheduler = scheduler
+
+
+@app.on_event("shutdown")
+def _shutdown():
+    scheduler = getattr(app.state, "scheduler", None)
+    if scheduler:
+        scheduler.shutdown(wait=False)
+
 
 VALID_STAGES = {stage.lower(): stage for stage in Stage.__args__}
 VALID_STATUSES = {status.lower(): status for status in Status.__args__}
@@ -376,6 +411,20 @@ def tv_cases():
         "generated_at": datetime.utcnow().isoformat(),
         "cases": [json.loads(c.model_dump_json()) for c in cases]
     }
+
+
+@app.get("/tv/cfb")
+def tv_cfb():
+    return JSONResponse(get_cached_payload())
+
+
+# Optional static fallback route for diagnostics
+@app.get("/static/data/cfb.json")
+def cfb_static():
+    path = os.path.join("static", "data", "cfb.json")
+    if not os.path.exists(path):
+        raise HTTPException(404, "Fallback not configured")
+    return FileResponse(path, media_type="application/json")
 
 # ----- Pages -----
 @app.get("/manage")

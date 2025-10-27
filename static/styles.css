@@ -349,3 +349,31 @@ body.dense .tv-row{ height: calc(var(--row-h) - 4px); }
 /* Width enforcement */
 .table, .thead, .trow { width:100% }
 .thead .cell, .trow .cell { flex:0 0 auto }
+
+/* ===== College Football Ticker ===== */
+.cfb-ticker{
+  position:fixed; left:0; right:0; bottom:0; height:52px; z-index:60;
+  background:linear-gradient(180deg, rgba(18,24,36,.78), rgba(10,14,22,.90));
+  border-top:1px solid rgba(255,255,255,.10); backdrop-filter:blur(6px);
+  box-shadow:0 -8px 26px rgba(0,0,0,.35); overflow:hidden;
+}
+.cfb-track{
+  display:flex; gap:18px; align-items:center; height:100%;
+  padding:0 24px; white-space:nowrap;
+  animation:cfb-marquee 42s linear infinite;
+}
+@keyframes cfb-marquee{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+.cfb-chip{
+  display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10);
+  font-variant-numeric:tabular-nums;
+}
+.cfb-chip .tag{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; opacity:.9 }
+.cfb-chip .meta{ opacity:.9 }
+.tag.final{ color:#FFD6AE } .tag.kick{ color:#BBD3FF }
+.cfb-sep{ opacity:.45; padding:0 6px }
+
+@media (prefers-reduced-motion: reduce){
+  .cfb-track{ animation-duration: 60s; }
+}
