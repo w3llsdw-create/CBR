@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "saved_at": "2025-10-24T19:40:43.832498",
+  "cases": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "client_name": "Willis",
+      "case_name": "Willis v. Doe",
+      "case_type": "Other",
+      "stage": "Discovery",
+      "status": "filed",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Waiting on Judge to Sign Order",
+      "focus_log": [
+        {
+          "at": "2025-10-24T18:14:44.009668",
+          "author": "DW",
+          "text": "Initial intake"
+        },
+        {
+          "at": "2025-10-24T19:40:43.834000Z",
+          "author": "DW",
+          "text": "Waiting on Judge to Sign Order"
+        }
+      ],
+      "deadlines": [],
+      "case_number": "60CV-25-12762",
+      "county": "Pulaski",
+      "division": "12th",
+      "judge": "Connors",
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    }
+  ]
+}

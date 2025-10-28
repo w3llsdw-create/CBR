@@ -1,0 +1,3073 @@
+{
+  "labels": {
+    "prev": "Live/Finals",
+    "next": "Week 10 Kickoffs"
+  },
+  "prev": [
+    {
+      "label": "UTEP @ KENN",
+      "home": "Kennesaw State",
+      "away": "UTEP",
+      "home_score": 0,
+      "away_score": 0,
+      "status": "10/28 - 8:00 PM EDT",
+      "kickoff": "2025-10-29T00:00Z",
+      "id": "401757289",
+      "src": "espn"
+    },
+    {
+      "label": "JMU @ TXST",
+      "home": "Texas State",
+      "away": "James Madison",
+      "home_score": 0,
+      "away_score": 0,
+      "status": "10/28 - 8:00 PM EDT",
+      "kickoff": "2025-10-29T00:00Z",
+      "id": "401761639",
+      "src": "espn"
+    }
+  ],
+  "next": [
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bobcat Stadium (TX)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Fifth Third Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Johnny \"Red\" Floyd Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Plaster Sports Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lincoln Financial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alamodome",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Brooks Stadium (SC)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Franklin Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Rice Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "JMA Wireless Dome",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Joe Aillet Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Walkup Skydome",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "McLane Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Chryst Field at Biemesderfer Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ram Stadium (WV)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Wright Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Schmidt Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Brevard Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Panther Stadium (OH)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Cardinal Stadium (DC)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Toppa Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alumni Field (Westfield, MA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Henry G. Steinbrenner '27 Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Charles L. Currier Memorial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dale Lippert Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "TDECU Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "BB&T Field at Griffin Plaza",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Younts Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Falcon Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Andre Reed Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Offutt Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "John A. Farrell Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Multi-Sport Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bishop Schmitt Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sherman Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Farmers Insurance Athletic Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Harms-Eischeid Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bob Boozer Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Pratt & Whitney Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "DKR-Texas Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Doyt L. Perry Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "DATCU Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Memorial Stadium (Champaign, IL)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Goodman Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Yale Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Campus Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Aggie Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "DeGol Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Arute Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Memorial Stadium (Clemson, SC)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Gerald J. Ford Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ohio Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Edwin Fauver Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dr. John W. Winkin Sports Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lions Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hempstead Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Robert T. Shields Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Elliot Field Athletic Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Grappone Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sabine Field at Haynes Family Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hantz Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Steuben Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Charles A. Gaetano Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Fitton Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Schoellkopf Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jayne Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Butler Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alfond Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Shadek Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Westside Athletic Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Butterfield Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Whittier Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Leckonby Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Fred Zollner Athletic Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Kean Alumni Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Knight Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jack Trice Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lloyd L. Thornton Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hardee-McGee Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Adamson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Farley-Lamb Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ellis Oval at Zimman Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Mihalik-Thompson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Holmgren Athletic Complex",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Burke-Tarr Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Langhorst Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Angell Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Turf Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sea Gull Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Leslie C. Quick Jr. Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dickerson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sea Foam Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Albany State University Coliseum",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "TowneBank Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Farris Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Schneider Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Scheels Field at Nemzek Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "B.T. Harvey Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bulldog Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Deeds Field-Piper Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Andy Kerr Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "W.B. Mason Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bailey Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Tucker Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ronald J. Abdow Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jack Miller Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sprankle-Sprandel Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Grand Rapids Christian High School",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Blue Storm Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Mustang Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Selby Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Charles A. Henry Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "John P. Papp Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Little Giant Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hotchkiss Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jessee/Miller Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Pioneer Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Frank Bailey Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Tom Adams Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Top Taggart Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Frost-Kalnow Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bazemore-Hyder Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ron & Carol Cope Stadium at Foster Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "University of Charleston Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "West Family Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Day Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Memorial Field (PA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Luther \"Nick\" Jeralds Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Robert E. Thorn Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jamieson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bison Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Golden Bear Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Patterson Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "McCarthy Stadium (Wilkes Barre)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Blakeslee Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Gibbs Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alumni Field (OH)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dial-Roberson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Sherman Field at McConagha Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Mount Union Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hoernemann Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "John Coughlin Memorial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Macholtz Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "J.W. Babb Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Carl W. Burt Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dwight T. Reed Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "O'Shaughnessy Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Pioneer Field (TN)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Charlie W. Johnson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Earl Kitchings Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Scotty Wood Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Community Stadium at Goerke Park",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Veterans Memorial Stadium (WI)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ralph E. Davis Pioneer Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "David Smith Stadium at Ramer Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Charles D. Lindberg Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Harper Davis Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Laird Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Public Schools Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hollingsworth Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jake Christiansen Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Warrior Field at Raabe Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Taylor Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Tomasini Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Donald J. Schneider Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Harley Knosher Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ingalls Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Farwell Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "England Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Amos Alonzo Stagg Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bulldogs Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Rogers Stadium (VA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alumni Memorial Stadium (NC)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ron and Joyce Schipper Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Chalmers Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Rock Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Wiliams Stadium (OH)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Allgood-Bailey Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Frank M. Lindsay Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Abel Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Gordon Wood Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Cliff Harris Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ben Altamirano Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Francis G. Welch Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lewis Field Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Kirkeby-Over Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bob Young Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "George P. Miller Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Marv Kay Stadium at Campbell Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jerry E. Apple Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "MLC Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Crusader Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Don Shula Stadium at Wasmer Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Blue Jay Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "QU Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "O'Harra Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Houck Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Oliver C. Dawson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "DakotaDome",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Johnson Hagood Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "E. Claiborne Robins Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Nottingham Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Paladin Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lincoln Financial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Koi Ishto Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Paul Laird Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Carnie Smith Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Craig Field at Spratt Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "MDU Resources Community Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Gayle and Tom Benson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Stewart Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lane Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ray Dennison Memorial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Lyle Hare Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Big Cat Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Mountaineer Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "O'Brien Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "BBVA Compass Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Golden Lion Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Municipal Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hancock Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Harvard Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Irwin Belk Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Grace P. Johnson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alumni Stadium (KY)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Abbott Memorial Alumni Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Thone Stadium at Buerkle Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Eddie Robinson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Panther Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Allegiant Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Dana J. Dykhouse Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Convoy Leslie Cotton Boll Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "William H. Greene Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bill Snyder Family Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "SECU Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Houchens Industries-L.T. Smith Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Zable Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Fargodome",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Williams Stadium (VA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "EverBank Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Malone Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Huntington Bank Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Stanford Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Hancock Whitney Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Albertsons Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Biddle Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alumni Stadium (Chestnut Hill, MA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "California Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Manning Field at John L. Guidry Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Roos Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Razorback Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Spero Financial Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Greater Zion Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Wildcat Stadium (TX)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Finley Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "The Pine Bowl",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Baker Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Maxwell Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Fritz B. Burns Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ortmayer Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Parker Field at McCool Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Waldo Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Torero Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Aggie Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "First Security Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "McCulloch Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Daly Field at Frank R. Campbell Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "McArthur Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Nissan Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Estes Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Monarch Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Buffalo Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Roy Stewart Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Alex G. Spanos Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Mitchell Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Cameron Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Wildcat Stadium (GA)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Salem Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Bragg Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Young-Wise Memorial Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Wilford Moore Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Homer Bryce Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Folsom Field",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Vaught-Hemingway Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Gable Field at Doc Wadley Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Snapdragon Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Michigan Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Strawberry Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Cowboy Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Memorial Stadium (Lincoln, NE)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Reser Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Carter-Finley Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Neyland Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Doak Campbell Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Jordan-Hare Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Veterans Memorial Stadium (AL)",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Al Whitehead Field at Greyhound Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Macalester Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Eccles Coliseum",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Tomlinson Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Ernie Chapman Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "Rice-Eccles Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    },
+    {
+      "label": " @ ",
+      "home": "",
+      "away": "",
+      "kickoff": null,
+      "venue": "CEFCU Stadium",
+      "line": null,
+      "total": null,
+      "src": "cfbd"
+    }
+  ],
+  "_stamp": 1761667384.3465798
+}

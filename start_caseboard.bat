@@ -14,7 +14,7 @@ REM Upgrade pip quietly
 ".venv\Scripts\python.exe" -m pip install --upgrade pip >nul 2>&1
 
 REM Install minimal dependencies (ignore any broken requirements.txt)
-".venv\Scripts\python.exe" -m pip install fastapi==0.120.0 uvicorn==0.38.0 pydantic==2.12.3 APScheduler==3.10.4 httpx==0.27.2 >nul
+".venv\Scripts\python.exe" -m pip install fastapi==0.120.0 uvicorn==0.38.0 pydantic==2.12.3 APScheduler==3.10.4 httpx==0.27.2 requests==2.32.3 >nul
 
 REM Kill any processes bound to port 8000
 for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000') do taskkill /PID %%a /F >nul 2>&1

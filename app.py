@@ -38,7 +38,8 @@ from typing import List, Optional, Literal
 from datetime import datetime, date
 import json, uuid, os, shutil, csv, io
 
-from backend.cfb import get_cached_payload, refresh_cache
+# Switched to simplified ESPN-driven ticker implementation
+from backend.cfb2 import get_cached_payload, refresh_cache
 
 DATA_DIR = "data"
 CASES_PATH = os.path.join(DATA_DIR, "cases.json")

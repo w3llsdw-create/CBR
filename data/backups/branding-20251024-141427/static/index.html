@@ -1,0 +1,24 @@
+﻿<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caseboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" style="height:22px">
+    <div class="brand">McMath Woods â€¢ David W. Wells â€¢ Caseboard</div>
+    <div class="live"><span id="dot" class="dot"></span><span id="clock"></span></div>
+  </header>
+  <div class="wrap">
+    <div class="card" style="padding:16px">
+      <h2>Welcome</h2>
+      <p class="small">Manage cases at <a href="/manage">/manage</a> â€¢ TV display at <a href="/tv">/tv</a></p>
+    </div>
+  </div>
+  <script>
+    setInterval(()=>{ document.getElementById('clock').textContent =
+      new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'}); }, 1000);
+  </script>
+</body></html>
+

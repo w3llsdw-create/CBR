@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "saved_at": "2025-10-28T22:57:38.624215",
+  "saved_at": "2025-10-28T17:03:23.166931",
   "cases": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -196,14 +196,8 @@
       "status": "Pre-Filing",
       "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Evaluating expert in Bethesda MD",
-      "focus_log": [
-        {
-          "at": "2025-10-28T19:48:53.495000Z",
-          "author": "DW",
-          "text": "Evaluating expert in Bethesda MD"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": "",
       "county": "Faulkner",

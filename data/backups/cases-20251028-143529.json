@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "saved_at": "2025-10-28T22:57:38.624215",
+  "saved_at": "2025-10-28T14:35:29.406156",
   "cases": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -84,8 +84,8 @@
           "resolved": false
         },
         {
-          "due_date": "2025-10-31",
-          "description": "Initiate formal service of complaint and summons",
+          "due_date": "2025-10-28",
+          "description": "",
           "resolved": false
         }
       ],
@@ -96,7 +96,7 @@
       "primary_attorney": "David",
       "opposing_counsel": null,
       "opposing_firm": null,
-      "next_due": "2025-10-31",
+      "next_due": "2025-10-28",
       "external": {
         "filevine_id": null,
         "filevine_number": null,
@@ -196,14 +196,8 @@
       "status": "Pre-Filing",
       "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Evaluating expert in Bethesda MD",
-      "focus_log": [
-        {
-          "at": "2025-10-28T19:48:53.495000Z",
-          "author": "DW",
-          "text": "Evaluating expert in Bethesda MD"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": "",
       "county": "Faulkner",
@@ -273,23 +267,29 @@
     },
     {
       "id": "68e536d2-dc33-41ab-aec6-e7a4b9740d54",
-      "client_name": "Hagan, Lashlee",
-      "case_name": "Hagan v. Bogue",
+      "client_name": "Lashlee, Hagan",
+      "case_name": "Lashlee, Hagan",
       "case_type": "MVA",
       "stage": "Pre-filing",
       "status": "Pre-Filing",
-      "attention": "",
+      "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "",
-      "focus_log": [],
+      "current_focus": "Waiting on further instructions",
+      "focus_log": [
+        {
+          "at": "2025-10-27T21:46:35.487000Z",
+          "author": "DW",
+          "text": "Waiting on further instructions"
+        }
+      ],
       "deadlines": [],
-      "case_number": "",
-      "county": "Prairie",
-      "division": "",
-      "judge": "",
+      "case_number": null,
+      "county": null,
+      "division": null,
+      "judge": null,
       "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
+      "opposing_counsel": null,
+      "opposing_firm": null,
       "next_due": null,
       "external": {
         "filevine_id": null,
@@ -556,32 +556,6 @@
       "primary_attorney": "",
       "opposing_counsel": null,
       "opposing_firm": null,
-      "next_due": null,
-      "external": {
-        "filevine_id": null,
-        "filevine_number": null,
-        "linked_at": null
-      }
-    },
-    {
-      "id": "d9a86ec5-cf25-4272-bf30-589f6b7c57a8",
-      "client_name": "Williams, Veronica",
-      "case_name": "Williams v. Williams",
-      "case_type": "MVA",
-      "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "",
-      "paralegal": "Andrew",
-      "current_focus": "",
-      "focus_log": [],
-      "deadlines": [],
-      "case_number": "",
-      "county": "Pulaski",
-      "division": "",
-      "judge": "",
-      "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
       "next_due": null,
       "external": {
         "filevine_id": null,

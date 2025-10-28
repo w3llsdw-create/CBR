@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Caseboard • TV</title>
   <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/static/brand.css">
-  <link rel="stylesheet" href="/static/fonts/fonts.css">
+    <link rel="stylesheet" href="/static/brand.css">
   <link rel="stylesheet" href="/static/styles.css">
+
 </head>
 <body class="page-tv dense">
     <header class="header header-tv slim">
@@ -22,25 +22,30 @@
   </header>
 
     <main class="wrap manage-layout tv-layout">
-                <div class="board-grid tv-board-grid with-aside">
+                                                <div class="board-grid tv-board-grid with-aside">
+
+
       <!-- list panel -->
       <section class="card list-card board-card tv-list" aria-label="Active cases">
-        <header class="card-header">
+                <header class="card-header">
           <div>
             <h2>Active cases</h2>
             <p class="small muted">Auto-refreshes every minute</p>
+            <div class="page-progress" aria-hidden="true"><div id="pageProgress" class="page-progress-bar"></div></div>
           </div>
           <div class="count" id="metricTotalLabel">0 cases</div>
         </header>
+
 
         <div class="table">
           <div class="thead">
             <div class="cell col-client">Client</div>
             <div class="cell col-case-name">Case</div>
-                        <div class="cell col-type">Type</div>
+                                    <div class="cell col-type">Type</div>
             <div class="cell col-status">Status</div>
             <div class="cell col-focus">Focus</div>
-            <div class="cell col-para">Paralegal</div>
+            <div class="cell col-county">County</div>
+
           </div>
           <div class="list-body tv-scroll" id="caseScroller">
             <div id="rows"></div>
@@ -48,35 +53,45 @@
         </div>
 
         <div class="scroll-veil top"></div>
-        <div class="scroll-veil bottom"></div>
+                <div class="scroll-veil bottom"></div>
       </section>
 
-                        <!-- right aside: three stacked live streams -->
+      <!-- right aside: three stacked live streams with audio selector -->
       <aside class="tv-aside">
-                <section class="card side-card video-card" aria-label="CBS News Live">
+        <div class="volume-controls" aria-label="Select audio source">
+          <span class="small muted">Audio</span>
+          <button type="button" class="vol-btn" data-target="v1" title="Audio: 1">1</button>
+          <button type="button" class="vol-btn" data-target="v2" title="Audio: 2">2</button>
+          <button type="button" class="vol-btn" data-target="v3" title="Audio: 3">3</button>
+          <button type="button" class="vol-btn ghost" data-target="off" title="Mute all">Mute</button>
+        </div>
+        <section class="card side-card video-card" aria-label="CBS News Live">
           <div class="video-frame">
-            <iframe title="CBS News Live"
-                    src="https://www.youtube-nocookie.com/embed/W-wvFPf3m2A?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+            <iframe id="tv_v1" title="CBS News Live"
+                    src="https://www.youtube-nocookie.com/embed/W-wvFPf3m2A?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&enablejsapi=1"
+
                     frameborder="0"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
           </div>
         </section>
-                <section class="card side-card video-card" aria-label="ABC News Live">
+                <section class="card side-card video-card" aria-label="Bloomberg">
           <div class="video-frame">
-            <iframe title="ABC News Live"
-                    src="https://www.youtube-nocookie.com/embed/LkeQTNzUYtQ?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+            <iframe id="tv_v2" title="Bloomberg"
+                    src="https://www.youtube-nocookie.com/embed/iEpJwprxDdk?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&enablejsapi=1"
                     frameborder="0"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
           </div>
         </section>
-                <section class="card side-card video-card" aria-label="NBC News NOW">
+
+        <section class="card side-card video-card" aria-label="NBC News NOW">
           <div class="video-frame">
-            <iframe title="NBC News NOW"
-                    src="https://www.youtube-nocookie.com/embed/BIwjgcXNzzg?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+            <iframe id="tv_v3" title="NBC News NOW"
+                                        src="https://www.youtube-nocookie.com/embed/BIwjgcXNzzg?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0&enablejsapi=1"
+
                     frameborder="0"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -84,16 +99,22 @@
           </div>
         </section>
       </aside>
+
     </div>
   </main>
 
-        <!-- Board metrics ticker (self-hosted, no external data) -->
-  <div id="statsTicker" class="cfb-ticker">
-    <div class="cfb-track" id="statsTrack" aria-live="polite"></div>
-  </div>
+
+        
 
       <div class="tv-vignette" aria-hidden="true"></div>
 
+  <!-- College Football Ticker (always visible) -->
+  <div id="cfbTicker" class="cfb-ticker">
+    <div class="cfb-track" id="cfbTrack" aria-live="polite">Loading scores…</div>
+  </div>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="/static/tv.js" defer></script>
 </body>
 </html>
+

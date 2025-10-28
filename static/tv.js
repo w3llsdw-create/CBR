@@ -4,6 +4,8 @@ const API = '/tv/cases';
 const POLL_MS = 60_000;
 const SCROLL_SPEED = 0.35;
 const PAUSE_AT_END_MS = 3000;
+// Force display timezone for TV (Central Time by default)
+const TIME_ZONE = 'America/Chicago';
 
 const clockEl = () => document.getElementById('clock');
 const dateEl = () => document.getElementById('date');
@@ -15,8 +17,11 @@ let pageIndex = 0;
 const PAGE_GROUP_COUNT = 3; // legacy: groups per page (unused for display)
 const PAGE_ROWS_COUNT = 10;  // number of case rows per page
 let pageTimer = null;
-const priorityEl = () => document.getElementById('priorityList');
-const miniUpcomingEl = () => document.getElementById('miniUpcoming');
+let pagePause = false;
+let progressRAF = null;
+const priorityEl = () => null;
+const miniUpcomingEl = () => null;
+
 const metricEl = id => document.getElementById(id);
 const totalLabelEl = () => document.getElementById('metricTotalLabel');
 const totalHintEl = () => document.getElementById('metricTotalHint');
@@ -32,12 +37,20 @@ const HTML_ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": 
 
 // === CFB ticker config ===
 const CFB_API = '/tv/cfb';
-const CFB_CYCLE_MS = 20_000;
+const CFB_CYCLE_MS = 45_000;
 const CFB_POLL_MS = 60_000;
 let cfbData = null;
 let cfbMode = 'prev';
 let cfbCycleTimer = null;
 let cfbPollTimer = null;
+let lastTickerHTML = '';
+let tickerRAF = null;
+let tickerOffset = 0; // px
+let tickerLastTs = 0;
+let lastTickerWidth = 0;
+const TICKER_SPEED = 40; // px/sec
+
+
 
 const GROUPS = [
   { key: 'overdue', label: 'Overdue', order: 0 },
@@ -63,9 +76,9 @@ async function loadCFB(){
     if(!res.ok) throw new Error(`cfb ${res.status}`);
     const payload = await res.json();
     if(payload){
-      cfbData = payload;
-      cfbMode = 'prev';
-      renderCFBTicker(true);
+            cfbData = payload;
+      renderCFBTicker();
+
     }
   }catch(err){
     if(!cfbData && wrap){
@@ -77,110 +90,118 @@ async function loadCFB(){
 }
 
 function ensureCFBTimers(){
-  if(!cfbCycleTimer){
-    cfbCycleTimer = setInterval(()=>{
-      cfbMode = cfbMode === 'prev' ? 'next' : 'prev';
-      renderCFBTicker(true);
-    }, CFB_CYCLE_MS);
-  }
+  // Disable mode cycling to avoid snapping; only poll for new data.
   if(!cfbPollTimer){
     cfbPollTimer = setInterval(loadCFB, CFB_POLL_MS);
   }
 }
 
-function renderCFBTicker(resetAnim=false){
+
+function startTickerLoop(){
+  const track = document.getElementById('cfbTrack');
+  if(!track) return;
+  cancelAnimationFrame(tickerRAF);
+  tickerLastTs = 0;
+  const step = (ts)=>{
+    if (!tickerLastTs) tickerLastTs = ts;
+    const dt = (ts - tickerLastTs) / 1000;
+    tickerLastTs = ts;
+    // advance offset
+    tickerOffset -= TICKER_SPEED * dt;
+        const total = track.scrollWidth / 2; // because content is duplicated
+    if (total > 0){
+      // wrap when we scrolled past one full set
+      if (tickerOffset <= -total) {
+        tickerOffset += total;
+      } else if (tickerOffset > 0) {
+        tickerOffset -= total;
+      }
+    }
+
+    track.style.transform = `translateX(${tickerOffset}px)`;
+    tickerRAF = requestAnimationFrame(step);
+  };
+  tickerRAF = requestAnimationFrame(step);
+}
+
+function renderCFBTicker(){
   const wrap = document.getElementById('cfbTicker');
   const track = document.getElementById('cfbTrack');
-  if(!wrap || !track || !cfbData) return;
+  if(!wrap || !track) return;
+  if(!cfbData){
+    wrap.removeAttribute('hidden');
+    track.textContent = 'Loading scores…';
+    return;
+  }
 
   const prevLane = Array.isArray(cfbData.prev) ? cfbData.prev : [];
   const nextLane = Array.isArray(cfbData.next) ? cfbData.next : [];
-  let lane = cfbMode === 'next' ? nextLane : prevLane;
-
-  if(!lane.length){
-    if(cfbMode === 'prev' && nextLane.length){
-      cfbMode = 'next';
-      lane = nextLane;
-    }else if(cfbMode === 'next' && prevLane.length){
-      cfbMode = 'prev';
-      lane = prevLane;
-    }else{
-      wrap.setAttribute('hidden','');
-      track.textContent = '';
-      return;
-    }
-  }
-
-  wrap.removeAttribute('hidden');
   const labels = cfbData.labels || {};
-  const labelText = cfbMode === 'next' ? (labels.next || 'Kickoffs') : (labels.prev || 'Finals');
-  const labelSafe = escapeHtml(labelText);
-  const tagClass = cfbMode === 'next' ? 'kick' : 'final';
 
-  const chips = lane.map(game=>{
-    if(cfbMode === 'prev'){
-      const awayScore = game.away_score ?? '—';
-      const homeScore = game.home_score ?? '—';
-      return `<span class="cfb-chip">
-        <span class="tag ${tagClass}">${labelSafe}</span>
-        <span>${escapeHtml(game.away)} ${escapeHtml(String(awayScore))} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)} ${escapeHtml(String(homeScore))}</span>
-      </span>`;
-    }
-
-    let kickoff = 'TBD';
-    if(game.start){
-      const dt = new Date(game.start);
-      if(!Number.isNaN(dt)){
-        kickoff = dt.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' });
-      }
-    }
-    const infoParts = [kickoff];
-    if(game.network){ infoParts.push(game.network); }
-    if(game.odds){
-      const odds = game.odds;
-      if(odds.fav){
-        let favText = odds.fav;
-        if(odds.spread !== null && odds.spread !== undefined){
-          const spreadVal = Number(odds.spread);
-          if(Number.isFinite(spreadVal)){
-            const sign = spreadVal > 0 ? '+' : '';
-            favText = `${favText} ${sign}${spreadVal}`;
-          }else{
-            favText = `${favText} ${odds.spread}`;
-          }
-        }
-        infoParts.push(favText.trim());
-      }
-      if(odds.ml !== null && odds.ml !== undefined){
-        const mlVal = Number(odds.ml);
-        if(Number.isFinite(mlVal)){
-          const sign = mlVal > 0 ? '+' : '';
-          infoParts.push(`ML ${sign}${mlVal}`);
-        }else{
-          infoParts.push(`ML ${odds.ml}`);
-        }
-      }
-      if(odds.ou !== null && odds.ou !== undefined){
-        const ouVal = Number(odds.ou);
-        infoParts.push(Number.isFinite(ouVal) ? `O/U ${ouVal}` : `O/U ${odds.ou}`);
-      }
-    }
-    const meta = infoParts.length ? `<span class="meta">• ${infoParts.map(part=>escapeHtml(part)).join(' • ')}</span>` : '';
-    return `<span class="cfb-chip">
-      <span class="tag ${tagClass}">${labelSafe}</span>
-      <span>${escapeHtml(game.away)} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)}</span>
-      ${meta}
-    </span>`;
+  const prevChips = prevLane.map(game=>{
+    const awayScore = game.away_score ?? '—';
+    const homeScore = game.home_score ?? '—';
+    return `<span class="cfb-chip"><span class="tag final">${escapeHtml(labels.prev || 'Finals')}</span><span>${escapeHtml(game.away)} ${escapeHtml(String(awayScore))} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)} ${escapeHtml(String(homeScore))}</span></span>`;
   }).join('');
 
-  track.innerHTML = chips + chips;
+  const nextChips = nextLane.map(game=>{
+    let kickoff = 'TBD';
+    if (game.kick_label) kickoff = game.kick_label;
+    else if (game.start){
+      const dt = new Date(game.start);
+      if(!Number.isNaN(dt)) kickoff = dt.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit', timeZone: TIME_ZONE, timeZoneName: 'short' });
+    }
+    const parts = [kickoff];
+    if(game.network) parts.push(game.network);
+    if(game.odds){
+      const o = game.odds;
+      if(o.fav){
+        let favText = o.fav;
+        if(o.spread !== null && o.spread !== undefined){
+          const v = Number(o.spread);
+          favText = Number.isFinite(v) ? `${favText} ${v>0?'+':''}${v}` : `${favText} ${o.spread}`;
+        }
+        parts.push(favText.trim());
+      }
+      if(o.ml !== null && o.ml !== undefined){
+        const v = Number(o.ml); parts.push(Number.isFinite(v)? `ML ${v>0?'+':''}${v}` : `ML ${o.ml}`);
+      }
+      if(o.ou !== null && o.ou !== undefined){
+        const v = Number(o.ou); parts.push(Number.isFinite(v)? `O/U ${v}` : `O/U ${o.ou}`);
+      }
+    }
+    const meta = parts.length ? `<span class="meta">• ${parts.map(p=>escapeHtml(p)).join(' • ')}</span>` : '';
+    return `<span class="cfb-chip"><span class="tag kick">${escapeHtml(labels.next || 'Kickoffs')}</span><span>${escapeHtml(game.away)} <span class="cfb-sep">＠</span> ${escapeHtml(game.home)}</span>${meta}</span>`;
+  }).join('');
 
-  if(resetAnim){
-    track.style.animation = 'none';
-    void track.offsetHeight;
-    track.style.animation = '';
+  const combined = prevChips + nextChips;
+  if(!combined){
+    wrap.removeAttribute('hidden');
+    track.textContent = 'No games available';
+    return;
+  }
+
+  const html = combined + combined; // loopable content
+  if (html !== lastTickerHTML) {
+    // Preserve offset proportionally if width changes
+    const oldTotal = lastTickerWidth / 2;
+    track.innerHTML = html;
+    lastTickerHTML = html;
+    lastTickerWidth = track.scrollWidth;
+    const newTotal = lastTickerWidth / 2;
+    if (oldTotal > 0 && newTotal > 0){
+      const ratio = newTotal / oldTotal;
+      tickerOffset = tickerOffset * ratio;
+      // clamp within new bounds
+      if (Math.abs(tickerOffset) > newTotal) tickerOffset = tickerOffset % newTotal;
+      track.style.transform = `translateX(${tickerOffset}px)`;
+    }
+    if (!tickerRAF) startTickerLoop();
+  } else if (!tickerRAF){
+    startTickerLoop();
   }
 }
+
 
 function badge(status){
   const normalized = normalizeText(status);
@@ -245,8 +266,9 @@ function row(c, info){
   const client = display(c.client_name);
       const rawCaseNumber = (c.case_number ?? '').toString().trim();
     const caseName = display(c.case_name);
-  const caseType = display(c.case_type);
-  const paralegal = display(c.paralegal);
+    const caseType = display(c.case_type);
+  const county = display(c.county);
+
   const focus = c.current_focus ?? c.current_task;
   const caseNumberLabel = rawCaseNumber ? `${rawCaseNumber}` : '';
   return `
@@ -262,9 +284,10 @@ function row(c, info){
     </div>
         <div class="cell col-type" title="${escapeAttr(caseType)}">${escapeHtml(caseType)}</div>
     <div class="cell col-status">${badge(c.status)}</div>
-    <div class="cell col-focus" title="${escapeAttr(display(focus))}">${focusText(focus)}</div>
-    <div class="cell col-para" title="${escapeAttr(paralegal)}">${escapeHtml(paralegal)}</div>
+        <div class="cell col-focus" title="${escapeAttr(display(focus))}">${focusText(focus)}</div>
+    <div class="cell col-county" title="${escapeAttr(county)}">${escapeHtml(county)}</div>
   </div>`;
+
 }
 
 function groupRow(group,count){ return `<div class="group-row ${group.key}"><span class="group-name">${group.label}</span><span class="group-count">${count}</span></div>`; }
@@ -327,22 +350,9 @@ function updateMetrics(grouped){
   }
 }
 
-function renderPriority(grouped){
-  const el = priorityEl(); if(!el) return; el.innerHTML = '';
-}
-function renderMiniUpcoming(grouped){
-  const el = miniUpcomingEl(); if(!el) return;
-  const soon = grouped.filter(g=>['overdue','today','week','next'].includes(g.key))
-                      .flatMap(g=>g.cases.map(x=>({...x, group:g.key})))
-                      .sort((a,b)=> a.info.sortValue - b.info.sortValue)
-                      .slice(0,5);
-  if(!soon.length){ el.innerHTML = '<li class="muted">No upcoming deadlines</li>'; return; }
-  el.innerHTML = soon.map(({case:c, info})=>{
-    const name = escapeHtml(display(c.case_name));
-    const due = info.dueDate ? fmtDate(info.dueDate) : '—';
-    return `<li><span class="mini-name" title="${escapeAttr(name)}">${name}</span><span class="mini-due">${escapeHtml(due)}</span></li>`;
-  }).join('');
-}
+function renderPriority(grouped){}
+function renderMiniUpcoming(grouped){}
+
 
 function sizeBoard(){
   const scroller = scrollerEl(); if(!scroller) return;
@@ -353,13 +363,50 @@ function sizeBoard(){
   scroller.style.maxHeight = `${max}px`;
 }
 
-function render(){
+function animateProgress(duration){
+  cancelAnimationFrame(progressRAF);
+  const bar = document.getElementById('pageProgress'); if(!bar) return;
+  const start = performance.now();
+  const step = (ts)=>{
+    const t = Math.min(1, (ts - start)/duration);
+    bar.style.width = `${t*100}%`;
+    progressRAF = requestAnimationFrame(step);
+  };
+  bar.style.width = '0%';
+  progressRAF = requestAnimationFrame(step);
+}
+
+function mountLayer(html){
+  // Mount page layers into the scroller so absolute layers have a sized, positioned parent
+  const container = scrollerEl();
+  if(!container) return;
+  const layer = document.createElement('div');
+  layer.className = 'page-layer fade-in row-stagger';
+  layer.innerHTML = html;
+  // stagger children
+  Array.from(layer.children).forEach((el, idx)=>{ el.style.animationDelay = `${idx*120}ms`; });
+  // Fade out any existing layers
+  const existing = Array.from(container.querySelectorAll('.page-layer'));
+  existing.forEach(el=> el.classList.add('fade-out'));
+  // Append new
+  container.appendChild(layer);
+  // Cleanup old after fade
+  setTimeout(()=>{ existing.forEach(el=> el.remove()); }, 1300);
+}
+
+
+function render(options={}){
+
+  const preserveTicker = !!options.preserveTicker;
   const list = Array.isArray(data?.cases) ? data.cases : [];
-  const grouped = groupCases(list);
+    const grouped = groupCases(list);
+  const container = rowsEl();
   if(!grouped.length){
-    rowsEl().innerHTML = '<div class="empty-state tv-empty">No active cases on the board.</div>';
+    container.innerHTML = '<div class="empty-state tv-empty">No active cases on the board.</div>';
     updateMetrics(grouped); renderPriority(grouped); renderMiniUpcoming(grouped); sizeBoard(); return;
   }
+
+
   // Flatten grouped cases for a single minimalist list (no section headers)
   const items = [];
   for(const g of grouped){ for(const item of g.cases){ items.push(item); } }
@@ -367,30 +414,52 @@ function render(){
   const pages = [];
   for(let i=0;i<items.length;i+=PAGE_ROWS_COUNT){ pages.push(items.slice(i,i+PAGE_ROWS_COUNT)); }
   if(pageIndex >= pages.length) pageIndex = 0;
-  const out = pages.length ? pages[pageIndex].map(({case:c,info})=>row(c,info)).join('') : '';
-  const container = rowsEl();
+    const page = pages.length ? pages[pageIndex] : [];
+  // Build HTML in normal flow with staggered rows (no absolute layers to avoid clipping)
+  container.classList.add('row-stagger');
+  container.innerHTML = page.map(({case:c,info}, idx)=>`<div class="row-wrap" style="animation-delay:${idx*120}ms">${row(c,info)}</div>`).join('');
   container.classList.add('fade-in');
-  container.innerHTML = out;
-  setTimeout(()=>container.classList.remove('fade-in'), 180);
+  setTimeout(()=>container.classList.remove('fade-in'), 1200);
+
   updateMetrics(grouped); renderPriority(grouped); renderMiniUpcoming(grouped); sizeBoard();
 
-  // set up page auto-advance if content exceeds viewport or if scrolling stutters
+
+  // Page timing: 6–10s based on rows
+    // Linger longer: ~double previous pacing
+  // Double dwell for slower pacing
+  const dwell = Math.min(40000, Math.max(24000, page.length * 2800));
+  animateProgress(dwell);
+
   if(pageTimer) clearTimeout(pageTimer);
-  pageTimer = setTimeout(()=>{ pageIndex = (pageIndex + 1) % Math.max(pages.length,1); render(); resetScroll(); }, 15000);
+  pageTimer = setTimeout(()=>{
+    pagePause = true; // brief pause at end
+    setTimeout(()=>{
+      pagePause = false;
+      pageIndex = (pageIndex + 1) % Math.max(pages.length,1);
+      render({preserveTicker:true});
+      resetScroll();
+    }, 1000);
+  }, dwell);
+
 }
+
+
 
 async function load(){
   const res = await fetch(API, { cache: 'no-store' });
   const json = await res.json();
   data = json || { cases: [] };
-  render();
+  // Do not reset the ticker when case data updates
+  render({preserveTicker:true});
+  // keep case scroller at top on page changes only
   resetScroll();
 }
 
-function formatHeaderDate(d){ return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}); }
+
+function formatHeaderDate(d){ return d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric', timeZone: TIME_ZONE}); }
 function tickClock(){
   const now = new Date();
-  const c = clockEl(); if(c) c.textContent = now.toLocaleTimeString([], { hour:'numeric', minute:'2-digit', second:'2-digit' });
+    const c = clockEl(); if(c) c.textContent = now.toLocaleTimeString([], { hour:'numeric', minute:'2-digit', second:'2-digit', timeZone: TIME_ZONE });
   const d = dateEl(); if(d) d.textContent = formatHeaderDate(now);
 }
 
@@ -414,18 +483,70 @@ function setThemeByTime(){
   body.setAttribute('data-theme', mode);
 }
 
+function setVolumeActive(id){
+  const buttons = document.querySelectorAll('.vol-btn');
+  buttons.forEach(b=>b.classList.toggle('active', b.dataset.target === id));
+}
+// YouTube player instances for finer control
+let YT_READY = false;
+let YT_PLAYERS = {};
+function onYouTubeIframeAPIReady(){ YT_READY = true; initYTPlayers(); }
+function initYTPlayers(){
+  const ids = ['tv_v1','tv_v2','tv_v3'];
+  ids.forEach((id)=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(YT_PLAYERS[id]) return;
+    try{
+      YT_PLAYERS[id] = new YT.Player(id, {
+        events: {
+          onReady: (ev)=>{ try{ ev.target.mute(); ev.target.playVideo && ev.target.playVideo(); }catch(e){} },
+        }
+      });
+    }catch(e){}
+  });
+}
+function setAudio(target){
+  const muteAll = target === 'off';
+  const ids = ['tv_v1','tv_v2','tv_v3'];
+  ids.forEach((id, idx)=>{
+    const p = YT_PLAYERS[id];
+    if(!p || !p.mute || !p.unMute) return;
+    const playerKey = `v${idx+1}`;
+    try{
+      if(muteAll || playerKey !== target){ p.mute(); } else { p.unMute(); p.setVolume && p.setVolume(100); }
+    }catch(e){}
+  });
+  setVolumeActive(target);
+}
+function wireVolumeControls(){
+  if(!YT_READY){
+    const h = setInterval(()=>{ if(YT_READY){ clearInterval(h); initYTPlayers(); } }, 300);
+  }
+
+  const container = document.querySelector('.volume-controls'); if(!container) return;
+  container.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.vol-btn'); if(!btn) return;
+    const target = btn.dataset.target;
+    setAudio(target);
+  });
+  // Default: all muted
+  setVolumeActive('off');
+}
+
 function init(){
   setThemeByTime(); setInterval(setThemeByTime, 10*60*1000);
   tickClock(); setInterval(tickClock,1000);
-  load(); setInterval(()=>{ load(); }, POLL_MS);
-  // Disable CFB ticker until API keys configured and results verified
-  // ensureCFBTimers();
-  // loadCFB();
-    window.addEventListener('resize', onResize);
-  // Switch to page view (no continuous autoscroll)
-  // rafId = requestAnimationFrame(autoScroll);
+    load(); setInterval(()=>{ load(); }, POLL_MS);
+  // Enable College Football ticker
+  ensureCFBTimers();
+  loadCFB();
+  window.addEventListener('resize', onResize);
+  wireVolumeControls();
   try{ if(document.documentElement.requestFullscreen){ document.documentElement.requestFullscreen().catch(()=>{}); } }catch(e){}
 }
+
+
 
 
 document.addEventListener('DOMContentLoaded', init);
