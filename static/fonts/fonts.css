@@ -1,0 +1,12 @@
+/* Self-hosted Google Fonts */
+
+
+/* Role stacks */
+:root{
+  --font-text: "Inter", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-head: "Sora", "Inter", system-ui, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+html,body{ font-family: var(--font-text); font-variant-numeric: normal; font-synthesis-weight: none; font-size: 20px; }
+.h1,.h2,.h3,.title{ font-family: var(--font-head); font-weight: 600; }
+.num,.kpi,.clock,.amount{ font-family: var(--font-mono); font-variant-numeric: tabular-nums; }

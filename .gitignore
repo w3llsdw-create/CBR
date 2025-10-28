@@ -1,5 +1,14 @@
-.DS_Store
+.venv/
+env/
 __pycache__/
 *.pyc
-data/backups/
+*.pyo
+.DS_Store
+.idea/
+.vscode/
+node_modules/
+build/
+dist/
+*.egg-info/
 .env
+.env.*

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "saved_at": "2025-10-28T01:37:23.215909",
+  "saved_at": "2025-10-25T01:32:30.805953",
   "cases": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -11,7 +11,7 @@
       "status": "Active",
       "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "Subpoena sent. Response due November 10",
+      "current_focus": "Waiting on Judge to Sign Order",
       "focus_log": [
         {
           "at": "2025-10-24T18:14:44.009668",
@@ -22,25 +22,9 @@
           "at": "2025-10-24T19:40:43.834000Z",
           "author": "DW",
           "text": "Waiting on Judge to Sign Order"
-        },
-        {
-          "at": "2025-10-27T20:42:23.538000Z",
-          "author": "DW",
-          "text": "Subpoena sent. Response due November 10"
         }
       ],
-      "deadlines": [
-        {
-          "due_date": "2025-10-28",
-          "description": "Follow up on proposed order",
-          "resolved": true
-        },
-        {
-          "due_date": "2025-11-10",
-          "description": "Subpoena response due",
-          "resolved": false
-        }
-      ],
+      "deadlines": [],
       "case_number": "60CV-25-12762",
       "county": "Pulaski",
       "division": "12th",
@@ -48,7 +32,33 @@
       "primary_attorney": null,
       "opposing_counsel": "",
       "opposing_firm": "",
-      "next_due": "2025-11-10",
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "29de1b2f-346c-44fc-9f72-ba3748dd6088",
+      "client_name": "k",
+      "case_name": "k",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filling",
+      "attention": "",
+      "paralegal": "k",
+      "current_focus": "",
+      "focus_log": [],
+      "deadlines": [],
+      "case_number": "k",
+      "county": "k",
+      "division": "k",
+      "judge": "k",
+      "primary_attorney": "k",
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "next_due": null,
       "external": {
         "filevine_id": null,
         "filevine_number": null,
@@ -62,23 +72,11 @@
       "case_type": "Domestic Relations",
       "stage": "Pretrial",
       "status": "Active",
-      "attention": "waiting",
+      "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Give D until end of week to return waiver then initiate formal service",
-      "focus_log": [
-        {
-          "at": "2025-10-27T13:34:55.424000Z",
-          "author": "DW",
-          "text": "Give D until end of week to return waiver then initiate formal service"
-        }
-      ],
-      "deadlines": [
-        {
-          "due_date": "2026-02-05",
-          "description": "Deadline to serve D Complaint and Summons",
-          "resolved": false
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
+      "deadlines": [],
       "case_number": "23DR-25-1089",
       "county": "Faulkner",
       "division": "4th",
@@ -86,7 +84,7 @@
       "primary_attorney": "David",
       "opposing_counsel": null,
       "opposing_firm": null,
-      "next_due": "2026-02-05",
+      "next_due": null,
       "external": {
         "filevine_id": null,
         "filevine_number": null,
@@ -99,19 +97,19 @@
       "case_name": "Railey v. Lane et al.",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Active",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
       "current_focus": "",
       "focus_log": [],
       "deadlines": [],
       "case_number": "60CV-25-5940",
-      "county": "Pulaski",
-      "division": "3rd",
-      "judge": "Compton",
+      "county": null,
+      "division": null,
+      "judge": null,
       "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
+      "opposing_counsel": null,
+      "opposing_firm": null,
       "next_due": null,
       "external": {
         "filevine_id": null,
@@ -125,19 +123,19 @@
       "case_name": "Temple v. Goss et al.",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Active",
+      "status": "Pre-Filling",
       "attention": "",
       "paralegal": "Sabrina",
       "current_focus": "",
       "focus_log": [],
       "deadlines": [],
       "case_number": "23CV-25-176",
-      "county": "Faulkner",
-      "division": "",
-      "judge": "",
+      "county": null,
+      "division": null,
+      "judge": null,
       "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
+      "opposing_counsel": null,
+      "opposing_firm": null,
       "next_due": null,
       "external": {
         "filevine_id": null,
@@ -151,17 +149,11 @@
       "case_name": "McCartan v. NW Physicians et al.",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Active",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
-      "current_focus": "Emailed case research to Neil",
-      "focus_log": [
-        {
-          "at": "2025-10-27T20:41:00.306000Z",
-          "author": "DW",
-          "text": "Emailed case research to Neil"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": "04CV-25-3798",
       "county": null,
@@ -183,17 +175,11 @@
       "case_name": "Suter v. Baptist Health",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "needs_attention",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Emailed a second potential expert witness",
-      "focus_log": [
-        {
-          "at": "2025-10-27T20:43:41.522000Z",
-          "author": "DW",
-          "text": "Emailed a second potential expert witness"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": null,
       "county": null,
@@ -215,8 +201,8 @@
       "case_name": "Taylor, Robert",
       "case_type": "Catastrophic Injury",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
       "current_focus": "",
       "focus_log": [],
@@ -241,17 +227,11 @@
       "case_name": "Burks v. Mena Short Stop",
       "case_type": "Environmental",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
-      "current_focus": "Waiting to send demand letter",
-      "focus_log": [
-        {
-          "at": "2025-10-27T13:18:48.383000Z",
-          "author": "Sabrina",
-          "text": "Waiting to send demand letter"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": null,
       "county": null,
@@ -273,17 +253,11 @@
       "case_name": "Lashlee, Hagan",
       "case_type": "MVA",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Waiting on further instructions",
-      "focus_log": [
-        {
-          "at": "2025-10-27T21:46:35.487000Z",
-          "author": "DW",
-          "text": "Waiting on further instructions"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": null,
       "county": null,
@@ -305,8 +279,8 @@
       "case_name": "Morales v. Russellville Holdings et al.",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Active",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
       "current_focus": "",
       "focus_log": [],
@@ -331,8 +305,8 @@
       "case_name": "In re: Estate of Dorsey",
       "case_type": "Other",
       "stage": "Pre-filing",
-      "status": "Active",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Jeseal",
       "current_focus": "",
       "focus_log": [],
@@ -357,8 +331,8 @@
       "case_name": "Holder, Ryan",
       "case_type": "MVA",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "needs_attention",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
       "current_focus": "",
       "focus_log": [],
@@ -383,22 +357,11 @@
       "case_name": "Surguine, Christopher",
       "case_type": "MVA",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Gave Will draft Demand Letter",
-      "focus_log": [
-        {
-          "at": "2025-10-27T13:36:08.463000Z",
-          "author": "DW",
-          "text": "Drafted complaint, waiting on Will to review"
-        },
-        {
-          "at": "2025-10-27T14:09:05.455000Z",
-          "author": "DW",
-          "text": "Gave Will draft Demand Letter"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": null,
       "county": null,
@@ -420,19 +383,19 @@
       "case_name": "Palmer v. Moore",
       "case_type": "Personal Injury",
       "stage": "Pre-filing",
-      "status": "Active",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Jeseal",
       "current_focus": "",
       "focus_log": [],
       "deadlines": [],
       "case_number": "12CV-25-317",
-      "county": "Cleburne",
-      "division": "1st",
-      "judge": "",
+      "county": null,
+      "division": null,
+      "judge": null,
       "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
+      "opposing_counsel": null,
+      "opposing_firm": null,
       "next_due": null,
       "external": {
         "filevine_id": null,
@@ -446,20 +409,15 @@
       "case_name": "Jackson v. Dreamland Ballroom",
       "case_type": "Personal Injury",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "needs_attention",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Andrew",
-      "current_focus": "Drafted letter to client, sent WB to review before sending client",
+      "current_focus": "Measure and photograph property. Schedule Zoom",
       "focus_log": [
         {
-          "at": "2025-10-27T14:55:40.941000Z",
+          "at": "2025-10-25T01:32:30.716000Z",
           "author": "DW",
-          "text": "Measured step and took photographs"
-        },
-        {
-          "at": "2025-10-27T20:44:16.114000Z",
-          "author": "DW",
-          "text": "Drafted letter to client, sent WB to review before sending client"
+          "text": "Measure and photograph property. Schedule Zoom"
         }
       ],
       "deadlines": [],
@@ -483,22 +441,11 @@
       "case_name": "Billingsley v. Dedman",
       "case_type": "Wrongful Death",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
-      "current_focus": "Will is reviewing draft complaint",
-      "focus_log": [
-        {
-          "at": "2025-10-27T13:18:09.599000Z",
-          "author": "Sabrina",
-          "text": "Waiting on Will to review draft Complaint"
-        },
-        {
-          "at": "2025-10-27T20:43:19.409000Z",
-          "author": "DW",
-          "text": "Will is reviewing draft complaint"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "case_number": null,
       "county": null,
@@ -520,8 +467,8 @@
       "case_name": "Phelps, Jacquelyn",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "waiting",
+      "status": "Pre-Filling",
+      "attention": "",
       "paralegal": "Sabrina",
       "current_focus": "",
       "focus_log": [],
@@ -533,43 +480,6 @@
       "primary_attorney": null,
       "opposing_counsel": null,
       "opposing_firm": null,
-      "next_due": null,
-      "external": {
-        "filevine_id": null,
-        "filevine_number": null,
-        "linked_at": null
-      }
-    },
-    {
-      "id": "78d2f847-e4f0-4a3c-a293-59d90d17f555",
-      "client_name": "Andress, Nathan",
-      "case_name": "Andress v. Safiullah",
-      "case_type": "MVA",
-      "stage": "Pre-filing",
-      "status": "Pre-Filing",
-      "attention": "",
-      "paralegal": "Andrew",
-      "current_focus": "Work on demand letter",
-      "focus_log": [
-        {
-          "at": "2025-10-27T21:23:21.440000Z",
-          "author": "DW",
-          "text": "Work on deman letter"
-        },
-        {
-          "at": "2025-10-27T21:45:57.247000Z",
-          "author": "DW",
-          "text": "Work on demand letter"
-        }
-      ],
-      "deadlines": [],
-      "case_number": "",
-      "county": "",
-      "division": "",
-      "judge": "",
-      "primary_attorney": null,
-      "opposing_counsel": "",
-      "opposing_firm": "",
       "next_due": null,
       "external": {
         "filevine_id": null,

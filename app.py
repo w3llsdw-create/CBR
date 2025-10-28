@@ -33,7 +33,7 @@ except Exception:  # pragma: no cover - optional dependency
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from typing import List, Optional, Literal
 from datetime import datetime, date
 import json, uuid, os, shutil, csv, io
@@ -53,12 +53,13 @@ class FocusEntry(BaseModel):
     text: str
 
 class Deadline(BaseModel):
-    due_date: date
+    due_date: Optional[date]  # allow clearing a date from the UI
     description: str
     resolved: bool = False
 
 Stage = Literal["Pre-filing","Filed","Discovery","Pretrial","Trial","Closed"]
-Status = Literal["Pre-Filing","Pre-Filling","Active","Settlement","Post-Trial","Appeal"]
+# Canonical statuses (remove misspelling "Pre-Filling")
+Status = Literal["Pre-Filing","Active","Settlement","Post-Trial","Appeal"]
 
 class ExternalRef(BaseModel):
     # reserved for Filevine; not used yet
@@ -95,6 +96,29 @@ class Case(BaseModel):
     next_due: Optional[date] = None
     external: ExternalRef = Field(default_factory=ExternalRef)
 
+    # Validators to accept tolerant inputs
+    @field_validator("status", mode="before")
+    @classmethod
+    def _coerce_status(cls, v):
+        if v is None:
+            return "Pre-Filing"
+        # Map common variations to canonical Status values
+        mapped = normalize_status(str(v))
+        return mapped or "Pre-Filing"
+
+    @field_validator("attention", mode="before")
+    @classmethod
+    def _coerce_attention(cls, v):
+        allowed = {"needs_attention", "waiting", ""}
+        if v in allowed:
+            return v
+        s = str(v or "").strip().lower()
+        if s in ("needs", "need", "needs-attention", "needs_attention"):
+            return "needs_attention"
+        if s in ("wait", "waiting"):
+            return "waiting"
+        return ""
+
 class CaseFile(BaseModel):
     schema_version: int = 1
     saved_at: datetime
@@ -105,12 +129,103 @@ class ImportPayload(BaseModel):
     csv: str
 
 # ---------- Storage ----------
+def _migrate_raw_case(d: dict) -> tuple[dict, bool]:
+    changed = False
+    case = dict(d)
+    # normalize stage
+    stage_norm = normalize_stage(case.get("stage", ""))
+    if not stage_norm:
+        stage_norm = "Pre-filing"
+    if case.get("stage") != stage_norm:
+        case["stage"] = stage_norm
+        changed = True
+
+    # normalize status with tolerance; default based on case_number if not special
+    status_norm = normalize_status(case.get("status", ""))
+    if not status_norm or status_norm not in ("Settlement", "Post-Trial", "Appeal"):
+        cn = (case.get("case_number") or "").strip()
+        status_norm = "Active" if cn else "Pre-Filing"
+    if case.get("status") != status_norm:
+        case["status"] = status_norm
+        changed = True
+
+    # normalize attention
+    if case.get("attention") not in ("needs_attention", "waiting", ""):
+        case["attention"] = ""
+        changed = True
+
+    # normalize deadlines list and coerce optional dates
+    dls = case.get("deadlines")
+    if not isinstance(dls, list):
+        dls = []
+        changed = True
+    out_dls = []
+    for item in dls:
+        if not isinstance(item, dict):
+            changed = True
+            continue
+        due = item.get("due_date")
+        if not due:
+            due = None
+        desc = item.get("description") or ""
+        res = bool(item.get("resolved", False))
+        out_dls.append({"due_date": due, "description": desc, "resolved": res})
+        # if original differs, mark changed
+        if (item.get("due_date") != due) or (item.get("description") != desc) or (bool(item.get("resolved", False)) != res):
+            changed = True
+    case["deadlines"] = out_dls
+
+    # ensure focus_log is a list
+    fl = case.get("focus_log")
+    if not isinstance(fl, list):
+        case["focus_log"] = []
+        changed = True
+
+    return case, changed
+
+
+def _migrate_raw_file(raw: dict) -> tuple[dict, bool]:
+    if not isinstance(raw, dict):
+        return {"schema_version": 1, "saved_at": datetime.utcnow().isoformat(), "cases": []}, True
+    changed = False
+    cases = raw.get("cases")
+    if not isinstance(cases, list):
+        raw["cases"] = []
+        changed = True
+        cases = []
+    new_cases = []
+    for c in cases:
+        if not isinstance(c, dict):
+            changed = True
+            continue
+        nc, ch = _migrate_raw_case(c)
+        new_cases.append(nc)
+        changed = changed or ch
+    raw["cases"] = new_cases
+    # bump/ensure schema version
+    if raw.get("schema_version") != 1:
+        raw["schema_version"] = 1
+        changed = True
+    return raw, changed
+
+
 def load() -> CaseFile:
     if not os.path.exists(CASES_PATH):
         return CaseFile(saved_at=datetime.utcnow(), cases=[])
     with open(CASES_PATH, "r", encoding="utf-8") as f:
         raw = json.load(f)
-    return CaseFile(**raw)
+    raw, changed = _migrate_raw_file(raw)
+    try:
+        model = CaseFile(**raw)
+    except ValidationError:
+        # As a last resort, attempt to coerce again with defaults
+        raw = {"schema_version": 1, "saved_at": datetime.utcnow().isoformat(), "cases": raw.get("cases", [])}
+        model = CaseFile(**raw)
+        changed = True
+    if changed:
+        # write back normalized data for durability
+        save(model)
+    return model
 
 def save(model: CaseFile):
     tmp = CASES_PATH + ".tmp"
@@ -123,8 +238,8 @@ def save(model: CaseFile):
     shutil.copyfile(CASES_PATH, os.path.join(BACKUP_DIR, f"cases-{stamp}.json"))
 
 def recompute(case: Case) -> Case:
-    # next_due from unresolved deadlines
-    future = [d.due_date for d in case.deadlines if not d.resolved]
+    # next_due from unresolved deadlines (ignore None dates)
+    future = [d.due_date for d in case.deadlines if (not d.resolved) and (d.due_date is not None)]
     case.next_due = min(future) if future else None
     # current_focus from latest focus entry
     if case.focus_log:
@@ -178,6 +293,27 @@ def _shutdown():
 VALID_STAGES = {stage.lower(): stage for stage in Stage.__args__}
 VALID_STATUSES = {status.lower(): status for status in Status.__args__}
 
+# Accept common variations and typos for robustness
+_STAGE_SYNONYMS = {
+    "pre filing": "Pre-filing",
+    "prefiling": "Pre-filing",
+    "pre-filed": "Pre-filing",
+}
+_STATUS_SYNONYMS = {
+    # Various ways users may enter Pre-Filing
+    "pre-filing": "Pre-Filing",
+    "pre filing": "Pre-Filing",
+    "prefiling": "Pre-Filing",
+    "pre-filling": "Pre-Filing",  # common typo
+    "pre-filling ": "Pre-Filing",
+    # Normal forms map to themselves for completeness
+    "active": "Active",
+    "settlement": "Settlement",
+    "post-trial": "Post-Trial",
+    "post trial": "Post-Trial",
+    "appeal": "Appeal",
+}
+
 
 def normalize(text: Optional[str]) -> str:
     if text is None:
@@ -189,14 +325,27 @@ def normalize_stage(raw: str) -> Optional[Stage]:
     value = normalize(raw)
     if not value:
         return None
-    return VALID_STAGES.get(value.lower())
+    key = value.lower()
+    if key in VALID_STAGES:
+        return VALID_STAGES[key]
+    if key in _STAGE_SYNONYMS:
+        return _STAGE_SYNONYMS[key]  # type: ignore[return-value]
+    return None
 
 
 def normalize_status(raw: str) -> Optional[Status]:
     value = normalize(raw)
     if not value:
         return None
-    return VALID_STATUSES.get(value.lower())
+    key = value.lower()
+    # direct exact match
+    if key in VALID_STATUSES:
+        return VALID_STATUSES[key]
+    # tolerant mapping
+    mapped = _STATUS_SYNONYMS.get(key)
+    if mapped:
+        return mapped  # type: ignore[return-value]
+    return None
 
 
 def apply_case_updates(original: Case, updates: dict) -> Case:

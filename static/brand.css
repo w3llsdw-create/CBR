@@ -4,31 +4,7 @@
    - Safe to remove: overrides via specificity and load order.
 */
 
-/* ---------- Fonts (install licensed files to /static/fonts) ---------- */
-@font-face{
-  font-family:"Argent CF";
-  src: local("Argent CF"),
-       url("/static/fonts/ArgentCF-Regular.otf") format("opentype");
-  font-weight:400; font-style:normal; font-display:swap;
-}
-@font-face{
-  font-family:"Argent CF";
-  src: local("Argent CF Semibold"),
-       url("/static/fonts/ArgentCF-Semibold.otf") format("opentype");
-  font-weight:600; font-style:normal; font-display:swap;
-}
-@font-face{
-  font-family:"Indivisible";
-  src: local("Indivisible"),
-       url("/static/fonts/Indivisible-Regular.otf") format("opentype");
-  font-weight:400; font-style:normal; font-display:swap;
-}
-@font-face{
-  font-family:"Indivisible";
-  src: local("Indivisible Medium"),
-       url("/static/fonts/Indivisible-Medium.otf") format("opentype");
-  font-weight:500; font-style:normal; font-display:swap;
-}
+/* ---------- Fonts: replaced by self-hosted Inter/Sora/Roboto Mono via /static/fonts/fonts.css ---------- */
 
 /* ---------- Brand tokens ---------- */
 :root{
@@ -39,8 +15,8 @@
   --mw-inkText: #E5E7EB;
   --mw-muted: #A7B0BF;
 
-  --font-display: "Argent CF", ui-serif, Georgia, "Times New Roman", serif;
-  --font-body: "Indivisible", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: "Sora", system-ui, "Segoe UI", Arial, sans-serif;
+  --font-body: "Inter", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
 
   /* map onto existing tokens so current CSS picks them up */
   --ink: var(--mw-charcoal);
@@ -54,7 +30,7 @@
 /* ---------- Global typography & surface ---------- */
 html,body{ background:#0F1520; color:var(--mw-inkText); }
 body{ font-family:var(--font-body); }
-.brand, h1,h2,h3,.section-title{ font-family:var(--font-display); letter-spacing:.04em; }
+.brand, h1,h2,h3,.section-title{ font-family:var(--font-display); letter-spacing:.04em; font-weight:600; }
 
 /* ---------- Header ---------- */
 .header{ height:64px; }

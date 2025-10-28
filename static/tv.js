@@ -2,14 +2,21 @@
 
 const API = '/tv/cases';
 const POLL_MS = 60_000;
-const SCROLL_SPEED = 0.3;
-const PAUSE_AT_END_MS = 2200;
+const SCROLL_SPEED = 0.35;
+const PAUSE_AT_END_MS = 3000;
 
 const clockEl = () => document.getElementById('clock');
 const dateEl = () => document.getElementById('date');
 const rowsEl  = () => document.getElementById('rows');
 const scrollerEl = () => document.getElementById('caseScroller');
+
+// paging for very long lists
+let pageIndex = 0;
+const PAGE_GROUP_COUNT = 3; // legacy: groups per page (unused for display)
+const PAGE_ROWS_COUNT = 10;  // number of case rows per page
+let pageTimer = null;
 const priorityEl = () => document.getElementById('priorityList');
+const miniUpcomingEl = () => document.getElementById('miniUpcoming');
 const metricEl = id => document.getElementById(id);
 const totalLabelEl = () => document.getElementById('metricTotalLabel');
 const totalHintEl = () => document.getElementById('metricTotalHint');
@@ -180,6 +187,7 @@ function badge(status){
   if(!normalized) return '<span class="badge none">No status</span>';
   const s = normalized.toLowerCase();
   const cls =
+    s.includes('active') ? 'active' :
     s.includes('pre') ? 'pre-filing' :
     s.includes('file') ? 'filed' :
     s.includes('close') ? 'closed' :
@@ -191,6 +199,12 @@ function badge(status){
 function needsAttention(c){
   const note = normalizeText(c?.attention || '');
   return note && note.toLowerCase().includes('need');
+}
+function attentionClass(c){
+  const a = (c?.attention || '').toLowerCase();
+  if(a === 'needs_attention') return 'att-needs';
+  if(a === 'waiting') return 'att-wait';
+  return '';
 }
 function parseDueDate(c){ if(!c||!c.next_due) return null; const d=new Date(c.next_due); return Number.isNaN(d)? null : d; }
 function startOfDay(d){ const x=new Date(d); x.setHours(0,0,0,0); return x; }
@@ -209,10 +223,8 @@ function categorizeCase(c){
   return { group:'later', accent:'later', pillLabel:`Due in ${diffDays} days`, dueDate:due, diffDays, sortValue: due.getTime() };
 }
 
-function priorityIcon(info){
-  switch(info.group){ case 'overdue': return '⛔'; case 'today': return '⏰'; case 'week': return '⚠️'; case 'next': return '🗓️'; default: return '📌'; }
-}
-function priorityFlag(info){ return `<span class="priority-flag ${info.accent}" aria-hidden="true">${priorityIcon(info)}</span>`; }
+function priorityIcon(info){ return ''; }
+function priorityFlag(info){ return ''; }
 function duePill(info){
   if(!info || !info.dueDate) return '<span class="due-pill nodue"><strong>No deadline</strong><span>Set date</span></span>';
   return `<span class="due-pill ${info.accent}"><strong>${escapeHtml(info.pillLabel)}</strong><span>${fmtDate(info.dueDate)}</span></span>`;
@@ -223,36 +235,35 @@ function focusText(value){
   return `<span class="focus-text">${escapeHtml(text)}</span>`;
 }
 
+function initials(name){ const parts=String(name||'').trim().split(/[\s,]+/).filter(Boolean); const first=parts[0]?.[0]||''; const last=parts[parts.length-1]?.[0]||''; return (first+last).toUpperCase(); }
+function hashColor(name){ let h=0; const s=60, l=62; const str=String(name||''); for(let i=0;i<str.length;i++){ h=(h*31 + str.charCodeAt(i))>>>0; } return `${h%360}, ${s}%, ${l}%`; }
+
 function row(c, info){
-  const classes = ['trow','row','tv-row',info.accent];
-  if(needsAttention(c)) classes.push('needs');
+    const classes = ['trow','row','tv-row',info.accent];
+  const att = attentionClass(c);
+  if(att) classes.push(att);
   const client = display(c.client_name);
-  const caseNumber = display(c.case_number);
-  const caseName = display(c.case_name);
+      const rawCaseNumber = (c.case_number ?? '').toString().trim();
+    const caseName = display(c.case_name);
   const caseType = display(c.case_type);
-  const stage = display(c.stage);
   const paralegal = display(c.paralegal);
   const focus = c.current_focus ?? c.current_task;
-  const caseNumberLabel = caseNumber==='—' ? 'No case #' : `Case ${caseNumber}`;
-
+  const caseNumberLabel = rawCaseNumber ? `${rawCaseNumber}` : '';
   return `
   <div class="${classes.join(' ')}" data-group="${info.group}">
-    <div class="cell col-client" title="${escapeAttr(client)}">
+        <div class="cell col-client" title="${escapeAttr(client)}">
       <div class="client-line">
-        ${priorityFlag(info)}
         <span class="client-name">${escapeHtml(client)}</span>
       </div>
-      <div class="client-meta">
-        <span class="micro muted" title="${escapeAttr(caseNumberLabel)}">${escapeHtml(caseNumberLabel)}</span>
-      </div>
     </div>
-    <div class="cell col-case-name" title="${escapeAttr(caseName)}">${escapeHtml(caseName)}</div>
-    <div class="cell col-type" title="${escapeAttr(caseType)}">${escapeHtml(caseType)}</div>
-    <div class="cell col-stage" title="${escapeAttr(stage)}">${escapeHtml(stage)}</div>
+    <div class="cell col-case-name" title="${escapeAttr(caseName)}">
+      <span class="case-name">${escapeHtml(caseName)}</span>
+      ${rawCaseNumber ? `<span class="case-num" title="${escapeAttr(rawCaseNumber)}">${escapeHtml(rawCaseNumber)}</span>` : ''}
+    </div>
+        <div class="cell col-type" title="${escapeAttr(caseType)}">${escapeHtml(caseType)}</div>
     <div class="cell col-status">${badge(c.status)}</div>
     <div class="cell col-focus" title="${escapeAttr(display(focus))}">${focusText(focus)}</div>
     <div class="cell col-para" title="${escapeAttr(paralegal)}">${escapeHtml(paralegal)}</div>
-    <div class="cell col-due">${duePill(info)}</div>
   </div>`;
 }
 
@@ -274,6 +285,23 @@ function groupCases(list){
 
 function pluralizeCase(n){ return n===1?'1 case':`${n} cases`; }
 
+function drawSpark(id, series, glow=false){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const w=100, h=24, pad=2;
+  const vals = (series && series.length) ? series.slice(-20) : [0];
+  const min = Math.min(...vals); const max = Math.max(...vals);
+  const range = (max - min) || 1;
+  const pts = vals.map((v,i)=>{
+    const x = pad + (i*(w-2*pad)/(vals.length-1||1));
+    const y = h - pad - ((v-min)* (h-2*pad) / range);
+    return `${x},${y}`;
+  }).join(' ');
+  el.innerHTML = `<polyline points="${pts}" fill="none" stroke="rgba(200,220,255,.85)" stroke-width="2" stroke-linecap="round" />`;
+  const card = el.closest('.kpi');
+  if(card) card.classList.toggle('glow', !!glow);
+}
+
 function updateMetrics(grouped){
   const counts = { overdue:0, today:0, week:0, next:0, later:0, nodue:0 };
   let total = 0;
@@ -281,6 +309,16 @@ function updateMetrics(grouped){
   const weekTotal = (counts.week||0) + (counts.next||0);
   const metrics = { metricOverdue: counts.overdue||0, metricToday: counts.today||0, metricWeek: weekTotal, metricTotal: total };
   for(const [id,val] of Object.entries(metrics)){ const el=metricEl(id); if(el) el.textContent = val; }
+  // naive sparkline demo using counts history kept on window
+  window.__kpi = window.__kpi || { overdue:[], today:[], week:[], total:[] };
+  window.__kpi.overdue.push(counts.overdue);
+  window.__kpi.today.push(counts.today);
+  window.__kpi.week.push(weekTotal);
+  window.__kpi.total.push(total);
+  drawSpark('sparkOverdue', window.__kpi.overdue, counts.overdue > 5);
+  drawSpark('sparkToday', window.__kpi.today, counts.today > 5);
+  drawSpark('sparkWeek', window.__kpi.week, weekTotal > 10);
+  drawSpark('sparkTotal', window.__kpi.total, false);
   const tl = totalLabelEl(); if(tl) tl.textContent = pluralizeCase(total);
   const hint = totalHintEl();
   if(hint){
@@ -290,27 +328,19 @@ function updateMetrics(grouped){
 }
 
 function renderPriority(grouped){
-  const el = priorityEl(); if(!el) return;
-  const urgent = grouped.filter(g=>['overdue','today','week','next'].includes(g.key))
-                        .flatMap(g=>g.cases.map(x=>({...x, group:g.key})));
-  urgent.sort((a,b)=>a.info.sortValue - b.info.sortValue);
-  const top = urgent.slice(0,4);
-  if(!top.length){ el.innerHTML = '<div class="priority-empty">No urgent deadlines in the next week.</div>'; return; }
-  el.innerHTML = top.map(({case:c, info})=>{
-    const name = display(c.case_name);
-    const dueText = info.dueDate ? `${info.pillLabel} · ${fmtDate(info.dueDate)}` : 'No deadline';
-    const owner = display(c.paralegal);
-    return `
-      <div class="priority-item ${info.accent}" role="listitem">
-        <div class="priority-top">
-          ${priorityFlag(info)}
-          <span class="priority-name" title="${escapeAttr(name)}">${escapeHtml(name)}</span>
-        </div>
-        <div class="priority-meta">
-          <span class="priority-due">${escapeHtml(dueText)}</span>
-          <span class="priority-owner" title="${escapeAttr(owner)}">${escapeHtml(owner)}</span>
-        </div>
-      </div>`;
+  const el = priorityEl(); if(!el) return; el.innerHTML = '';
+}
+function renderMiniUpcoming(grouped){
+  const el = miniUpcomingEl(); if(!el) return;
+  const soon = grouped.filter(g=>['overdue','today','week','next'].includes(g.key))
+                      .flatMap(g=>g.cases.map(x=>({...x, group:g.key})))
+                      .sort((a,b)=> a.info.sortValue - b.info.sortValue)
+                      .slice(0,5);
+  if(!soon.length){ el.innerHTML = '<li class="muted">No upcoming deadlines</li>'; return; }
+  el.innerHTML = soon.map(({case:c, info})=>{
+    const name = escapeHtml(display(c.case_name));
+    const due = info.dueDate ? fmtDate(info.dueDate) : '—';
+    return `<li><span class="mini-name" title="${escapeAttr(name)}">${name}</span><span class="mini-due">${escapeHtml(due)}</span></li>`;
   }).join('');
 }
 
@@ -328,12 +358,25 @@ function render(){
   const grouped = groupCases(list);
   if(!grouped.length){
     rowsEl().innerHTML = '<div class="empty-state tv-empty">No active cases on the board.</div>';
-    updateMetrics(grouped); renderPriority(grouped); sizeBoard(); return;
+    updateMetrics(grouped); renderPriority(grouped); renderMiniUpcoming(grouped); sizeBoard(); return;
   }
-  const out = [];
-  for(const g of grouped){ out.push(groupRow(g,g.cases.length)); out.push(g.cases.map(({case:c,info})=>row(c,info)).join('')); }
-  rowsEl().innerHTML = out.join('');
-  updateMetrics(grouped); renderPriority(grouped); sizeBoard();
+  // Flatten grouped cases for a single minimalist list (no section headers)
+  const items = [];
+  for(const g of grouped){ for(const item of g.cases){ items.push(item); } }
+  // Build paged rows by fixed row count
+  const pages = [];
+  for(let i=0;i<items.length;i+=PAGE_ROWS_COUNT){ pages.push(items.slice(i,i+PAGE_ROWS_COUNT)); }
+  if(pageIndex >= pages.length) pageIndex = 0;
+  const out = pages.length ? pages[pageIndex].map(({case:c,info})=>row(c,info)).join('') : '';
+  const container = rowsEl();
+  container.classList.add('fade-in');
+  container.innerHTML = out;
+  setTimeout(()=>container.classList.remove('fade-in'), 180);
+  updateMetrics(grouped); renderPriority(grouped); renderMiniUpcoming(grouped); sizeBoard();
+
+  // set up page auto-advance if content exceeds viewport or if scrolling stutters
+  if(pageTimer) clearTimeout(pageTimer);
+  pageTimer = setTimeout(()=>{ pageIndex = (pageIndex + 1) % Math.max(pages.length,1); render(); resetScroll(); }, 15000);
 }
 
 async function load(){
@@ -354,7 +397,8 @@ function tickClock(){
 function resetScroll(){ const el=scrollerEl(); if(!el) return; el.scrollTop=0; autoscrollState={dir:1, pauseUntil:0}; }
 function autoScroll(ts){
   const el = scrollerEl(); if(!el){ rafId=requestAnimationFrame(autoScroll); return; }
-  const max = el.scrollHeight - el.clientHeight; if(max<=0){ rafId=requestAnimationFrame(autoScroll); return; }
+  const max = el.scrollHeight - el.clientHeight;
+  if(max<=0){ rafId=requestAnimationFrame(autoScroll); return; }
   if(ts < autoscrollState.pauseUntil){ rafId=requestAnimationFrame(autoScroll); return; }
   el.scrollTop += SCROLL_SPEED * autoscrollState.dir;
   if(el.scrollTop <= 0){ autoscrollState.dir=1; autoscrollState.pauseUntil = ts + PAUSE_AT_END_MS; }
@@ -363,12 +407,25 @@ function autoScroll(ts){
 }
 
 function onResize(){ sizeBoard(); }
-function init(){
-  tickClock(); setInterval(tickClock,1000);
-  load(); setInterval(load, POLL_MS);
-  ensureCFBTimers();
-  loadCFB();
-  window.addEventListener('resize', onResize);
-  rafId = requestAnimationFrame(autoScroll);
+function setThemeByTime(){
+  const hour = new Date().getHours();
+  const body = document.body;
+  const mode = hour < 10 ? 'morning' : hour < 17 ? 'day' : hour < 21 ? 'evening' : 'night';
+  body.setAttribute('data-theme', mode);
 }
+
+function init(){
+  setThemeByTime(); setInterval(setThemeByTime, 10*60*1000);
+  tickClock(); setInterval(tickClock,1000);
+  load(); setInterval(()=>{ load(); }, POLL_MS);
+  // Disable CFB ticker until API keys configured and results verified
+  // ensureCFBTimers();
+  // loadCFB();
+    window.addEventListener('resize', onResize);
+  // Switch to page view (no continuous autoscroll)
+  // rafId = requestAnimationFrame(autoScroll);
+  try{ if(document.documentElement.requestFullscreen){ document.documentElement.requestFullscreen().catch(()=>{}); } }catch(e){}
+}
+
+
 document.addEventListener('DOMContentLoaded', init);

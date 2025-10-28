@@ -30,6 +30,7 @@ const metrics = {
   dueSoon: $('#metric_due_soon'),
   staleFocus: $('#metric_stale_focus'),
 };
+const detailsCard = document.querySelector('.details-card');
 const metricHints = {
   total: $('#metric_total_hint'),
   attention: $('#metric_attention_hint'),
@@ -185,6 +186,7 @@ function setDetailsEnabled(enabled) {
   attentionButtons.forEach((btn) => {
     btn.disabled = !enabled;
   });
+  if (detailsCard) detailsCard.classList.toggle('has-selection', !!enabled);
   if (!enabled) {
     hiddenId.value = '';
     detailTitleEl.textContent = 'Choose a case to review';
@@ -194,6 +196,7 @@ function setDetailsEnabled(enabled) {
     if (focusAuthorSelect) focusAuthorSelect.value = 'DW';
   }
 }
+
 
 function filtersMatch(caseData) {
   if (filters.stage !== 'all' && caseData.stage !== filters.stage) return false;

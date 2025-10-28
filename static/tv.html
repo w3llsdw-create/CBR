@@ -7,49 +7,22 @@
   <title>Caseboard • TV</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/static/brand.css">
+  <link rel="stylesheet" href="/static/fonts/fonts.css">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body class="page-tv dense">
-  <header class="header header-tv">
+    <header class="header header-tv slim">
     <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" class="header-logo">
-    <div class="brand-block">
-      <div class="brand">McMath Woods • David W. Wells</div>
-      <div class="brand-sub">Caseboard Command Center</div>
-    </div>
+    <div class="brand">McMath Woods • David W. Wells</div>
     <div class="live" aria-live="polite">
       <span id="date" class="date"></span>
       <span class="dot" aria-hidden="true"></span>
-      <span class="live-label">Live</span>
       <span id="clock"></span>
     </div>
   </header>
 
-  <main class="wrap manage-layout tv-layout">
-    <!-- metrics row, read-only -->
-    <section class="insights-grid tv-insights" aria-label="Case highlights">
-      <article class="insight-card accent-overdue">
-        <span class="metric-label">Overdue</span>
-        <span class="metric-value" id="metricOverdue">0</span>
-        <span class="metric-hint">Needs immediate action</span>
-      </article>
-      <article class="insight-card accent-today">
-        <span class="metric-label">Due today</span>
-        <span class="metric-value" id="metricToday">0</span>
-        <span class="metric-hint">Wrap before close of business</span>
-      </article>
-      <article class="insight-card accent-week">
-        <span class="metric-label">Next 7 days</span>
-        <span class="metric-value" id="metricWeek">0</span>
-        <span class="metric-hint">Upcoming deadlines</span>
-      </article>
-      <article class="insight-card accent-total">
-        <span class="metric-label">Active cases</span>
-        <span class="metric-value" id="metricTotal">0</span>
-        <span class="metric-hint" id="metricTotalHint">Tracking on this board</span>
-      </article>
-    </section>
-
-    <div class="board-grid tv-board-grid">
+    <main class="wrap manage-layout tv-layout">
+                <div class="board-grid tv-board-grid with-aside">
       <!-- list panel -->
       <section class="card list-card board-card tv-list" aria-label="Active cases">
         <header class="card-header">
@@ -64,12 +37,10 @@
           <div class="thead">
             <div class="cell col-client">Client</div>
             <div class="cell col-case-name">Case</div>
-            <div class="cell col-type">Type</div>
-            <div class="cell col-stage">Stage</div>
+                        <div class="cell col-type">Type</div>
             <div class="cell col-status">Status</div>
-            <div class="cell col-focus">Current focus</div>
+            <div class="cell col-focus">Focus</div>
             <div class="cell col-para">Paralegal</div>
-            <div class="cell col-due">Next due</div>
           </div>
           <div class="list-body tv-scroll" id="caseScroller">
             <div id="rows"></div>
@@ -80,22 +51,48 @@
         <div class="scroll-veil bottom"></div>
       </section>
 
-      <!-- priority panel -->
-      <section class="card priority-card" aria-label="Urgent focus">
-        <header class="card-header">
-          <div>
-            <h2>Urgent focus</h2>
-            <p class="small muted">Top approaching deadlines</p>
+                        <!-- right aside: three stacked live streams -->
+      <aside class="tv-aside">
+                <section class="card side-card video-card" aria-label="CBS News Live">
+          <div class="video-frame">
+            <iframe title="CBS News Live"
+                    src="https://www.youtube-nocookie.com/embed/W-wvFPf3m2A?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
           </div>
-        </header>
-        <div class="priority-list" id="priorityList" role="list"></div>
-      </section>
+        </section>
+                <section class="card side-card video-card" aria-label="ABC News Live">
+          <div class="video-frame">
+            <iframe title="ABC News Live"
+                    src="https://www.youtube-nocookie.com/embed/LkeQTNzUYtQ?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+          </div>
+        </section>
+                <section class="card side-card video-card" aria-label="NBC News NOW">
+          <div class="video-frame">
+            <iframe title="NBC News NOW"
+                    src="https://www.youtube-nocookie.com/embed/BIwjgcXNzzg?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=0"
+                    frameborder="0"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+          </div>
+        </section>
+      </aside>
     </div>
   </main>
 
-  <div id="cfbTicker" class="cfb-ticker" hidden>
-    <div class="cfb-track" id="cfbTrack" aria-live="polite"></div>
+        <!-- Board metrics ticker (self-hosted, no external data) -->
+  <div id="statsTicker" class="cfb-ticker">
+    <div class="cfb-track" id="statsTrack" aria-live="polite"></div>
   </div>
+
+      <div class="tv-vignette" aria-hidden="true"></div>
 
   <script src="/static/tv.js" defer></script>
 </body>
