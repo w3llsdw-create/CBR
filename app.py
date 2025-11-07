@@ -41,6 +41,22 @@ import json, uuid, os, shutil, csv, io
 # Switched to simplified ESPN-driven ticker implementation
 from backend.cfb2 import get_cached_payload, refresh_cache
 
+# Optional PDF engines
+try:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet
+    _PDF_AVAILABLE = True
+except Exception:  # pragma: no cover - optional dependency
+    _PDF_AVAILABLE = False
+
+try:
+    from fpdf import FPDF  # fpdf2
+    _FPDF_AVAILABLE = True
+except Exception:  # pragma: no cover - optional dependency
+    _FPDF_AVAILABLE = False
+
 DATA_DIR = "data"
 CASES_PATH = os.path.join(DATA_DIR, "cases.json")
 BACKUP_DIR = os.path.join(DATA_DIR, "backups")
@@ -53,6 +69,14 @@ class FocusEntry(BaseModel):
     author: str
     text: str
 
+class ColleagueTask(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    at: datetime
+    author: str  # Initials: WB, NC, TG, CS, SJ
+    task: str
+    reviewed: bool = False
+    reviewed_at: Optional[datetime] = None
+
 class Deadline(BaseModel):
     due_date: Optional[date]  # allow clearing a date from the UI
     description: str
@@ -60,7 +84,7 @@ class Deadline(BaseModel):
 
 Stage = Literal["Pre-filing","Filed","Discovery","Pretrial","Trial","Closed"]
 # Canonical statuses (remove misspelling "Pre-Filling")
-Status = Literal["Pre-Filing","Active","Settlement","Post-Trial","Appeal"]
+Status = Literal["Prospect","Pre-Filing","Active","Settlement","Post-Trial","Appeal"]
 
 class ExternalRef(BaseModel):
     # reserved for Filevine; not used yet
@@ -68,7 +92,22 @@ class ExternalRef(BaseModel):
     filevine_number: Optional[str] = None
     linked_at: Optional[datetime] = None
 
-SPECIAL_STATUSES: set[str] = {"Settlement", "Post-Trial", "Appeal"}
+# --- Extended client/case data ---
+class ICDCode(BaseModel):
+    code: str
+    description: Optional[str] = None
+
+class Provider(BaseModel):
+    name: str
+    role: Optional[str] = None              # e.g., Insurance, Medical Provider, Adjuster, Other
+    represents: Optional[str] = None        # e.g., Plaintiff, Defendant, Client, Insured
+    company: Optional[str] = None           # Carrier or facility name
+    phone: Optional[str] = None
+    claim_number: Optional[str] = None
+    policy_number: Optional[str] = None
+    notes: Optional[str] = None
+
+SPECIAL_STATUSES: set[str] = {"Prospect", "Settlement", "Post-Trial", "Appeal"}
 
 
 class Case(BaseModel):
@@ -83,6 +122,7 @@ class Case(BaseModel):
     current_focus: str = ""                          # one-liner, last focus
     focus_log: List[FocusEntry] = Field(default_factory=list)
     deadlines: List[Deadline] = Field(default_factory=list)
+    colleague_tasks: List[ColleagueTask] = Field(default_factory=list)
 
     # Court fields (optional in pre-filing)
     case_number: Optional[str] = None
@@ -92,6 +132,25 @@ class Case(BaseModel):
     primary_attorney: Optional[str] = None
     opposing_counsel: Optional[str] = None
     opposing_firm: Optional[str] = None
+
+    # Client details
+    client_address: Optional[str] = None
+    client_phone: Optional[str] = None
+    client_dob: Optional[date] = None
+
+    # Narrative summary of claim
+    claim_summary: str = ""
+
+    # Medical coding (ICD-10 codes)
+    icd10: List[ICDCode] = Field(default_factory=list)
+
+    # Providers and related contacts (insurance, facilities, adjusters, etc.)
+    providers: List[Provider] = Field(default_factory=list)
+
+    # Manual priority flag for TV and list emphasis
+    top_priority: bool = False
+    # Archive flag to hide finished cases from active views
+    archived: bool = False
 
     # Derivatives
     next_due: Optional[date] = None
@@ -246,13 +305,26 @@ def recompute(case: Case) -> Case:
     if case.focus_log:
         case.current_focus = case.focus_log[-1].text
     has_case_number = bool((case.case_number or "").strip())
-    if case.status not in SPECIAL_STATUSES:
+    # Do not override user-specified special statuses (Prospect/Settlement/Post-Trial/Appeal)
+    # Also, if archived, leave status as-is.
+    if (not getattr(case, "archived", False)) and (case.status not in SPECIAL_STATUSES):
         case.status = "Active" if has_case_number else "Pre-Filing"
     return case
 
 # ---------- App ----------
 app = FastAPI(title="Caseboard")
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+
+# Lightweight ICD-10 description map (expandable). Fallback returns empty description.
+ICD10_MAP: dict[str, str] = {
+    "A00": "Cholera",
+    "S06.0X0A": "Concussion without loss of consciousness, initial encounter",
+    "S06.0X1A": "Concussion with loss of consciousness of 30 minutes or less, initial encounter",
+    "M54.5": "Low back pain",
+    "S16.1XXA": "Strain of muscle, fascia and tendon at neck level, initial encounter",
+    "S13.4XXA": "Sprain of ligaments of cervical spine, initial encounter",
+    "S80.01XA": "Contusion of knee, initial encounter",
+}
 
 
 @app.get("/favicon.ico")
@@ -307,6 +379,8 @@ _STATUS_SYNONYMS = {
     "prefiling": "Pre-Filing",
     "pre-filling": "Pre-Filing",  # common typo
     "pre-filling ": "Pre-Filing",
+    # Prospect
+    "prospect": "Prospect",
     # Normal forms map to themselves for completeness
     "active": "Active",
     "settlement": "Settlement",
@@ -462,6 +536,12 @@ def edit_page():
 def root():
     return FileResponse("static/index.html")
 
+# ----- Auxiliary APIs -----
+@app.get("/api/icd10/{code}")
+def api_icd10(code: str):
+    c = (code or "").strip().upper()
+    return {"code": c, "description": ICD10_MAP.get(c, "")}
+
 # ----- Manage API -----
 @app.get("/api/cases", response_model=CaseFile)
 def api_get_cases():
@@ -551,21 +631,133 @@ async def api_import_cases(payload: ImportPayload):
 
     return summary
 
+# Toggle Top Priority
+@app.post("/api/cases/{case_id}/priority/{state}", response_model=Case)
+def api_set_priority(case_id: str, state: Literal["on","off","toggle"]):
+    model = load()
+    for i, c in enumerate(model.cases):
+        if c.id == case_id:
+            if state == "toggle":
+                c.top_priority = not getattr(c, "top_priority", False)
+            else:
+                c.top_priority = (state == "on")
+            model.cases[i] = recompute(c)
+            save(model)
+            return model.cases[i]
+    raise HTTPException(404, "Not found")
+
+# Archive/Unarchive
+@app.post("/api/cases/{case_id}/archive/{state}", response_model=Case)
+def api_set_archive(case_id: str, state: Literal["on","off","toggle"]):
+    model = load()
+    for i, c in enumerate(model.cases):
+        if c.id == case_id:
+            if state == "toggle":
+                c.archived = not getattr(c, "archived", False)
+            else:
+                c.archived = (state == "on")
+            model.cases[i] = recompute(c)
+            save(model)
+            return model.cases[i]
+    raise HTTPException(404, "Not found")
+
+# ----- Colleague Task endpoints -----
+@app.get("/api/cases/{case_id}/details")
+def get_case_details(case_id: str):
+    """Get full case details including focus history and colleague tasks"""
+    model = load()
+    for c in model.cases:
+        if c.id == case_id:
+            case_dict = json.loads(c.model_dump_json())
+            return JSONResponse(case_dict)
+    raise HTTPException(404, "Case not found")
+
+class ColleagueTaskRequest(BaseModel):
+    task: str
+    author: str  # WB, NC, TG, CS, SJ
+
+@app.post("/api/cases/{case_id}/colleague-tasks")
+def add_colleague_task(case_id: str, request: ColleagueTaskRequest):
+    """Add a new colleague task to a case"""
+    # Validate author initials
+    allowed_authors = {"WB", "NC", "TG", "CS", "SJ"}
+    if request.author not in allowed_authors:
+        raise HTTPException(400, f"Invalid author. Must be one of: {', '.join(allowed_authors)}")
+    
+    model = load()
+    for i, c in enumerate(model.cases):
+        if c.id == case_id:
+            # Create new colleague task
+            new_task = ColleagueTask(
+                at=datetime.utcnow(),
+                author=request.author,
+                task=request.task.strip(),
+                reviewed=False
+            )
+            
+            # Add to case
+            if not hasattr(c, 'colleague_tasks') or c.colleague_tasks is None:
+                c.colleague_tasks = []
+            c.colleague_tasks.append(new_task)
+            
+            model.cases[i] = recompute(c)
+            save(model)
+            
+            return JSONResponse({
+                "success": True,
+                "task": json.loads(new_task.model_dump_json())
+            })
+    
+    raise HTTPException(404, "Case not found")
+
+@app.post("/api/cases/{case_id}/colleague-tasks/{task_id}/review")
+def review_colleague_task(case_id: str, task_id: str):
+    """Mark a colleague task as reviewed"""
+    model = load()
+    for i, c in enumerate(model.cases):
+        if c.id == case_id:
+            if hasattr(c, 'colleague_tasks') and c.colleague_tasks:
+                for j, task in enumerate(c.colleague_tasks):
+                    if task.id == task_id:
+                        task.reviewed = True
+                        task.reviewed_at = datetime.utcnow()
+                        model.cases[i] = recompute(c)
+                        save(model)
+                        return JSONResponse({"success": True})
+            raise HTTPException(404, "Task not found")
+    raise HTTPException(404, "Case not found")
+
 # ----- TV endpoint (read-only) -----
 @app.get("/tv/cases")
 def tv_cases():
     model = load()
-    cases = [recompute(c) for c in model.cases]
+    # Exclude archived from TV feed
+    cases = [recompute(c) for c in model.cases if not getattr(c, "archived", False)]
     def urgency_key(c: Case):
         days = 9999
         if c.next_due:
             days = (c.next_due - date.today()).days
         att = 0 if c.attention == "needs_attention" else 1
-        return (att, days, c.client_name.lower())
+        # Top priority bumps earlier without disrupting core grouping too much
+        pri = 0 if getattr(c, "top_priority", False) else 1
+        return (pri, att, days, c.client_name.lower())
     cases.sort(key=urgency_key)
+    
+    # Add colleague task notification flag to each case
+    cases_with_flags = []
+    for c in cases:
+        case_dict = json.loads(c.model_dump_json())
+        # Check for unreviewed colleague tasks
+        unreviewed_tasks = 0
+        if hasattr(c, 'colleague_tasks') and c.colleague_tasks:
+            unreviewed_tasks = sum(1 for task in c.colleague_tasks if not task.reviewed)
+        case_dict['has_unreviewed_colleague_tasks'] = unreviewed_tasks > 0
+        case_dict['unreviewed_colleague_task_count'] = unreviewed_tasks
+        cases_with_flags.append(case_dict)
+    
     return {
         "generated_at": datetime.utcnow().isoformat(),
-        "cases": [json.loads(c.model_dump_json()) for c in cases]
+        "cases": cases_with_flags
     }
 
 
@@ -573,6 +765,121 @@ def tv_cases():
 def tv_cfb():
     return JSONResponse(get_cached_payload())
 
+# ----- Reports -----
+@app.get("/api/reports/clients.pdf")
+def api_report_clients_pdf(include_archived: bool = False):
+    model = load()
+    cases = [recompute(c) for c in model.cases if include_archived or not getattr(c, "archived", False)]
+
+    if _PDF_AVAILABLE:
+        # Build PDF via reportlab
+        buf = io.BytesIO()
+        doc = SimpleDocTemplate(buf, pagesize=letter, leftMargin=36, rightMargin=36, topMargin=48, bottomMargin=36)
+        styles = getSampleStyleSheet()
+
+        title = Paragraph("Client Case Summary", styles["Title"])  # large title
+        stamp = datetime.now().strftime("%B %d, %Y %I:%M %p")
+        subtitle = Paragraph(f"Printed {stamp}", styles["Normal"])  # print date line
+
+        # Helper to wrap text inside table cells
+        def P(txt: str):
+            return Paragraph((txt or "").replace("\n","<br/>"), styles["BodyText"]) if txt else Paragraph("", styles["BodyText"]) 
+
+        # Header row
+        data = [[
+            Paragraph("<b>Client</b>", styles["Normal"]),
+            Paragraph("<b>Case</b>", styles["Normal"]),
+            Paragraph("<b>Case #</b>", styles["Normal"]),
+            Paragraph("<b>Type</b>", styles["Normal"]),
+            Paragraph("<b>County</b>", styles["Normal"]),
+            Paragraph("<b>Current Focus</b>", styles["Normal"]),
+        ]]
+        for c in sorted(cases, key=lambda x: (x.client_name or "").lower()):
+            data.append([
+                P(c.client_name or "—"),
+                P(c.case_name or "—"),
+                P(c.case_number or ""),
+                P(c.case_type or "—"),
+                P(c.county or "—"),
+                P(c.current_focus or ""),
+            ])
+
+        col_widths = [140, 160, 70, 110, 80, 220]
+        table = Table(data, colWidths=col_widths, repeatRows=1)
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#0F1520")),
+            ("TEXTCOLOR", (0,0), (-1,0), colors.HexColor("#F2EBE3")),
+            ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
+            ("FONTSIZE", (0,0), (-1,0), 10),
+            ("BOTTOMPADDING", (0,0), (-1,0), 6),
+            ("TOPPADDING", (0,0), (-1,0), 6),
+
+            ("FONTNAME", (0,1), (-1,-1), "Helvetica"),
+            ("FONTSIZE", (0,1), (-1,-1), 9),
+            ("TEXTCOLOR", (0,1), (-1,-1), colors.black),
+
+            ("ROWBACKGROUNDS", (0,1), (-1,-1), [colors.whitesmoke, colors.lightgrey]),
+            ("GRID", (0,0), (-1,-1), 0.25, colors.HexColor("#CCCCCC")),
+            ("VALIGN", (0,0), (-1,-1), "TOP"),
+        ]))
+
+        story = [title, subtitle, Spacer(1, 10), table]
+        doc.build(story)
+        buf.seek(0)
+        filename = f"client_case_summary_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+        return Response(content=buf.getvalue(), media_type="application/pdf", headers={
+            "Content-Disposition": f"attachment; filename={filename}"
+        })
+
+    if _FPDF_AVAILABLE:
+        # Fallback: build PDF via fpdf2 (pure Python)
+        pdf = FPDF(orientation='P', unit='pt', format='Letter')
+        pdf.set_margins(36, 48, 36)
+        pdf.add_page()
+        # Title
+        pdf.set_font('Helvetica', 'B', 18)
+        pdf.cell(0, 22, 'Client Case Summary', ln=1)
+        pdf.set_font('Helvetica', '', 11)
+        stamp = datetime.now().strftime('%B %d, %Y %I:%M %p')
+        pdf.cell(0, 16, f'Printed {stamp}', ln=1)
+        pdf.ln(6)
+        # Table header
+        headers = ['Client', 'Case', 'Case #', 'Type', 'County', 'Current Focus']
+        col_widths = [140, 160, 70, 110, 80, 220]
+        pdf.set_font('Helvetica', 'B', 10)
+        for w, h in zip(col_widths, headers):
+            pdf.cell(w, 16, h, border=1)
+        pdf.ln(16)
+        # Rows
+        pdf.set_font('Helvetica', '', 9)
+        for c in sorted(cases, key=lambda x: (x.client_name or '').lower()):
+            row = [
+                c.client_name or '—',
+                c.case_name or '—',
+                c.case_number or '',
+                c.case_type or '—',
+                c.county or '—',
+                c.current_focus or '',
+            ]
+            # naive wrapping: split very long focus into chunks
+            # (fpdf2 supports multi_cell; use that for focus)
+            # Print first five columns as single-line cells
+            for i in range(5):
+                pdf.cell(col_widths[i], 14, row[i][:60], border=1)
+            # Focus as multi_cell occupying last column
+            x_before = pdf.get_x()
+            y_before = pdf.get_y()
+            pdf.multi_cell(col_widths[5], 14, row[5], border=1)
+            y_after = pdf.get_y()
+            # Move to next line aligning with the tallest cell
+            pdf.set_xy(36, y_after)
+        out = pdf.output(dest='S').encode('latin-1')
+        filename = f"client_case_summary_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
+        return Response(content=out, media_type="application/pdf", headers={
+            "Content-Disposition": f"attachment; filename={filename}"
+        })
+
+    raise HTTPException(500, "PDF engine not installed. Please restart with reportlab or install fpdf2.")
 
 # Optional static fallback route for diagnostics
 @app.get("/static/data/cfb.json")
@@ -588,3 +895,7 @@ def manage_page(): return FileResponse("static/manage.html")
 
 @app.get("/tv")
 def tv_page(): return FileResponse("static/tv.html")
+
+@app.get("/board")
+def board_page(): return FileResponse("static/board.html")
+

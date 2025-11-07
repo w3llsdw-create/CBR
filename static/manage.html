@@ -60,15 +60,16 @@
         </select>
       </div>
     </div>
-    <div class="toolbar-right">
-      <div class="small" id="result_count">0 cases</div>
-      <div class="toolbar-actions">
-        <button id="clear_filters" type="button" class="ghost">Clear</button>
-        <button id="import_cases" type="button">Import CSV</button>
-        <a class="button" href="/add">+ New Case/Client</a>
+          <div class="toolbar-right">
+        <div class="small" id="result_count">0 cases</div>
+        <div class="toolbar-actions">
+          <button id="clear_filters" type="button" class="ghost">Clear</button>
+          <button id="import_cases" type="button">Import CSV</button>
+          <a class="button" href="/add">+ New Case/Client</a>
+          <a class="button" id="download_pdf" href="/api/reports/clients.pdf" target="_blank" rel="noopener">Download PDF</a>
+        </div>
+        <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
       </div>
-      <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
-    </div>
   </section>
 
   <input id="import_file" type="file" accept=".csv,text/csv" hidden>
@@ -99,7 +100,7 @@
   <div class="board-grid">
     <!-- Cases table -->
     <section class="card list-card" aria-label="Case list">
-      <div class="thead">
+            <div class="thead">
         <div class="cell col-client">Client</div>
         <div class="cell col-case-name">Case</div>
         <div class="cell col-type">Type</div>
@@ -108,6 +109,7 @@
         <div class="cell col-focus">Focus</div>
         <div class="cell col-para">Paralegal</div>
         <div class="cell col-due">Next Due</div>
+        <div class="cell col-priority" title="Top Priority (TV)">Top</div>
       </div>
       <div id="list" class="list-body"></div>
     </section>
@@ -121,19 +123,21 @@
           <h2 id="detail_title">Choose a case to review</h2>
           <p id="detail_subtitle" class="small"></p>
         </div>
-        <div class="attention-group">
+                <div class="attention-group">
           <button id="attention_needs" type="button" data-state="needs_attention" class="chip">Needs Attention</button>
           <button id="attention_waiting" type="button" data-state="waiting" class="chip">Waiting</button>
           <button id="attention_clear" type="button" data-state="" class="chip">Clear</button>
+          <button id="toggle_top" type="button" class="chip" title="Mark this case as Top Priority for TV">Top Priority</button>
         </div>
-        <div class="header-actions">
+                <div class="header-actions">
           <button id="open_edit" type="button" class="ghost" disabled>Open full editor</button>
+          <button id="archive_case" type="button" class="ghost" disabled>Archive</button>
           <button id="delete_case" type="button" class="ghost danger" disabled>Delete case</button>
         </div>
       </header>
 
       <section class="details-overview" aria-label="Case overview">
-        <div class="details-grid">
+                <div class="details-grid">
           <div class="detail-pair"><span class="detail-label">Client</span><span class="detail-value" id="detail_client_name">—</span></div>
           <div class="detail-pair"><span class="detail-label">Case</span><span class="detail-value" id="detail_case_name">—</span></div>
           <div class="detail-pair"><span class="detail-label">Type</span><span class="detail-value" id="detail_case_type">—</span></div>
@@ -146,6 +150,10 @@
           <div class="detail-pair"><span class="detail-label">Judge</span><span class="detail-value" id="detail_judge">—</span></div>
           <div class="detail-pair"><span class="detail-label">Opposing counsel</span><span class="detail-value" id="detail_opposing_counsel">—</span></div>
           <div class="detail-pair"><span class="detail-label">Opposing firm</span><span class="detail-value" id="detail_opposing_firm">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Client phone</span><span class="detail-value" id="detail_client_phone">—</span></div>
+          <div class="detail-pair"><span class="detail-label">Client birthday</span><span class="detail-value" id="detail_client_dob">—</span></div>
+          <div class="detail-pair" style="grid-column:1/-1"><span class="detail-label">Client address</span><span class="detail-value" id="detail_client_address">—</span></div>
+          <div class="detail-pair" style="grid-column:1/-1"><span class="detail-label">Claim summary</span><span class="detail-value" id="detail_claim_summary">—</span></div>
         </div>
       </section>
 
@@ -153,6 +161,23 @@
         <header><div class="small">Current focus</div></header>
         <p id="current_focus_text" class="current-focus-text">Select a case to see the latest focus.</p>
       </section>
+
+      <section class="details-section">
+        <header><div class="small">ICD-10 Codes</div></header>
+        <div id="icd10_list" class="deadline-list"></div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input id="icd_input" placeholder="e.g., S06.0X0A" style="max-width:220px;">
+          <input id="icd_desc" placeholder="(auto) description" style="flex:1;">
+          <button id="add_icd" type="button" disabled>Add code</button>
+        </div>
+      </section>
+
+      <section class="details-section">
+        <header><div class="small">Providers & Contacts</div></header>
+        <div id="providers_list" class="deadline-list"></div>
+        <button id="add_provider" type="button" disabled>Add provider</button>
+      </section>
+
 
       <section class="details-section">
         <header><div class="small">Deadlines</div></header>
@@ -174,6 +199,11 @@
       <section class="details-section">
         <header><div class="small">Focus Log</div></header>
         <ul id="focus_list" class="focus-list"></ul>
+      </section>
+
+      <section class="details-section">
+        <header><div class="small">Colleague Tasks</div></header>
+        <div id="colleague_tasks" class="colleague-tasks-list"></div>
       </section>
     </section>
   </div>

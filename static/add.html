@@ -21,7 +21,7 @@
         <label style="margin-right:12px;"><input type="radio" name="filed" value="Pre-filing" checked> Pre-filed</label>
         <label><input type="radio" name="filed" value="Filed"> Filed</label>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px;">
         <label>Client<input id="client_name" required></label>
         <label>Case name<input id="case_name" required></label>
         <label>Type<select id="case_type">
@@ -34,9 +34,28 @@
           <option>Wrongful Death</option>
           <option>Medical Malpractice</option>
           <option>Environmental</option>
+          <option>Premises Liability</option>
+          <option>Dog Bite/Animal</option>
+          <option>Boating</option>
+          <option>TBI</option>
+          <option>Workplace</option>
+          <option>Nursing Home</option>
+          <option>Pharmacy Malpractice</option>
+          <option>Dental Malpractice</option>
+          <option>Product Liability</option>
+          <option>First-Party Bad Faith</option>
+          <option>Property Damage</option>
+          <option>Defamation</option>
+          <option>IIED</option>
+          <option>Consumer Fraud</option>
+          <option>Employment</option>
         </select></label>
         <label>Paralegal<input id="paralegal"></label>
-  <label>Primary Attorney<input id="primary_attorney"></label>
+        <label>Primary Attorney<input id="primary_attorney"></label>
+        <label>Client phone<input id="client_phone" placeholder="(555) 123-4567"></label>
+        <label>Client birthday<input id="client_dob" type="date"></label>
+        <label style="grid-column:1 / -1;">Client address<textarea id="client_address" rows="2" placeholder="Street, City, State ZIP"></textarea></label>
+        <label style="grid-column:1 / -1;">Claim summary<textarea id="claim_summary" rows="4" placeholder="Paragraph or two explaining the claim..."></textarea></label>
       </div>
       <div id="filed-fields" style="display:none; margin-bottom:18px;">
         <div class="small" style="margin-bottom:8px;">Filed Case Details</div>
@@ -72,14 +91,18 @@
 document.getElementById('add-form').onsubmit = async function(e) {
   e.preventDefault();
   const filed = document.querySelector('input[name="filed"]:checked').value;
-  const payload = {
+    const payload = {
     client_name: document.getElementById('client_name').value,
     case_name: document.getElementById('case_name').value,
     case_type: document.getElementById('case_type').value,
     paralegal: document.getElementById('paralegal').value,
     primary_attorney: document.getElementById('primary_attorney').value,
+    client_phone: document.getElementById('client_phone').value,
+    client_dob: document.getElementById('client_dob').value || null,
+    client_address: document.getElementById('client_address').value,
+    claim_summary: document.getElementById('claim_summary').value,
     stage: document.getElementById('stage').value,
-    focus_log: [], deadlines: []
+    focus_log: [], deadlines: [], icd10: [], providers: []
   };
   if (filed === 'Filed') {
     payload.case_number = document.getElementById('case_number').value;

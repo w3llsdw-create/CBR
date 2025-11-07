@@ -1,0 +1,1112 @@
+{
+  "schema_version": 1,
+  "saved_at": "2025-11-07T15:43:05.695730",
+  "cases": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "client_name": "Willis, Traci",
+      "case_name": "Willis v. Doe",
+      "case_type": "Defamation",
+      "stage": "Discovery",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Received and responsed to email re: suit for damages. Start logging time",
+      "focus_log": [
+        {
+          "at": "2025-10-29T20:26:20.156000Z",
+          "author": "DW",
+          "text": "Got confirmation of subpoena service. Expect production by November 10"
+        },
+        {
+          "at": "2025-11-04T14:37:13.531000Z",
+          "author": "DW",
+          "text": "Received and responsed to email re: suit for damages. Start logging time"
+        }
+      ],
+      "deadlines": [
+        {
+          "due_date": "2025-11-10",
+          "description": "TextNow production due",
+          "resolved": false
+        }
+      ],
+      "colleague_tasks": [],
+      "case_number": "60CV-25-12762",
+      "county": "Pulaski",
+      "division": "12th",
+      "judge": "Connors",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": "2025-11-10",
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "3b0b2203-4ce9-42a5-9894-c9895b4b3efa",
+      "client_name": "Jones, Hope",
+      "case_name": "Tronca v. Tronca",
+      "case_type": "Domestic Relations",
+      "stage": "Pretrial",
+      "status": "Active",
+      "attention": "needs_attention",
+      "paralegal": "Andrew",
+      "current_focus": "Draft decree. Schedule pickup for HJ with NT.",
+      "focus_log": [
+        {
+          "at": "2025-10-27T13:34:55.424000Z",
+          "author": "DW",
+          "text": "Give D until end of week to return waiver then initiate formal service"
+        },
+        {
+          "at": "2025-10-28T14:35:22.032000Z",
+          "author": "DW",
+          "text": "Responded to NT email re: ring/truck proposal"
+        },
+        {
+          "at": "2025-11-03T17:21:02.512000Z",
+          "author": "DW",
+          "text": "Filed Waiver 10/31. Need to email NT and HJ."
+        },
+        {
+          "at": "2025-11-04T14:35:00.058000Z",
+          "author": "DW",
+          "text": "Emailed both. Time to draft next docs"
+        },
+        {
+          "at": "2025-11-05T21:44:54.125000Z",
+          "author": "DW",
+          "text": "Draft decree. Schedule pickup for HJ with NT."
+        }
+      ],
+      "deadlines": [
+        {
+          "due_date": "2026-02-05",
+          "description": "Deadline to serve D Complaint and Summons",
+          "resolved": true
+        },
+        {
+          "due_date": "2025-10-31",
+          "description": "Initiate formal service of complaint and summons",
+          "resolved": true
+        },
+        {
+          "due_date": "2025-12-01",
+          "description": "NT Answer Due",
+          "resolved": false
+        }
+      ],
+      "colleague_tasks": [],
+      "case_number": "23DR-25-1089",
+      "county": "Faulkner",
+      "division": "4th",
+      "judge": "Clark",
+      "primary_attorney": "David",
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": true,
+      "archived": false,
+      "next_due": "2025-12-01",
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "546098bb-7362-4243-8fa6-5f89db81c2ec",
+      "client_name": "Railey, Patti",
+      "case_name": "Railey v. Lane et al.",
+      "case_type": "Dental Malpractice",
+      "stage": "Pre-filing",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Send first set of disco",
+      "focus_log": [
+        {
+          "at": "2025-10-30T00:33:34.787000Z",
+          "author": "DW",
+          "text": "Rework discovery with suggestions from WB"
+        },
+        {
+          "at": "2025-11-04T14:36:31.770000Z",
+          "author": "DW",
+          "text": "Rework discovery again, more final draft. Review answer once more"
+        },
+        {
+          "at": "2025-11-05T21:48:11.965000Z",
+          "author": "DW",
+          "text": "Send first set of disco"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "60CV-25-5940",
+      "county": "Pulaski",
+      "division": "3rd",
+      "judge": "Compton",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "65a83019-9b52-4d66-9a5d-d89f2fb29fa7",
+      "client_name": "Temple, William",
+      "case_name": "Temple v. Goss et al.",
+      "case_type": "MVA",
+      "stage": "Pretrial",
+      "status": "Active",
+      "attention": "",
+      "paralegal": "Sabrina",
+      "current_focus": "",
+      "focus_log": [],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "23CV-25-176",
+      "county": "Faulkner",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": "",
+      "client_phone": "",
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "bd2b7846-dd18-428e-96f7-e6f568b1ea99",
+      "client_name": "McCartan, Rebecca",
+      "case_name": "McCartan v. NW Physicians",
+      "case_type": "Pharmacy Malpractice",
+      "stage": "Pre-filing",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Review and calendar discovery requests",
+      "focus_log": [
+        {
+          "at": "2025-11-05T22:01:44.077000Z",
+          "author": "DW",
+          "text": "Review and calendar discovery requests"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "04CV-25-3798",
+      "county": "Benton",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "c9a5ad03-fd04-48d4-9528-6a8fe83971a5",
+      "client_name": "Suter, Kristen",
+      "case_name": "Suter v. Baptist Health",
+      "case_type": "Medical Malpractice",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "needs_attention",
+      "paralegal": "Andrew",
+      "current_focus": "Send record to expert (Anzalone)",
+      "focus_log": [
+        {
+          "at": "2025-10-28T19:48:53.495000Z",
+          "author": "DW",
+          "text": "Evaluating expert in Bethesda MD"
+        },
+        {
+          "at": "2025-10-29T13:53:26.694000Z",
+          "author": "DW",
+          "text": "Emailed expert in Co"
+        },
+        {
+          "at": "2025-11-05T21:49:11.677000Z",
+          "author": "DW",
+          "text": "Send record to expert (Anzalone)"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Faulkner",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "0dc2fabd-de44-4154-84fd-2b85d117a337",
+      "client_name": "Taylor, Robert",
+      "case_name": "Taylor, Robert",
+      "case_type": "Catastrophic Injury",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "WB and GC setting up meeting",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:58:07.814000Z",
+          "author": "DW",
+          "text": "Unclear"
+        },
+        {
+          "at": "2025-11-05T21:49:31.036000Z",
+          "author": "DW",
+          "text": "WB and GC setting up meeting"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Lonoke",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "7a25df39-2bef-4ecc-afcb-3fc74f3db689",
+      "client_name": "Burks, Mike",
+      "case_name": "Burks v. Mena Short Stop",
+      "case_type": "Environmental",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Sent demand",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:56:26.069000Z",
+          "author": "DW",
+          "text": "Sent demand"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Polk",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "68e536d2-dc33-41ab-aec6-e7a4b9740d54",
+      "client_name": "Hagan, Lashlee",
+      "case_name": "Hagan v. Bogue",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Draft demand",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:57:29.717000Z",
+          "author": "DW",
+          "text": "Draft demand"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Prairie",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "a38e9044-329a-4a0b-a32c-973ca0274bf7",
+      "client_name": "Estate of Morales",
+      "case_name": "Morales v. R'ville Hldgs",
+      "case_type": "Medical Malpractice",
+      "stage": "Pre-filing",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Currently not applicable/involved",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:58:30.517000Z",
+          "author": "DW",
+          "text": "Waiting"
+        },
+        {
+          "at": "2025-11-05T22:02:12.333000Z",
+          "author": "DW",
+          "text": "Currently not applicable/involved"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "58CV-24-104",
+      "county": "Pope",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "310c8a98-c7fd-4a86-95a8-9cb5afdcfc65",
+      "client_name": "Dorsey, Jesse",
+      "case_name": "In re: Estate of Dorsey",
+      "case_type": "Probate",
+      "stage": "Pre-filing",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Jeseal",
+      "current_focus": "Had call with Teresa and drafted order and pet to close estate. Sent to WB",
+      "focus_log": [
+        {
+          "at": "2025-11-04T13:49:38.506000Z",
+          "author": "DW",
+          "text": "Rework Packet, call Theresa"
+        },
+        {
+          "at": "2025-11-05T21:43:43.004000Z",
+          "author": "DW",
+          "text": "Rework filing packet. Call with Mother Teresa scheduled 11/6 am."
+        },
+        {
+          "at": "2025-11-06T20:46:44.259000Z",
+          "author": "DW",
+          "text": "Draft petition to close estate and proposed order. Spoke with Teresa on phone this AM who gave blessing."
+        },
+        {
+          "at": "2025-11-07T14:35:47.610000Z",
+          "author": "DW",
+          "text": "Had call with Teresa and drafted order and pet to close estate. Sent to WB"
+        }
+      ],
+      "deadlines": [
+        {
+          "due_date": "2025-11-06",
+          "description": "Rework filing packet. Call with Mother Teresa scheduled 11/6 am.",
+          "resolved": false
+        }
+      ],
+      "colleague_tasks": [],
+      "case_number": "60PR-23-342",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "Reif",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": "2025-11-06",
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "0e808f37-5349-4e30-abc2-9697a08266c8",
+      "client_name": "Holder, Ryan",
+      "case_name": "Holder, Ryan",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Call on 11/6 morning",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:58:42.150000Z",
+          "author": "DW",
+          "text": "Review"
+        },
+        {
+          "at": "2025-11-05T00:26:55.605000Z",
+          "author": "DW",
+          "text": "Emailed WB draft counter"
+        },
+        {
+          "at": "2025-11-05T21:45:46.477000Z",
+          "author": "DW",
+          "text": "Call on 11/6 morning"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": null,
+      "county": null,
+      "division": null,
+      "judge": null,
+      "primary_attorney": null,
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "076e5974-6a5d-42a1-8e8c-867aa138f2ff",
+      "client_name": "Surguine, Christopher",
+      "case_name": "Surguine, Christopher",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Demand draft in Y",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:54:12.949000Z",
+          "author": "DW",
+          "text": "Gave demand letter to WB"
+        },
+        {
+          "at": "2025-11-05T22:01:14.685000Z",
+          "author": "DW",
+          "text": "Demand draft in Y"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "1d3ee827-2503-42ab-8cf5-04d1b68f3983",
+      "client_name": "Palmer, Valerie",
+      "case_name": "Palmer v. Moore",
+      "case_type": "Dog Bite/Animal",
+      "stage": "Pre-filing",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "Jeseal",
+      "current_focus": "Summons served, waiting on answer",
+      "focus_log": [
+        {
+          "at": "2025-10-31T16:17:54.525000Z",
+          "author": "DW",
+          "text": "Summons served, waiting on answer"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "12CV-25-317",
+      "county": "Cleburne",
+      "division": "1st",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "8e108ebc-87aa-406e-968e-fc3bdc0d503f",
+      "client_name": "Jackson, Terra",
+      "case_name": "Jackson v. Dreamland Ballroom",
+      "case_type": "Premises Liability",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "needs_attention",
+      "paralegal": "Andrew",
+      "current_focus": "Rewrite client letter rejecting case",
+      "focus_log": [
+        {
+          "at": "2025-11-04T14:39:11.323000Z",
+          "author": "DW",
+          "text": "Rewrite client letter rejecting case"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": true,
+      "archived": true,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "810b2fe1-42bc-4efe-ae45-e8c53eab8a94",
+      "client_name": "Billingsley, Jacob",
+      "case_name": "Billingsley v. Dedman",
+      "case_type": "Wrongful Death",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Drafted complaint",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:56:00.549000Z",
+          "author": "DW",
+          "text": "Drafted complaint"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "d46c1fd2-3925-477a-a5d4-b22d4180fabb",
+      "client_name": "Phelps, Jacquelyn",
+      "case_name": "Phelps, Jacquelyn",
+      "case_type": "Medical Malpractice",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "needs_attention",
+      "paralegal": "Sabrina",
+      "current_focus": "Read over expert materials before chat with WB and NC. Run thought on CTD by WB.",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:58:22.229000Z",
+          "author": "DW",
+          "text": "Waiting on expert review"
+        },
+        {
+          "at": "2025-11-04T14:37:57.130000Z",
+          "author": "DW",
+          "text": "Read expert materials"
+        },
+        {
+          "at": "2025-11-05T21:47:42.605000Z",
+          "author": "DW",
+          "text": "Read over expert materials before chat with WB and NC. Run thought on CTD by WB."
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Saline",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "78d2f847-e4f0-4a3c-a293-59d90d17f555",
+      "client_name": "Andress, Nathan",
+      "case_name": "Andress v. Safiullah",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Andrew",
+      "current_focus": "Completed demand draft, waiting on med billing",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:53:08.021000Z",
+          "author": "DW",
+          "text": "Start work on demand"
+        },
+        {
+          "at": "2025-10-31T16:17:33.086000Z",
+          "author": "DW",
+          "text": "Completed demand draft, waiting on med billing"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "2784aae8-4744-4fbc-8499-edec0f155072",
+      "client_name": "Cheek, Edianne",
+      "case_name": "Cheek v. Polaris",
+      "case_type": "Wrongful Death",
+      "stage": "Discovery",
+      "status": "Active",
+      "attention": "waiting",
+      "paralegal": "",
+      "current_focus": "Nothing on my end",
+      "focus_log": [
+        {
+          "at": "2025-10-28T13:07:17.363000Z",
+          "author": "DW",
+          "text": "Research verdict ranges"
+        },
+        {
+          "at": "2025-10-29T13:52:24.517000Z",
+          "author": "DW",
+          "text": "Emailed verdict ranges to WB"
+        },
+        {
+          "at": "2025-11-05T21:58:49.533000Z",
+          "author": "DW",
+          "text": "Verdict ranges through Lexis"
+        },
+        {
+          "at": "2025-11-07T14:27:36.651000Z",
+          "author": "DW",
+          "text": "Nothing on my end"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "60CV-24-4608",
+      "county": "Pulaski",
+      "division": "11th",
+      "judge": "James",
+      "primary_attorney": "",
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "d9a86ec5-cf25-4272-bf30-589f6b7c57a8",
+      "client_name": "Williams, Veronica",
+      "case_name": "Williams v. Williams",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "needs_attention",
+      "paralegal": "Andrew",
+      "current_focus": "Have authorization for $30k. Call adj with WB",
+      "focus_log": [
+        {
+          "at": "2025-10-29T13:53:53.366000Z",
+          "author": "DW",
+          "text": "Gave counter letter to WB"
+        },
+        {
+          "at": "2025-11-04T14:38:40.298000Z",
+          "author": "DW",
+          "text": "Call veronica to get authorization for 30K. Then call adjuster w/ WB."
+        },
+        {
+          "at": "2025-11-05T21:50:16.076000Z",
+          "author": "DW",
+          "text": "Have authorization for $30k. Call adj with WB"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "Pulaski",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "ff66cc21-f14e-45c3-910f-9973af232a48",
+      "client_name": "McKenzie, Alan",
+      "case_name": "McKenzie v. GUARD",
+      "case_type": "Property Damage",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "waiting",
+      "paralegal": "Sabrina",
+      "current_focus": "Reviewed. Ball in client's court I believe.",
+      "focus_log": [
+        {
+          "at": "2025-10-29T20:17:12.921000Z",
+          "author": "DW",
+          "text": "Review policy; review what we sent; look at what remains viable"
+        },
+        {
+          "at": "2025-11-04T13:52:12.362000Z",
+          "author": "DW",
+          "text": "Follow up"
+        },
+        {
+          "at": "2025-11-05T21:46:54.124000Z",
+          "author": "DW",
+          "text": "Reviewed. Ball in client's court I believe."
+        }
+      ],
+      "deadlines": [
+        {
+          "due_date": "2025-10-30",
+          "description": "Deadline for records",
+          "resolved": true
+        }
+      ],
+      "colleague_tasks": [],
+      "case_number": null,
+      "county": null,
+      "division": null,
+      "judge": null,
+      "primary_attorney": "Will",
+      "opposing_counsel": null,
+      "opposing_firm": null,
+      "client_address": null,
+      "client_phone": null,
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "15ca530b-81f5-4f1b-adb9-a30917303cdc",
+      "client_name": "Griffith, Gail",
+      "case_name": "Ruggles v. Griffith",
+      "case_type": "Probate",
+      "stage": "Discovery",
+      "status": "Active",
+      "attention": "",
+      "paralegal": "",
+      "current_focus": "Resend contract after chat with TG",
+      "focus_log": [
+        {
+          "at": "2025-11-05T21:59:53.213000Z",
+          "author": "DW",
+          "text": "Resend contract after chat with TG"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "46CV-25-320",
+      "county": "Miller",
+      "division": "",
+      "judge": "Arnold",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": "",
+      "client_phone": "4783963976",
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": true,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "0186c8c6-7d19-4f5b-9db0-ec9ebe0ee8be",
+      "client_name": "Dunbar, Lottie",
+      "case_name": "Dunbar v. Little Rock Metro",
+      "case_type": "MVA",
+      "stage": "Pre-filing",
+      "status": "Pre-Filing",
+      "attention": "",
+      "paralegal": "",
+      "current_focus": "Send form to ASP",
+      "focus_log": [
+        {
+          "at": "2025-11-05T22:00:41.821000Z",
+          "author": "DW",
+          "text": "Send form to ASP"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "",
+      "county": "",
+      "division": "",
+      "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": "",
+      "client_phone": "",
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    }
+  ]
+}

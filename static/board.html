@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Colleague Board • McMath Woods</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/static/brand.css">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="page-tv dense board-layout">
+  <header class="header header-tv slim">
+    <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" class="header-logo">
+    <div class="brand">McMath Woods • David W. Wells • Colleague Board</div>
+    <div class="live" aria-live="polite">
+      <span id="date" class="date"></span>
+      <span class="dot" aria-hidden="true"></span>
+      <span id="clock"></span>
+      <span class="live-indicator" id="liveIndicator">● OFFLINE</span>
+    </div>
+  </header>
+
+  <main class="wrap manage-layout tv-layout">
+  <div class="board-grid tv-board-grid with-aside">
+      <!-- List panel -->
+      <section class="card list-card board-card tv-list" aria-label="Active cases">
+        <header class="card-header">
+          <div>
+            <h2>Active cases</h2>
+            <div class="search-controls">
+              <div class="search-bar">
+                <input type="search" id="searchInput" placeholder="Search cases, clients, or numbers..." />
+                <button type="button" id="clearSearch" class="clear-search">×</button>
+              </div>
+              <div class="filter-pills">
+                <button class="filter-pill active" data-filter="all">All</button>
+                <button class="filter-pill" data-filter="urgent">Urgent</button>
+                <button class="filter-pill" data-filter="due-soon">Due Soon</button>
+                <button class="filter-pill" data-filter="top-priority">Priority</button>
+              </div>
+            </div>
+          </div>
+          <div class="count" id="metricTotalLabel">0 cases</div>
+        </header>
+
+        <div class="table">
+          <div class="thead">
+            <div class="cell col-client">Client</div>
+            <div class="cell col-case-name">Case</div>
+            <div class="cell col-type">Type</div>
+            <div class="cell col-status">Status</div>
+            <div class="cell col-focus">Focus</div>
+            <div class="cell col-county">County</div>
+          </div>
+          <div class="list-body tv-scroll" id="caseScroller">
+            <div id="rows"></div>
+          </div>
+        </div>
+
+        <div class="scroll-veil top"></div>
+        <div class="scroll-veil bottom"></div>
+      </section>
+
+      <!-- Right sidebar: Case details -->
+      <aside class="tv-aside case-sidebar">
+        <section class="card side-card case-details-card" id="caseDetails">
+          <header class="case-details-header">
+            <div class="case-title">
+              <h3 id="detailsCaseName">Select a Case</h3>
+              <p id="detailsClientName"></p>
+              <div id="detailsCaseMeta" class="case-meta"></div>
+            </div>
+            <button class="close-details" id="closeDetails" aria-label="Close">×</button>
+          </header>
+          
+          <div class="case-details-body">
+            <div class="details-section">
+              <h4>Focus History</h4>
+              <div id="focusHistoryList" class="focus-history">
+                <div class="loading">Select a case to view history...</div>
+              </div>
+            </div>
+            
+            <div class="details-section">
+              <h4>Colleague Tasks</h4>
+              <div id="tasksList" class="tasks-list">
+                <div class="no-tasks">Select a case to view tasks.</div>
+              </div>
+              
+              <form id="addTaskForm" class="add-task-form">
+                <div class="form-group">
+                  <label for="taskText">Add a task:</label>
+                  <textarea id="taskText" rows="3" placeholder="Enter task description..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="authorSelect">Your initials:</label>
+                  <select id="authorSelect">
+                    <option value="">Select...</option>
+                    <option value="WB">WB</option>
+                    <option value="NC">NC</option>
+                    <option value="TG">TG</option>
+                    <option value="CS">CS</option>
+                    <option value="SJ">SJ</option>
+                  </select>
+                </div>
+                <div class="form-actions">
+                  <button type="submit">Add Task</button>
+                  <button type="button" id="cancelTask">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="/static/board.js?v=20251105"></script>
+</body>
+</html>

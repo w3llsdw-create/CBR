@@ -7,14 +7,22 @@ const detailTitleEl = $('#detail_title');
 const detailSubtitleEl = $('#detail_subtitle');
 const openEditBtn = $('#open_edit');
 const deleteCaseBtn = $('#delete_case');
+const archiveCaseBtn = $('#archive_case');
 const focusListEl = $('#focus_list');
 const focusEntryInput = $('#focus_entry');
 const focusAuthorSelect = $('#focus_author');
 const currentFocusEl = $('#current_focus_text');
 const deadlinesEl = $('#deadlines');
 const addDeadlineBtn = $('#add_deadline');
+const icdListEl = document.getElementById('icd10_list');
+const icdInput = document.getElementById('icd_input');
+const icdDescInput = document.getElementById('icd_desc');
+const addIcdBtn = document.getElementById('add_icd');
+const providersListEl = document.getElementById('providers_list');
+const addProviderBtn = document.getElementById('add_provider');
+const colleagueTasksEl = document.getElementById('colleague_tasks');
 const hiddenId = $('#id');
-const attentionButtons = $$('.attention-group .chip');
+const attentionButtons = $$('.attention-group .chip[data-state]');
 const importBtn = $('#import_cases');
 const importInput = $('#import_file');
 const importFeedback = $('#import_feedback');
@@ -31,6 +39,8 @@ const metrics = {
   staleFocus: $('#metric_stale_focus'),
 };
 const detailsCard = document.querySelector('.details-card');
+const toggleTopBtn = document.getElementById('toggle_top');
+
 const metricHints = {
   total: $('#metric_total_hint'),
   attention: $('#metric_attention_hint'),
@@ -51,6 +61,10 @@ const detailFields = {
   judge: $('#detail_judge'),
   opposing_counsel: $('#detail_opposing_counsel'),
   opposing_firm: $('#detail_opposing_firm'),
+  client_phone: $('#detail_client_phone'),
+  client_dob: $('#detail_client_dob'),
+  client_address: $('#detail_client_address'),
+  claim_summary: $('#detail_claim_summary'),
 };
 
 let CASES = [];
@@ -143,8 +157,11 @@ function dueClass(caseData) {
 }
 
 function statusClass(status) {
-  return (status || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const s = (status || '').toLowerCase();
+  if (s.includes('prospect')) return 'prospect';
+  return s.replace(/[^a-z0-9]+/g, '-');
 }
+
 
 function attentionLabel(att) {
   if (att === 'needs_attention') return 'Needs attention';
@@ -180,7 +197,8 @@ function clearDetails() {
 }
 
 function setDetailsEnabled(enabled) {
-  [focusEntryInput, focusAuthorSelect, addDeadlineBtn, openEditBtn, deleteCaseBtn].forEach((el) => {
+    [focusEntryInput, focusAuthorSelect, addDeadlineBtn, openEditBtn, deleteCaseBtn, toggleTopBtn, archiveCaseBtn].forEach((el) => {
+
     if (el) el.disabled = !enabled;
   });
   attentionButtons.forEach((btn) => {
@@ -196,6 +214,7 @@ function setDetailsEnabled(enabled) {
     if (focusAuthorSelect) focusAuthorSelect.value = 'DW';
   }
 }
+
 
 
 function filtersMatch(caseData) {
@@ -242,9 +261,10 @@ function sortCases(list) {
 }
 
 function applyFilters() {
-  const matches = CASES.filter(filtersMatch);
+  const matches = CASES.filter((c) => !c.archived).filter(filtersMatch);
   return sortCases(matches);
 }
+
 
 function updateResultCount(count) {
   resultCountEl.textContent = `${count} case${count === 1 ? '' : 's'}`;
@@ -380,34 +400,60 @@ function renderList() {
     highlightRow(null);
     return;
   }
-  cases.forEach((c) => {
-    const row = document.createElement('button');
-    row.type = 'button';
+      cases.forEach((c) => {
+    const row = document.createElement('div');
     row.className = `trow case-row ${dueClass(c)} ${c.attention === 'needs_attention' ? 'needs' : ''}`;
     row.dataset.id = c.id;
+    row.tabIndex = 0;
+    row.setAttribute('role', 'button');
     const paralegalName = (c.paralegal || '').trim();
     const clientName = c.client_name && c.client_name.trim() ? c.client_name : '—';
     const caseName = c.case_name && c.case_name.trim() ? c.case_name : '—';
     const statusText = displayStatus(c.status);
     const statusClassName = statusText === '—' ? 'none' : statusClass(statusText);
-    const focusText = (c.current_focus || '').trim();
-    const focusHtml = focusText
-      ? `<span class="focus-text">${esc(focusText)}</span>`
+    const focusTextVal = (c.current_focus || '').trim();
+    const focusHtml = focusTextVal
+      ? `<span class="focus-text">${esc(focusTextVal)}</span>`
       : '<span class="muted focus-text">No focus logged</span>';
+    const isTop = !!c.top_priority;
     row.innerHTML = `
-        <div class="cell col-client">${esc(clientName)}</div>
-        <div class="cell col-case-name">${esc(caseName)}</div>
-        <div class="cell col-type">${esc(c.case_type || '—')}</div>
-        <div class="cell col-stage">${esc(c.stage || '—')}</div>
-        <div class="cell col-status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
-        <div class="cell col-focus">${focusHtml}</div>
-        <div class="cell col-para">${esc(paralegalName || '—')}</div>
-        <div class="cell col-due">
+        <div class="cell col-client" data-label="Client">${esc(clientName)}</div>
+        <div class="cell col-case-name" data-label="Case">${esc(caseName)}</div>
+        <div class="cell col-type" data-label="Type">${esc(c.case_type || '—')}</div>
+        <div class="cell col-stage" data-label="Stage">${esc(c.stage || '—')}</div>
+        <div class="cell col-status" data-label="Status"><span class="badge ${statusClassName}">${esc(statusText)}</span></div>
+        <div class="cell col-focus" data-label="Focus">${focusHtml}</div>
+        <div class="cell col-para" data-label="Paralegal">${esc(paralegalName || '—')}</div>
+        <div class="cell col-due" data-label="Next Due">
           <div class="due-inline">
             <span class="due-date">${fmtDate(c.next_due)}</span>
             <span class="micro muted due-relative">${relativeDue(c.next_due)}</span>
           </div>
+        </div>
+        <div class="cell col-priority" data-label="Top Priority">
+          <label class="small checkbox" title="Top Priority (TV)">
+            <input type="checkbox" ${isTop ? 'checked' : ''} aria-label="Top Priority">
+            Top
+          </label>
         </div>`;
+    const checkbox = row.querySelector('.col-priority input[type="checkbox"]');
+    if (checkbox) {
+      checkbox.addEventListener('click', (e) => e.stopPropagation());
+      checkbox.addEventListener('change', async (e) => {
+        e.stopPropagation();
+        try {
+          const state = e.target.checked ? 'on' : 'off';
+          const r = await fetch(`/api/cases/${c.id}/priority/${state}`, { method: 'POST' });
+          if (!r.ok) throw new Error('Failed to update priority');
+          const updated = await r.json();
+          applyCaseUpdate(updated);
+        } catch (err) {
+          console.error(err);
+          alert('Unable to update Top Priority.');
+          e.target.checked = !e.target.checked; // revert UI
+        }
+      });
+    }
     row.addEventListener('click', () => edit(c.id));
     row.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -417,8 +463,10 @@ function renderList() {
     });
     listEl.appendChild(row);
   });
+
   highlightRow(activeId);
 }
+
 
 function setImportFeedback(message, tone = 'info') {
   if (!importFeedback) return;
@@ -444,6 +492,121 @@ function renderFocusLog(entries) {
       )}</span><span class="focus-text">${esc(entry.text)}</span>`;
       focusListEl.appendChild(li);
     });
+}
+
+function renderColleagueTasks(tasks) {
+  if (!colleagueTasksEl) return;
+  colleagueTasksEl.innerHTML = '';
+  
+  if (!tasks || !tasks.length) {
+    colleagueTasksEl.appendChild(emptyState('No colleague tasks yet.'));
+    return;
+  }
+
+  tasks.forEach((task, index) => {
+    const taskEl = document.createElement('div');
+    taskEl.className = `colleague-task-item ${task.reviewed ? 'reviewed' : ''}`;
+    
+    const timestamp = new Date(task.at).toLocaleString();
+    taskEl.innerHTML = `
+      <div class="colleague-task-header">
+        <strong>${esc(task.author)}</strong>
+        <div class="colleague-task-meta">${esc(timestamp)}</div>
+      </div>
+      <div class="colleague-task-text">${esc(task.task)}</div>
+      <div class="colleague-task-actions">
+        ${!task.reviewed ? `<button type="button" class="mark-reviewed" data-index="${index}">Mark Reviewed</button>` : '<span class="small">Reviewed</span>'}
+      </div>
+    `;
+    
+    if (!task.reviewed) {
+      const reviewBtn = taskEl.querySelector('.mark-reviewed');
+      reviewBtn.addEventListener('click', async () => {
+        await markColleagueTaskReviewed(index);
+      });
+    }
+    
+    colleagueTasksEl.appendChild(taskEl);
+  });
+}
+
+function renderICD(list){
+  if(!icdListEl) return;
+  icdListEl.innerHTML = '';
+  const arr = Array.isArray(list) ? list : [];
+  if(!arr.length){ icdListEl.appendChild(emptyState('No ICD-10 codes.')); return; }
+  arr.forEach((item, index)=>{
+    const row = document.createElement('div');
+    row.className = 'deadline-row';
+    row.innerHTML = `
+      <input type="text" value="${escAttr(item.code || '')}" style="max-width:200px">
+      <input type="text" placeholder="Description" value="${escAttr(item.description || '')}">
+      <button type="button" class="icon" aria-label="Remove code">×</button>`;
+    const [codeInput, descInput, removeBtn] = row.children;
+    const commit = ()=>{
+      if(!activeCase) return;
+      const next = (activeCase.icd10 || []).map((it, i)=> i===index ? { code: codeInput.value.trim(), description: descInput.value.trim() } : it);
+      activeCase.icd10 = next;
+      persistCasePatch({ icd10: next });
+    };
+    codeInput.addEventListener('blur', commit);
+    descInput.addEventListener('blur', commit);
+    removeBtn.addEventListener('click', ()=>{
+      if(!activeCase) return;
+      const next = (activeCase.icd10 || []).slice();
+      next.splice(index,1);
+      activeCase.icd10 = next;
+      persistCasePatch({ icd10: next });
+    });
+    icdListEl.appendChild(row);
+  });
+}
+
+function renderProviders(list){
+  if(!providersListEl) return;
+  providersListEl.innerHTML = '';
+  const arr = Array.isArray(list) ? list : [];
+  if(!arr.length){ providersListEl.appendChild(emptyState('No providers added.')); return; }
+  arr.forEach((p, index)=>{
+    const row = document.createElement('div');
+    row.className = 'deadline-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Name" value="${escAttr(p.name || '')}">
+      <input type="text" placeholder="Role (Insurance, Provider, Adjuster)" value="${escAttr(p.role || '')}">
+      <input type="text" placeholder="Represents (Plaintiff, Defendant)" value="${escAttr(p.represents || '')}">
+      <button type="button" class="icon" aria-label="Edit details">✎</button>
+      <button type="button" class="icon" aria-label="Remove">×</button>`;
+    const [nameInput, roleInput, reprInput, editBtn, removeBtn] = row.children;
+    const commit = ()=>{
+      if(!activeCase) return;
+      const next = (activeCase.providers || []).map((it,i)=> i===index ? { ...it, name: nameInput.value.trim(), role: roleInput.value.trim(), represents: reprInput.value.trim() } : it);
+      activeCase.providers = next;
+      persistCasePatch({ providers: next });
+    };
+    nameInput.addEventListener('blur', commit);
+    roleInput.addEventListener('blur', commit);
+    reprInput.addEventListener('blur', commit);
+    editBtn.addEventListener('click', ()=>{
+      const details = prompt('Provider details (company, phone, claim/policy, notes)\nUse JSON keys: company, phone, claim_number, policy_number, notes', JSON.stringify({
+        company: p.company || '', phone: p.phone || '', claim_number: p.claim_number || '', policy_number: p.policy_number || '', notes: p.notes || ''
+      }));
+      if(!details) return;
+      try{
+        const obj = JSON.parse(details);
+        const next = (activeCase.providers || []).map((it,i)=> i===index ? { ...it, ...obj, name: nameInput.value.trim(), role: roleInput.value.trim(), represents: reprInput.value.trim() } : it);
+        activeCase.providers = next;
+        persistCasePatch({ providers: next });
+      }catch(e){ alert('Invalid JSON'); }
+    });
+    removeBtn.addEventListener('click', ()=>{
+      if(!activeCase) return;
+      const next = (activeCase.providers || []).slice();
+      next.splice(index,1);
+      activeCase.providers = next;
+      persistCasePatch({ providers: next });
+    });
+    providersListEl.appendChild(row);
+  });
 }
 
 function renderDeadlines(dls) {
@@ -497,6 +660,46 @@ function normalizeCase(caseData) {
   return { ...caseData, status: normalizeStatus(caseData.status) };
 }
 
+async function fetchICD(code){
+  if(!code) return '';
+  try{
+    const r = await fetch(`/api/icd10/${encodeURIComponent(code)}`);
+    if(!r.ok) return '';
+    const j = await r.json();
+    return j.description || '';
+  }catch{ return ''; }
+}
+
+async function addICD(){
+  if(!activeCase) return alert('Select a case first.');
+  const code = (icdInput?.value || '').trim().toUpperCase();
+  if(!code) return;
+  let desc = (icdDescInput?.value || '').trim();
+  if(!desc) desc = await fetchICD(code);
+  const next = (activeCase.icd10 || []).concat({ code, description: desc });
+  activeCase.icd10 = next;
+  persistCasePatch({ icd10: next });
+  icdInput.value=''; icdDescInput.value='';
+}
+
+function addProvider(){
+  if(!activeCase) return alert('Select a case first.');
+  const next = (activeCase.providers || []).concat({ name:'', role:'', represents:'' });
+  activeCase.providers = next;
+  persistCasePatch({ providers: next });
+}
+
+async function persistCasePatch(patch){
+  if(!activeCase) return;
+  try{
+    const payload = { ...activeCase, ...patch };
+    const r = await fetch(`/api/cases/${activeCase.id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if(!r.ok) throw new Error('Update failed');
+    const updated = await r.json();
+    applyCaseUpdate(updated);
+  }catch(err){ console.error(err); alert('Unable to update case.'); }
+}
+
 function populateDetails(caseData) {
   if (!caseData) return;
   activeCase = JSON.parse(JSON.stringify(normalizeCase(caseData)));
@@ -507,15 +710,27 @@ function populateDetails(caseData) {
     el.textContent = raw && raw !== '' ? raw : '—';
   });
   detailTitleEl.textContent = `${activeCase.client_name}`;
-  detailSubtitleEl.textContent = `${activeCase.case_name} • ${attentionLabel(activeCase.attention)}`;
+  const topText = activeCase.top_priority ? ' • Top Priority' : '';
+    const archivedText = activeCase.archived ? ' • Archived' : '';
+  detailSubtitleEl.textContent = `${activeCase.case_name} • ${attentionLabel(activeCase.attention)}${topText}${archivedText}`;
+  if (archiveCaseBtn) archiveCaseBtn.textContent = activeCase.archived ? 'Unarchive' : 'Archive';
+
+  if (toggleTopBtn) toggleTopBtn.classList.toggle('active', !!activeCase.top_priority);
   if (currentFocusEl) {
     currentFocusEl.textContent = activeCase.current_focus ? activeCase.current_focus : 'No current focus recorded.';
   }
-  renderDeadlines(activeCase.deadlines || []);
+    renderDeadlines(activeCase.deadlines || []);
   renderFocusLog(activeCase.focus_log || []);
+  renderICD(activeCase.icd10 || []);
+  renderProviders(activeCase.providers || []);
+  renderColleagueTasks(activeCase.colleague_tasks || []);
+  if(addIcdBtn) addIcdBtn.disabled = false;
+  if(addProviderBtn) addProviderBtn.disabled = false;
+
   updateAttentionButtons(activeCase.attention);
   if (focusEntryInput) focusEntryInput.value = '';
 }
+
 
 function updateAttentionButtons(state) {
   attentionButtons.forEach((btn) => {
@@ -613,6 +828,26 @@ async function setAttention(state) {
   }
 }
 
+async function markColleagueTaskReviewed(taskIndex) {
+  if (!activeId || !activeCase) return;
+  
+  const task = activeCase.colleague_tasks[taskIndex];
+  if (!task || !task.id) return;
+  
+  try {
+    const r = await fetch(`/api/cases/${activeId}/colleague-tasks/${task.id}/review`, { 
+      method: 'POST' 
+    });
+    if (!r.ok) throw new Error('Failed to mark task as reviewed');
+    
+    // Reload the case to get updated data
+    await load({ keepSelection: true });
+  } catch (err) {
+    console.error(err);
+    alert('Unable to mark task as reviewed.');
+  }
+}
+
 async function load(options = {}) {
   try {
     const r = await fetch('/api/cases', { cache: 'no-store' });
@@ -697,6 +932,21 @@ function attachDetailListeners() {
       window.open(`/edit?id=${encodeURIComponent(activeId)}`, '_blank');
     });
   }
+  if (toggleTopBtn) {
+    toggleTopBtn.addEventListener('click', async () => {
+      if (!activeId) return;
+      try {
+        const r = await fetch(`/api/cases/${activeId}/priority/toggle`, { method: 'POST' });
+        if (!r.ok) throw new Error('Failed to toggle Top Priority');
+        const updated = await r.json();
+        applyCaseUpdate(updated);
+      } catch (err) {
+        console.error(err);
+        alert('Unable to toggle Top Priority.');
+      }
+    });
+  }
+
   if (addDeadlineBtn) {
     addDeadlineBtn.addEventListener('click', () => {
       if (!activeCase) {
@@ -723,9 +973,24 @@ function attachDetailListeners() {
       }
     });
   }
-  if (deleteCaseBtn) {
+    if (deleteCaseBtn) {
     deleteCaseBtn.addEventListener('click', deleteActiveCase);
   }
+  if (archiveCaseBtn) {
+    archiveCaseBtn.addEventListener('click', async () => {
+      if (!activeId) return;
+      try {
+        const r = await fetch(`/api/cases/${activeId}/archive/toggle`, { method: 'POST' });
+        if (!r.ok) throw new Error('Failed to toggle archive');
+        const updated = await r.json();
+        applyCaseUpdate(updated);
+      } catch (err) {
+        console.error(err);
+        alert('Unable to toggle archive state.');
+      }
+    });
+  }
+
 }
 
 quickFilterButtons.forEach((btn) => {
@@ -805,4 +1070,6 @@ if (importBtn && importInput) {
 setDetailsEnabled(false);
 attachFilterListeners();
 attachDetailListeners();
+if(addIcdBtn) addIcdBtn.addEventListener('click', addICD);
+if(addProviderBtn) addProviderBtn.addEventListener('click', addProvider);
 load();

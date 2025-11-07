@@ -10,23 +10,27 @@ if not exist ".venv\Scripts\python.exe" (
   py -3 -m venv .venv
 )
 
-REM Upgrade pip quietly
-".venv\Scripts\python.exe" -m pip install --upgrade pip >nul 2>&1
+REM If dependencies might be missing, prompt to run installer
+if not exist ".venv\Lib\site-packages\reportlab" if not exist ".venv\Lib\site-packages\fpdf" (
+  echo Dependencies not detected. Opening installer window...
+  start powershell -ExecutionPolicy Bypass -File "%cd%\install_caseboard.ps1"
+  echo Waiting for installer to close...
+  pause
+)
 
-REM Install minimal dependencies (ignore any broken requirements.txt)
-".venv\Scripts\python.exe" -m pip install fastapi==0.120.0 uvicorn==0.38.0 pydantic==2.12.3 APScheduler==3.10.4 httpx==0.27.2 requests==2.32.3 >nul
 
 REM Kill any processes bound to port 8000
 for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000') do taskkill /PID %%a /F >nul 2>&1
 
-REM Start uvicorn in a new window
-start "Caseboard API" cmd /k ""%cd%\.venv\Scripts\python.exe" -m uvicorn app:app --reload --host 127.0.0.1 --port 8000"
+REM Start uvicorn in a new window (accessible to entire WiFi network)
+start "Caseboard API" cmd /k ""%cd%\.venv\Scripts\python.exe" -m uvicorn app:app --reload --host 0.0.0.0 --port 8000"
+
 
 REM Wait a moment for the server to start
 ping 127.0.0.1 -n 3 >nul
 
 REM Open management and TV apps in browser
-start "" "http://127.0.0.1:8000/manage"
-start "" "http://127.0.0.1:8000/tv"
+start "" "http://192.168.0.98:8000/manage"
+start "" "http://192.168.0.98:8000/tv"
 
 endlocal

@@ -17,9 +17,11 @@
     <form id="edit-form">
       <div class="small">Edit Case or Client</div>
       <input type="hidden" id="id">
+      <input type="hidden" id="top_priority">
+
       <label>Client<input id="client_name" required></label>
       <label>Case name<input id="case_name" required></label>
-      <label>Type<select id="case_type">
+            <label>Type<select id="case_type">
         <option>MVA</option>
         <option>Personal Injury</option>
         <option>Intentional Tort</option>
@@ -29,18 +31,47 @@
         <option>Wrongful Death</option>
         <option>Medical Malpractice</option>
         <option>Environmental</option>
+        <option>Premises Liability</option>
+        <option>Dog Bite/Animal</option>
+        <option>Boating</option>
+        <option>TBI</option>
+        <option>Workplace</option>
+        <option>Nursing Home</option>
+        <option>Pharmacy Malpractice</option>
+        <option>Dental Malpractice</option>
+        <option>Product Liability</option>
+        <option>First-Party Bad Faith</option>
+        <option>Property Damage</option>
+        <option>Defamation</option>
+        <option>IIED</option>
+        <option>Consumer Fraud</option>
+        <option>Employment</option>
       </select></label>
-      <label>Paralegal<input id="paralegal"></label>
+            <label>Paralegal<input id="paralegal"></label>
       <label>Stage<select id="stage">
         <option>Pre-filing</option><option>Filed</option><option>Discovery</option>
         <option>Pretrial</option><option>Trial</option><option>Closed</option>
       </select></label>
+      <label>Status<select id="status">
+        <option>Prospect</option>
+        <option>Pre-Filing</option>
+        <option>Active</option>
+        <option>Settlement</option>
+        <option>Post-Trial</option>
+        <option>Appeal</option>
+      </select></label>
       <label>Case #<input id="case_number"></label>
+
       <label>County<input id="county"></label>
       <label>Division<input id="division"></label>
       <label>Judge<input id="judge"></label>
       <label>Opposing counsel<input id="opposing_counsel"></label>
-      <label>Opposing firm<input id="opposing_firm"></label>
+            <label>Opposing firm<input id="opposing_firm"></label>
+      <label>Client phone<input id="client_phone" placeholder="(555) 123-4567"></label>
+      <label>Client birthday<input id="client_dob" type="date"></label>
+      <label>Client address<textarea id="client_address" rows="2" placeholder="Street, City, State ZIP"></textarea></label>
+      <label>Claim summary<textarea id="claim_summary" rows="4" placeholder="Paragraph or two explaining the claim..."></textarea></label>
+
       <div style="margin-top:18px;display:flex;gap:12px;">
         <button id="submit" type="submit">Save Changes</button>
         <a href="/manage" style="align-self:center;">Cancel</a>
@@ -56,36 +87,52 @@ if (!caseId) window.location = '/manage';
 async function loadCase() {
   const r = await fetch(`/api/cases/${caseId}`);
   if (!r.ok) return;
-  const c = await r.json();
+    const c = await r.json();
   document.getElementById('id').value = c.id;
+  document.getElementById('top_priority').value = c.top_priority ? '1' : '';
   document.getElementById('client_name').value = c.client_name;
   document.getElementById('case_name').value = c.case_name;
   document.getElementById('case_type').value = c.case_type;
-  document.getElementById('paralegal').value = c.paralegal;
+    document.getElementById('paralegal').value = c.paralegal;
   document.getElementById('stage').value = c.stage;
+  document.getElementById('status').value = c.status;
   document.getElementById('case_number').value = c.case_number || '';
+
   document.getElementById('county').value = c.county || '';
   document.getElementById('division').value = c.division || '';
   document.getElementById('judge').value = c.judge || '';
   document.getElementById('opposing_counsel').value = c.opposing_counsel || '';
   document.getElementById('opposing_firm').value = c.opposing_firm || '';
+  document.getElementById('client_phone').value = c.client_phone || '';
+  document.getElementById('client_dob').value = c.client_dob || '';
+  document.getElementById('client_address').value = c.client_address || '';
+  document.getElementById('claim_summary').value = c.claim_summary || '';
+
 }
 loadCase();
+
 document.getElementById('edit-form').onsubmit = async function(e) {
   e.preventDefault();
-  const payload = {
+    const payload = {
     id: document.getElementById('id').value,
     client_name: document.getElementById('client_name').value,
     case_name: document.getElementById('case_name').value,
     case_type: document.getElementById('case_type').value,
     paralegal: document.getElementById('paralegal').value,
     stage: document.getElementById('stage').value,
+    status: document.getElementById('status').value,
+
     case_number: document.getElementById('case_number').value,
     county: document.getElementById('county').value,
     division: document.getElementById('division').value,
     judge: document.getElementById('judge').value,
     opposing_counsel: document.getElementById('opposing_counsel').value,
-    opposing_firm: document.getElementById('opposing_firm').value
+    opposing_firm: document.getElementById('opposing_firm').value,
+    client_phone: document.getElementById('client_phone').value,
+    client_dob: document.getElementById('client_dob').value || null,
+    client_address: document.getElementById('client_address').value,
+        claim_summary: document.getElementById('claim_summary').value,
+    top_priority: !!document.getElementById('top_priority').value
   };
   const r = await fetch(`/api/cases/${payload.id}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
   if(r.ok) {

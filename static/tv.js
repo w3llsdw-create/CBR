@@ -15,7 +15,7 @@ const scrollerEl = () => document.getElementById('caseScroller');
 // paging for very long lists
 let pageIndex = 0;
 const PAGE_GROUP_COUNT = 3; // legacy: groups per page (unused for display)
-const PAGE_ROWS_COUNT = 10;  // number of case rows per page
+const PAGE_ROWS_COUNT = 14;  // number of case rows per page
 let pageTimer = null;
 let pagePause = false;
 let progressRAF = null;
@@ -208,6 +208,7 @@ function badge(status){
   if(!normalized) return '<span class="badge none">No status</span>';
   const s = normalized.toLowerCase();
   const cls =
+    s.includes('prospect') ? 'prospect' :
     s.includes('active') ? 'active' :
     s.includes('pre') ? 'pre-filing' :
     s.includes('file') ? 'filed' :
@@ -216,6 +217,7 @@ function badge(status){
     s.includes('appeal') ? 'appeal' : 'open';
   return `<span class="badge ${cls}">${escapeHtml(normalized)}</span>`;
 }
+
 
 function needsAttention(c){
   const note = normalizeText(c?.attention || '');
@@ -263,6 +265,7 @@ function row(c, info){
     const classes = ['trow','row','tv-row',info.accent];
   const att = attentionClass(c);
   if(att) classes.push(att);
+  if (c.top_priority) classes.push('top-priority');
   const client = display(c.client_name);
       const rawCaseNumber = (c.case_number ?? '').toString().trim();
     const caseName = display(c.case_name);
@@ -271,11 +274,19 @@ function row(c, info){
 
   const focus = c.current_focus ?? c.current_task;
   const caseNumberLabel = rawCaseNumber ? `${rawCaseNumber}` : '';
+  const ribbon = c.top_priority ? '<span class="priority-ribbon" aria-hidden="true"></span>' : '';
+  const star = c.top_priority ? '<span class="priority-mark" title="Top Priority" aria-hidden="true">★</span>' : '';
+  
+  // Colleague task notification indicator
+  const colleagueNotification = c.has_unreviewed_colleague_tasks ? 
+    `<span class="colleague-notification" title="New colleague task (${c.unreviewed_colleague_task_count})">●</span>` : '';
+  
   return `
   <div class="${classes.join(' ')}" data-group="${info.group}">
+    ${ribbon}
         <div class="cell col-client" title="${escapeAttr(client)}">
       <div class="client-line">
-        <span class="client-name">${escapeHtml(client)}</span>
+        ${star}<span class="client-name">${escapeHtml(client)}</span>${colleagueNotification}
       </div>
     </div>
     <div class="cell col-case-name" title="${escapeAttr(caseName)}">
@@ -416,10 +427,9 @@ function render(options={}){
   if(pageIndex >= pages.length) pageIndex = 0;
     const page = pages.length ? pages[pageIndex] : [];
   // Build HTML in normal flow with staggered rows (no absolute layers to avoid clipping)
-  container.classList.add('row-stagger');
-  container.innerHTML = page.map(({case:c,info}, idx)=>`<div class="row-wrap" style="animation-delay:${idx*120}ms">${row(c,info)}</div>`).join('');
-  container.classList.add('fade-in');
-  setTimeout(()=>container.classList.remove('fade-in'), 1200);
+  container.classList.remove('row-stagger');
+  container.classList.remove('fade-in');
+  container.innerHTML = page.map(({case:c,info})=>row(c,info)).join('');
 
   updateMetrics(grouped); renderPriority(grouped); renderMiniUpcoming(grouped); sizeBoard();
 
@@ -549,4 +559,17 @@ function init(){
 
 
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', ()=>{
+  const params = new URLSearchParams(location.search);
+  const noVideos = params.has('novideo') || params.get('videos') === 'off';
+  if (noVideos) {
+    document.body.classList.add('no-videos');
+  } else {
+    // Replace data-src with src on iframes to avoid preloading that can trigger captcha
+    document.querySelectorAll('.video-frame iframe[data-src]').forEach(ifr=>{
+      const url = ifr.getAttribute('data-src');
+      if(url) ifr.setAttribute('src', url);
+    });
+  }
+  init();
+});
