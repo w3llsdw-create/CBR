@@ -60,16 +60,16 @@
         </select>
       </div>
     </div>
-          <div class="toolbar-right">
-        <div class="small" id="result_count">0 cases</div>
-        <div class="toolbar-actions">
-          <button id="clear_filters" type="button" class="ghost">Clear</button>
-          <button id="import_cases" type="button">Import CSV</button>
-          <a class="button" href="/add">+ New Case/Client</a>
-          <a class="button" id="download_pdf" href="/api/reports/clients.pdf" target="_blank" rel="noopener">Download PDF</a>
-        </div>
-        <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
+    <div class="toolbar-right">
+      <div class="small" id="result_count">0 cases</div>
+      <div class="toolbar-actions">
+        <button id="clear_filters" type="button" class="ghost">Clear</button>
+        <button id="import_cases" type="button">Import CSV</button>
+        <a class="button" href="/add">+ New Case/Client</a>
+        <a class="button" id="download_pdf" href="/api/reports/clients.pdf" target="_blank" rel="noopener">Download PDF</a>
       </div>
+      <div id="import_feedback" class="import-feedback" role="status" aria-live="polite"></div>
+    </div>
   </section>
 
   <input id="import_file" type="file" accept=".csv,text/csv" hidden>
@@ -100,18 +100,20 @@
   <div class="board-grid">
     <!-- Cases table -->
     <section class="card list-card" aria-label="Case list">
-            <div class="thead">
-        <div class="cell col-client">Client</div>
-        <div class="cell col-case-name">Case</div>
-        <div class="cell col-type">Type</div>
-        <div class="cell col-stage">Stage</div>
-        <div class="cell col-status">Status</div>
-        <div class="cell col-focus">Focus</div>
-        <div class="cell col-para">Paralegal</div>
-        <div class="cell col-due">Next Due</div>
-        <div class="cell col-priority" title="Top Priority (TV)">Top</div>
+      <div class="case-table-wrap">
+        <div class="thead" role="rowgroup">
+          <div class="cell col-client" role="columnheader">Client</div>
+          <div class="cell col-case-name" role="columnheader">Case</div>
+          <div class="cell col-type" role="columnheader">Type</div>
+          <div class="cell col-stage" role="columnheader">Stage</div>
+          <div class="cell col-status" role="columnheader">Status</div>
+          <div class="cell col-focus" role="columnheader">Focus</div>
+          <div class="cell col-para" role="columnheader">Paralegal</div>
+          <div class="cell col-due" role="columnheader">Next Due</div>
+          <div class="cell col-priority" role="columnheader" title="Top Priority (TV)">Top</div>
+        </div>
+        <div id="list" class="list-body" role="rowgroup"></div>
       </div>
-      <div id="list" class="list-body"></div>
     </section>
 
     <!-- Editor -->

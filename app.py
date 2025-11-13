@@ -785,30 +785,41 @@ def api_report_clients_pdf(include_archived: bool = False):
         def P(txt: str):
             return Paragraph((txt or "").replace("\n","<br/>"), styles["BodyText"]) if txt else Paragraph("", styles["BodyText"]) 
 
-        # Header row
+        # Header row - create a header paragraph style with white text to ensure contrast on dark header
+        header_style = styles["Normal"].clone("pdf_header")
+        header_style.textColor = colors.white
+        header_style.fontName = "Helvetica-Bold"
+        header_style.fontSize = 10
+        # Merge Client + Case into a single stacked column (client on top, case below)
         data = [[
-            Paragraph("<b>Client</b>", styles["Normal"]),
-            Paragraph("<b>Case</b>", styles["Normal"]),
-            Paragraph("<b>Case #</b>", styles["Normal"]),
-            Paragraph("<b>Type</b>", styles["Normal"]),
-            Paragraph("<b>County</b>", styles["Normal"]),
-            Paragraph("<b>Current Focus</b>", styles["Normal"]),
+            Paragraph("Client / Case", header_style),
+            Paragraph("Case #", header_style),
+            Paragraph("Type", header_style),
+            Paragraph("County", header_style),
+            Paragraph("Current Focus", header_style),
         ]]
-        for c in sorted(cases, key=lambda x: (x.client_name or "").lower()):
+
+        # Sort alphabetically by client name, then case name for stable ordering
+        for c in sorted(cases, key=lambda x: ((x.client_name or "").lower(), (x.case_name or "").lower())):
+            # Use a newline to force stacked rendering (ReportLab Paragraph will render <br/>)
+            combined = f"{(c.client_name or '—')}\n{(c.case_name or '—')}"
             data.append([
-                P(c.client_name or "—"),
-                P(c.case_name or "—"),
+                P(combined),
                 P(c.case_number or ""),
                 P(c.case_type or "—"),
                 P(c.county or "—"),
                 P(c.current_focus or ""),
             ])
 
-        col_widths = [140, 160, 70, 110, 80, 220]
+        # Adjust column widths to fit within the printable page width (letter width minus margins).
+        # Left/right margins are 36 each -> usable width = 612 - 72 = 540 points.
+        # New distribution: Client/Case (stacked), Case#, Type, County, Focus
+        col_widths = [160, 100, 80, 80, 120]
         table = Table(data, colWidths=col_widths, repeatRows=1)
-        table.setStyle(TableStyle([
+        # Restore table font sizes to previous (header 10pt / body 9pt) and set per-row backgrounds
+        style = TableStyle([
             ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#0F1520")),
-            ("TEXTCOLOR", (0,0), (-1,0), colors.HexColor("#F2EBE3")),
+            ("TEXTCOLOR", (0,0), (-1,0), colors.white),
             ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
             ("FONTSIZE", (0,0), (-1,0), 10),
             ("BOTTOMPADDING", (0,0), (-1,0), 6),
@@ -818,10 +829,26 @@ def api_report_clients_pdf(include_archived: bool = False):
             ("FONTSIZE", (0,1), (-1,-1), 9),
             ("TEXTCOLOR", (0,1), (-1,-1), colors.black),
 
-            ("ROWBACKGROUNDS", (0,1), (-1,-1), [colors.whitesmoke, colors.lightgrey]),
             ("GRID", (0,0), (-1,-1), 0.25, colors.HexColor("#CCCCCC")),
             ("VALIGN", (0,0), (-1,-1), "TOP"),
-        ]))
+        ])
+
+        # Apply full-row backgrounds based on attention state (row index in table starts at 1)
+        # Use light tints for readability
+        for idx, c in enumerate(sorted(cases, key=lambda x: ((x.client_name or "").lower(), (x.case_name or "").lower()))):
+            row_index = idx + 1
+            # Use subtle, low-saturation tints for readability and set dark text for contrast
+            if getattr(c, 'attention', '') == 'needs_attention':
+                style.add("BACKGROUND", (0, row_index), (-1, row_index), colors.HexColor("#FFF4F4"))
+                style.add("TEXTCOLOR", (0, row_index), (-1, row_index), colors.HexColor("#111827"))
+            elif getattr(c, 'attention', '') == 'waiting':
+                style.add("BACKGROUND", (0, row_index), (-1, row_index), colors.HexColor("#FFFBEE"))
+                style.add("TEXTCOLOR", (0, row_index), (-1, row_index), colors.HexColor("#111827"))
+            else:
+                style.add("BACKGROUND", (0, row_index), (-1, row_index), colors.white)
+                style.add("TEXTCOLOR", (0, row_index), (-1, row_index), colors.black)
+
+        table.setStyle(style)
 
         story = [title, subtitle, Spacer(1, 10), table]
         doc.build(story)
@@ -837,6 +864,7 @@ def api_report_clients_pdf(include_archived: bool = False):
         pdf.set_margins(36, 48, 36)
         pdf.add_page()
         # Title
+        # Restore previous title/stamp fonts (larger) for familiarity
         pdf.set_font('Helvetica', 'B', 18)
         pdf.cell(0, 22, 'Client Case Summary', ln=1)
         pdf.set_font('Helvetica', '', 11)
@@ -844,34 +872,78 @@ def api_report_clients_pdf(include_archived: bool = False):
         pdf.cell(0, 16, f'Printed {stamp}', ln=1)
         pdf.ln(6)
         # Table header
-        headers = ['Client', 'Case', 'Case #', 'Type', 'County', 'Current Focus']
-        col_widths = [140, 160, 70, 110, 80, 220]
+        headers = ['Client / Case', 'Case #', 'Type', 'County', 'Current Focus']
+        # Use a matching column width distribution for the fpdf fallback so the table fits the page.
+        # New distribution: Client/Case (stacked), Case#, Type, County, Focus
+        col_widths = [160, 100, 80, 80, 120]
         pdf.set_font('Helvetica', 'B', 10)
+        # Header fill: dark background with light text
+        # Use a slightly less-saturated header background for the PDF header
+        pdf.set_fill_color(28, 34, 40)  # slightly lighter than #0F1520
+        pdf.set_text_color(255, 255, 255)  # white for header text
         for w, h in zip(col_widths, headers):
-            pdf.cell(w, 16, h, border=1)
+            pdf.cell(w, 16, h, border=1, fill=True)
         pdf.ln(16)
+        # Reset text color for body rows
+        pdf.set_text_color(0, 0, 0)
         # Rows
         pdf.set_font('Helvetica', '', 9)
-        for c in sorted(cases, key=lambda x: (x.client_name or '').lower()):
+        # Sort alphabetically by client name, then case name for stable ordering
+        for c in sorted(cases, key=lambda x: ((x.client_name or '').lower(), (x.case_name or '').lower())):
+            # Stack client + case into the first column. Truncate the client/case lines to reduce risk
+            # of excessive wrapping in the fallback engine.
+            client_short = (c.client_name or '—')[:60]
+            case_short = (c.case_name or '—')[:80]
+            stacked = f"{client_short}\n{case_short}"
             row = [
-                c.client_name or '—',
-                c.case_name or '—',
+                stacked,
                 c.case_number or '',
                 c.case_type or '—',
                 c.county or '—',
                 c.current_focus or '',
             ]
-            # naive wrapping: split very long focus into chunks
-            # (fpdf2 supports multi_cell; use that for focus)
-            # Print first five columns as single-line cells
-            for i in range(5):
-                pdf.cell(col_widths[i], 14, row[i][:60], border=1)
-            # Focus as multi_cell occupying last column
-            x_before = pdf.get_x()
-            y_before = pdf.get_y()
-            pdf.multi_cell(col_widths[5], 14, row[5], border=1)
+            # Determine background color for this row based on attention
+            # Subtle fills for row backgrounds and dark text for legibility
+            if getattr(c, 'attention', '') == 'needs_attention':
+                pdf.set_fill_color(255, 244, 244)  # very light red tint
+                pdf.set_text_color(17, 24, 39)     # dark text
+                fill = True
+            elif getattr(c, 'attention', '') == 'waiting':
+                pdf.set_fill_color(255, 250, 238)  # very light yellow tint
+                pdf.set_text_color(17, 24, 39)     # dark text
+                fill = True
+            else:
+                pdf.set_fill_color(255, 255, 255)  # white
+                pdf.set_text_color(0, 0, 0)
+                fill = True
+
+            # We need to print the stacked first column (may be two lines) and ensure other
+            # columns align to the top of the same row. Use a fixed line height and compute
+            # the stacked height (we intentionally force two logical lines for client+case).
+            line_h = 14
+            stacked_lines = 2
+            stacked_h = line_h * stacked_lines
+
+            # Remember starting position
+            x_start = pdf.get_x()
+            y_start = pdf.get_y()
+
+            # Print stacked client/case as a multi_cell at the left
+            pdf.set_xy(x_start, y_start)
+            pdf.multi_cell(col_widths[0], line_h, row[0], border=1, fill=fill)
+
+            # Print the adjacent columns (Case#, Type, County) as fixed-height cells aligned to the top
+            pdf.set_xy(x_start + col_widths[0], y_start)
+            for i in range(1, 4):
+                pdf.cell(col_widths[i], stacked_h, (row[i] or '')[:160], border=1, fill=fill)
+
+            # Current Focus: allow wrapping within the last column using multi_cell; start at its X
+            last_col_x = x_start + sum(col_widths[:4])
+            pdf.set_xy(last_col_x, y_start)
+            pdf.multi_cell(col_widths[4], line_h, row[4] or '', border=1, fill=fill)
+
+            # Move cursor to the left margin at the bottom of the last cell to start next row
             y_after = pdf.get_y()
-            # Move to next line aligning with the tallest cell
             pdf.set_xy(36, y_after)
         out = pdf.output(dest='S').encode('latin-1')
         filename = f"client_case_summary_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
@@ -892,6 +964,10 @@ def cfb_static():
 # ----- Pages -----
 @app.get("/manage")
 def manage_page(): return FileResponse("static/manage.html")
+
+@app.get("/manage-v4")
+def manage_v4_page():
+    return FileResponse("static/manage-v4.html")
 
 @app.get("/tv")
 def tv_page(): return FileResponse("static/tv.html")

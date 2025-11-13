@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Caseboard • Manager v4</title>
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="/static/fonts/fonts.css" />
+  <link rel="stylesheet" href="/static/brand.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              ink: '#0F1520',
+              charcoal: '#0B0F16',
+              surface: '#141A24',
+              surfaceDeep: '#0D121B',
+              surfaceSoft: '#182231',
+              copper: '#C58A59',
+              text: '#E5E7EB',
+              muted: '#A7B0BF',
+              border: 'rgba(255,255,255,0.08)',
+              borderSoft: 'rgba(255,255,255,0.14)'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'Segoe UI', 'Arial', 'sans-serif'],
+            display: ['Sora', 'Inter', 'system-ui', 'Segoe UI', 'sans-serif'],
+            mono: ['Roboto Mono', 'SFMono-Regular', 'Consolas', 'monospace']
+          },
+          boxShadow: {
+            brand: 'inset 0 1px rgba(255,255,255,0.06), 0 18px 40px rgba(0,0,0,0.38)'
+          },
+          borderRadius: {
+            xl: '14px'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <style>
+    body { background: #0F1520; color: #E5E7EB; }
+    .scrollbar-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(197,138,89,0.45); border-radius: 9999px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: rgba(15,21,32,0.6); }
+    /* Row accent styles for attention / waiting / priority */
+    .row-accent { position: relative; }
+    .row-accent::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 6px;
+      border-radius: 6px;
+      opacity: 0.98;
+    }
+  /* subtle background tint so row content is still readable */
+  .row-needs::before { background: linear-gradient(180deg, rgba(220,60,70,0.98), rgba(200,40,55,0.78)); }
+  .row-waiting::before { background: linear-gradient(180deg, rgba(235,200,60,0.95), rgba(220,180,40,0.75)); }
+  .row-priority::before { background: linear-gradient(180deg, rgba(220,80,100,0.92), rgba(200,60,80,0.75)); }
+  /* subtle background tint so row content is still readable */
+  /* stronger full-row backgrounds (more like the legacy export) */
+  /* Softer full-row backgrounds (subtle, less saturated) */
+  .row-needs { background: rgba(255, 244, 244, 0.95); color: #0b0f16; }
+  .row-waiting { background: rgba(255, 250, 238, 0.95); color: #0b0f16; }
+  .row-priority { background: linear-gradient(90deg, rgba(220,80,100,0.04), transparent); }
+    /* ensure the priority mark doesn't conflict with focus styles */
+    .row-accent td { position: relative; z-index: 1; }
+  /* Compact search styling */
+  .compact-search input { padding: 6px 8px; height: 34px; font-size: 13px; }
+
+  /* Quick focus modal */
+  .qf-overlay { position: fixed; inset: 0; background: rgba(3,6,10,0.6); display:none; align-items:center; justify-content:center; z-index:60; }
+  .qf-panel { background: linear-gradient(180deg, rgba(20,24,28,.95), rgba(14,16,18,.95)); border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:12px; width:420px; box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+  .qf-input { width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.08); background:#0d121a; color:var(--mw-inkText); }
+  .qf-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+  .qf-submit { padding:8px 10px; border-radius:8px; border:1px solid rgba(197,138,89,.25); background:linear-gradient(180deg, rgba(197,138,89,.22), rgba(197,138,89,.12)); color:var(--mw-inkText); }
+  /* Compact table rows for higher density */
+  .min-w-full.table-auto thead th { padding: 8px 10px; }
+  .min-w-full.table-auto tbody td { padding: 8px 10px; vertical-align: middle; max-height: 44px; }
+  .min-w-full.table-auto tbody tr { height: 44px; }
+  /* Force single-line content with ellipsis so rows stay uniform */
+  .min-w-full.table-auto tbody td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Allow the Focus column to show a slightly longer truncated text but still one line */
+  .min-w-full.table-auto tbody td .focus-text { display: inline-block; max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  </style>
+</head>
+<body class="min-h-screen font-sans bg-brand-ink text-brand-text">
+  <div class="mx-auto flex min-h-screen max-w-[1680px] flex-col gap-8 px-6 pb-16 pt-8 lg:px-10">
+    <header class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex items-center gap-4">
+        <img src="/static/pngs/McMathWoods_Logo_White.png" alt="McMath Woods" class="h-10 w-auto" />
+        <div>
+          <p class="font-display text-xl tracking-[0.12em] text-brand-text">McMath Woods • David W. Wells</p>
+          <p class="text-sm text-brand-muted">Case Management Dashboard</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href="/manage" class="inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm text-brand-muted transition hover:text-brand-text">Legacy Manager</a>
+        <button id="action-add" type="button" class="inline-flex items-center gap-2 rounded-full border border-brand-border bg-brand-surfaceSoft px-4 py-2 text-sm font-medium text-brand-text hover:border-brand-copper">Add Case</button>
+        <a id="action-export" href="/api/reports/clients.pdf" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border border-brand-border bg-brand-surfaceSoft px-5 py-2 text-sm font-medium text-brand-text shadow-brand transition hover:border-brand-copper hover:bg-brand-surface">
+          <span class="inline-block h-2 w-2 rounded-full bg-brand-copper"></span>
+          Export Client PDF
+        </a>
+      </div>
+    </header>
+
+    <section aria-label="Filters" class="rounded-xl border border-brand-border bg-brand-surface/80 p-6 shadow-brand">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap items-end gap-4 lg:gap-6">
+          <label class="flex w-full flex-col gap-1 text-sm text-brand-muted sm:max-w-xs compact-search">
+            <span>Search</span>
+            <input id="filter-search" type="search" placeholder="Client, case, paralegal" class="rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-1.5 text-brand-text focus:border-brand-copper focus:ring-brand-copper" />
+          </label>
+          <label class="flex w-full flex-col gap-1 text-sm text-brand-muted sm:max-w-[180px]">
+            <span>Stage</span>
+            <select id="filter-stage" class="rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-brand-text focus:border-brand-copper focus:ring-brand-copper">
+              <option value="all">All stages</option>
+              <option value="Pre-filing">Pre-filing</option>
+              <option value="Filed">Filed</option>
+              <option value="Discovery">Discovery</option>
+              <option value="Pretrial">Pretrial</option>
+              <option value="Trial">Trial</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </label>
+          <label class="flex w-full flex-col gap-1 text-sm text-brand-muted sm:max-w-[180px]">
+            <span>Status</span>
+            <select id="filter-status" class="rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-brand-text focus:border-brand-copper focus:ring-brand-copper">
+              <option value="all">All statuses</option>
+              <option value="Prospect">Prospect</option>
+              <option value="Pre-Filing">Pre-Filing</option>
+              <option value="Active">Active</option>
+              <option value="Settlement">Settlement</option>
+              <option value="Post-Trial">Post-Trial</option>
+              <option value="Appeal">Appeal</option>
+            </select>
+          </label>
+          <label class="flex w-full flex-col gap-1 text-sm text-brand-muted sm:max-w-[200px]">
+            <span>Attention</span>
+            <select id="filter-attention" class="rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-brand-text focus:border-brand-copper focus:ring-brand-copper">
+              <option value="all">All cases</option>
+              <option value="needs_attention">Needs attention</option>
+              <option value="waiting">Waiting</option>
+              <option value="">None</option>
+            </select>
+          </label>
+          <label class="flex w-full flex-col gap-1 text-sm text-brand-muted sm:max-w-[200px]">
+            <span>Paralegal</span>
+            <select id="filter-paralegal" class="rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-brand-text focus:border-brand-copper focus:ring-brand-copper">
+              <option value="all">All paralegals</option>
+            </select>
+          </label>
+          <button id="clear-filters" type="button" class="ml-auto inline-flex items-center gap-2 rounded-full border border-brand-border px-4 py-2 text-sm text-brand-muted transition hover:border-brand-copper hover:text-brand-text">
+            Clear Filters
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-brand-muted">
+          <span id="case-count">0 cases</span>
+          <span aria-hidden="true" class="mx-2 h-px w-8 bg-brand-border"></span>
+          <span id="attention-count">0 need attention</span>
+          <span aria-hidden="true" class="mx-2 h-px w-8 bg-brand-border"></span>
+          <span id="due-count">0 due soon</span>
+          <span aria-hidden="true" class="mx-2 h-px w-8 bg-brand-border"></span>
+          <span id="stale-count">0 stale focus</span>
+        </div>
+      </div>
+    </section>
+
+    <main class="grid flex-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(360px,1fr)]">
+      <section aria-label="Case overview" class="rounded-xl border border-brand-border bg-brand-surface/80 shadow-brand">
+        <div class="flex items-center justify-between gap-4 border-b border-brand-border px-6 py-4">
+          <div>
+            <h2 class="font-display text-lg tracking-[0.16em] text-brand-text">Active Caseload</h2>
+            <p class="text-sm text-brand-muted">Client, case, stage, and status visibility at a glance</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs uppercase tracking-[0.28em] text-brand-muted">
+            <span id="visible-count">0 shown</span>
+          </div>
+        </div>
+        <div class="scrollbar-thin overflow-x-auto">
+          <table class="min-w-full table-auto divide-y divide-brand-border text-left text-sm text-brand-text">
+            <thead class="bg-brand-surfaceDeep/90 text-xs uppercase tracking-[0.24em] text-brand-muted">
+              <tr>
+                <th scope="col" class="whitespace-nowrap px-4 py-3 font-medium">Client</th>
+                <th scope="col" class="whitespace-nowrap px-4 py-3 font-medium">Case</th>
+                <th scope="col" class="whitespace-nowrap px-4 py-3 font-medium">Type</th>
+                <th scope="col" class="whitespace-nowrap px-4 py-3 font-medium">Last Focus</th>
+              </tr>
+            </thead>
+            <tbody id="case-table" class="divide-y divide-brand-border text-sm">
+              <tr>
+                <td colspan="4" class="px-4 py-10 text-center text-brand-muted">Loading cases…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section aria-label="Selected case" class="flex min-h-[560px] flex-col rounded-xl border border-brand-border bg-brand-surface/80 shadow-brand">
+        <header class="flex flex-col gap-4 border-b border-brand-border px-6 py-5">
+          <div>
+            <p class="text-xs uppercase tracking-[0.32em] text-brand-muted">Selected Case</p>
+            <h2 id="detail-title" class="font-display text-xl tracking-[0.12em] text-brand-text">Choose a case</h2>
+            <p id="detail-subtitle" class="text-sm text-brand-muted">Pick a matter to view its full context.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-medium">
+            <button id="tag-needs" type="button" class="rounded-full border border-brand-border px-3 py-1.5 text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Needs Attention</button>
+            <button id="tag-waiting" type="button" class="rounded-full border border-brand-border px-3 py-1.5 text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Waiting</button>
+            <button id="tag-clear" type="button" class="rounded-full border border-brand-border px-3 py-1.5 text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Clear</button>
+            <button id="tag-priority" type="button" class="rounded-full border border-brand-border px-3 py-1.5 text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Top Priority</button>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button id="action-open" type="button" class="rounded-lg border border-brand-border px-4 py-2 text-sm text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Open Full Editor</button>
+            <button id="action-archive" type="button" class="rounded-lg border border-brand-border px-4 py-2 text-sm text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Archive</button>
+            <button id="action-delete" type="button" class="rounded-lg border border-red-500/50 px-4 py-2 text-sm text-red-300 transition hover:border-red-400 hover:bg-red-500/10" disabled>Delete Case</button>
+          </div>
+        </header>
+        <div class="flex-1 space-y-8 overflow-y-auto px-6 py-6 scrollbar-thin">
+          <section aria-label="Case metadata" class="space-y-4">
+            <h3 class="font-display text-sm uppercase tracking-[0.32em] text-brand-muted">Overview</h3>
+            <dl class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Client</dt>
+                <dd id="meta-client" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Case Title</dt>
+                <dd id="meta-case" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Type</dt>
+                <dd id="meta-type" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Paralegal</dt>
+                <dd id="meta-paralegal" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Stage</dt>
+                <dd id="meta-stage" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Status</dt>
+                <dd id="meta-status" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Case #</dt>
+                <dd id="meta-number" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">County</dt>
+                <dd id="meta-county" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Judge</dt>
+                <dd id="meta-judge" class="text-sm text-brand-text">—</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-[0.28em] text-brand-muted">Next Due</dt>
+                <dd id="meta-due" class="text-sm text-brand-text">—</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section aria-label="Deadlines" class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display text-sm uppercase tracking-[0.32em] text-brand-muted">Deadlines</h3>
+              <button id="add-deadline" type="button" class="rounded-full border border-brand-border px-3 py-1 text-xs text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Add Deadline</button>
+            </div>
+            <div id="deadlines-list" class="space-y-3"></div>
+          </section>
+
+          <section aria-label="Focus" class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-display text-sm uppercase tracking-[0.32em] text-brand-muted">Focus</h3>
+              <div class="flex items-center gap-2 text-xs text-brand-muted">
+                <span>Last update</span>
+                <span id="meta-focus-updated" class="rounded-full bg-brand-surfaceDeep px-2 py-0.5 font-mono text-[11px] text-brand-text">—</span>
+              </div>
+            </div>
+            <form id="focus-form" class="space-y-3" autocomplete="off">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <label class="text-xs uppercase tracking-[0.32em] text-brand-muted" for="focus-author">Author</label>
+                <select id="focus-author" class="w-full rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-sm text-brand-text focus:border-brand-copper focus:ring-brand-copper" disabled>
+                  <option value="DW">DW</option>
+                  <option value="WB">WB</option>
+                  <option value="NC">NC</option>
+                  <option value="TG">TG</option>
+                  <option value="CS">CS</option>
+                  <option value="SJ">SJ</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-3 sm:flex-row">
+                <input id="focus-input" type="text" placeholder="Add a new focus update" class="flex-1 rounded-lg border border-brand-border bg-brand-surfaceDeep/80 px-3 py-2 text-sm text-brand-text focus:border-brand-copper focus:ring-brand-copper" disabled />
+                <button id="focus-submit" type="submit" class="rounded-lg border border-brand-border px-4 py-2 text-sm text-brand-muted transition hover:border-brand-copper hover:text-brand-text" disabled>Log Focus</button>
+              </div>
+            </form>
+            <ul id="focus-log" class="space-y-3 text-sm text-brand-muted">
+              <li class="rounded-lg border border-dashed border-brand-border px-4 py-3 text-center text-brand-muted/80">No focus selected.</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Quick Focus modal -->
+  <div id="qf-overlay" class="qf-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="qf-panel" role="document">
+      <div class="text-sm text-brand-muted">Add quick focus</div>
+      <input id="qf-input" class="qf-input" type="text" placeholder="Type focus and press Enter" aria-label="Quick focus input">
+      <div class="qf-row">
+        <button id="qf-submit" class="qf-submit" type="button">Save</button>
+        <button id="qf-cancel" class="rounded-full border border-brand-border px-3 py-1 text-sm text-brand-muted">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Case modal -->
+  <div id="add-overlay" class="qf-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="qf-panel" role="document">
+      <div class="text-sm text-brand-muted">Add new case</div>
+      <div class="mt-3 space-y-2">
+        <label class="text-xs text-brand-muted">Client</label>
+        <input id="add-client" class="qf-input" type="text" placeholder="Client name" aria-label="Client name">
+        <label class="text-xs text-brand-muted">Case title</label>
+        <input id="add-case" class="qf-input" type="text" placeholder="Case name (e.g., Smith v. Jones)" aria-label="Case name">
+        <label class="text-xs text-brand-muted">Type</label>
+        <input id="add-type" class="qf-input" type="text" placeholder="Case type (e.g., Personal Injury)" aria-label="Case type">
+      </div>
+      <div class="qf-row">
+        <button id="add-submit" class="qf-submit" type="button">Create</button>
+        <button id="add-cancel" class="rounded-full border border-brand-border px-3 py-1 text-sm text-brand-muted">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/static/manage-v4.js"></script>
+</body>
+</html>

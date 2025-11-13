@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "saved_at": "2025-11-07T15:44:59.438960",
+  "saved_at": "2025-11-12T22:27:59.396173",
   "cases": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
@@ -11,7 +11,7 @@
       "status": "Active",
       "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "Received and responsed to email re: suit for damages. Start logging time",
+      "current_focus": "If I dont hear from TextNow, reemail on 11/18",
       "focus_log": [
         {
           "at": "2025-10-29T20:26:20.156000Z",
@@ -22,6 +22,11 @@
           "at": "2025-11-04T14:37:13.531000Z",
           "author": "DW",
           "text": "Received and responsed to email re: suit for damages. Start logging time"
+        },
+        {
+          "at": "2025-11-12T20:32:34.143000Z",
+          "author": "DW",
+          "text": "If I dont hear from TextNow, reemail on 11/18"
         }
       ],
       "deadlines": [
@@ -61,9 +66,9 @@
       "case_type": "Domestic Relations",
       "stage": "Pretrial",
       "status": "Active",
-      "attention": "needs_attention",
+      "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "Draft decree. Schedule pickup for HJ with NT.",
+      "current_focus": "Call clerk to schedule final hearing on 11/24",
       "focus_log": [
         {
           "at": "2025-10-27T13:34:55.424000Z",
@@ -89,6 +94,11 @@
           "at": "2025-11-05T21:44:54.125000Z",
           "author": "DW",
           "text": "Draft decree. Schedule pickup for HJ with NT."
+        },
+        {
+          "at": "2025-11-12T20:31:44.607000Z",
+          "author": "DW",
+          "text": "Call clerk to schedule final hearing on 11/24"
         }
       ],
       "deadlines": [
@@ -122,7 +132,7 @@
       "claim_summary": "",
       "icd10": [],
       "providers": [],
-      "top_priority": true,
+      "top_priority": false,
       "archived": false,
       "next_due": "2025-12-01",
       "external": {
@@ -140,7 +150,7 @@
       "status": "Active",
       "attention": "waiting",
       "paralegal": "Sabrina",
-      "current_focus": "First set of discovery sent to \u25b2.",
+      "current_focus": "Went over discovery with PR.",
       "focus_log": [
         {
           "at": "2025-10-30T00:33:34.787000Z",
@@ -161,6 +171,11 @@
           "at": "2025-11-07T15:44:59.433000Z",
           "author": "DW",
           "text": "First set of discovery sent to \u25b2."
+        },
+        {
+          "at": "2025-11-11T14:48:21.713000Z",
+          "author": "DW",
+          "text": "Went over discovery with PR."
         }
       ],
       "deadlines": [],
@@ -272,7 +287,7 @@
       "status": "Pre-Filing",
       "attention": "needs_attention",
       "paralegal": "Andrew",
-      "current_focus": "Send record to expert (Anzalone)",
+      "current_focus": "Spoke with Anzalone. Continue expert hunt",
       "focus_log": [
         {
           "at": "2025-10-28T19:48:53.495000Z",
@@ -288,6 +303,11 @@
           "at": "2025-11-05T21:49:11.677000Z",
           "author": "DW",
           "text": "Send record to expert (Anzalone)"
+        },
+        {
+          "at": "2025-11-11T14:53:06.944000Z",
+          "author": "DW",
+          "text": "Spoke with Anzalone. Continue expert hunt"
         }
       ],
       "deadlines": [],
@@ -323,7 +343,7 @@
       "status": "Pre-Filing",
       "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "WB and GC setting up meeting",
+      "current_focus": "Meeting on 11/12",
       "focus_log": [
         {
           "at": "2025-10-29T13:58:07.814000Z",
@@ -334,6 +354,11 @@
           "at": "2025-11-05T21:49:31.036000Z",
           "author": "DW",
           "text": "WB and GC setting up meeting"
+        },
+        {
+          "at": "2025-11-11T14:48:47.217000Z",
+          "author": "DW",
+          "text": "Meeting on 11/12"
         }
       ],
       "deadlines": [],
@@ -444,26 +469,15 @@
     },
     {
       "id": "a38e9044-329a-4a0b-a32c-973ca0274bf7",
-      "client_name": "Estate of Morales",
+      "client_name": "Morales, Jesus (Estate of)",
       "case_name": "Morales v. R'ville Hldgs",
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
       "status": "Active",
-      "attention": "waiting",
+      "attention": "",
       "paralegal": "Sabrina",
-      "current_focus": "Currently not applicable/involved",
-      "focus_log": [
-        {
-          "at": "2025-10-29T13:58:30.517000Z",
-          "author": "DW",
-          "text": "Waiting"
-        },
-        {
-          "at": "2025-11-05T22:02:12.333000Z",
-          "author": "DW",
-          "text": "Currently not applicable/involved"
-        }
-      ],
+      "current_focus": "",
+      "focus_log": [],
       "deadlines": [],
       "colleague_tasks": [],
       "case_number": "58CV-24-104",
@@ -473,8 +487,8 @@
       "primary_attorney": null,
       "opposing_counsel": "",
       "opposing_firm": "",
-      "client_address": null,
-      "client_phone": null,
+      "client_address": "",
+      "client_phone": "",
       "client_dob": null,
       "claim_summary": "",
       "icd10": [],
@@ -559,7 +573,7 @@
       "status": "Pre-Filing",
       "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "Call on 11/6 morning",
+      "current_focus": "WB calling. Adjust sent letter today re: update on status.",
       "focus_log": [
         {
           "at": "2025-10-29T13:58:42.150000Z",
@@ -575,6 +589,16 @@
           "at": "2025-11-05T21:45:46.477000Z",
           "author": "DW",
           "text": "Call on 11/6 morning"
+        },
+        {
+          "at": "2025-11-11T14:52:10.977000Z",
+          "author": "DW",
+          "text": "WB calling"
+        },
+        {
+          "at": "2025-11-12T21:11:58.832000Z",
+          "author": "DW",
+          "text": "WB calling. Adjust sent letter today re: update on status."
         }
       ],
       "deadlines": [],
@@ -610,7 +634,7 @@
       "status": "Pre-Filing",
       "attention": "waiting",
       "paralegal": "Andrew",
-      "current_focus": "Demand draft in Y",
+      "current_focus": "New records in Y, need to review and then adjust draft demand in Y accordingly",
       "focus_log": [
         {
           "at": "2025-10-29T13:54:12.949000Z",
@@ -621,6 +645,11 @@
           "at": "2025-11-05T22:01:14.685000Z",
           "author": "DW",
           "text": "Demand draft in Y"
+        },
+        {
+          "at": "2025-11-12T22:27:59.392000Z",
+          "author": "DW",
+          "text": "New records in Y, need to review and then adjust draft demand in Y accordingly"
         }
       ],
       "deadlines": [],
@@ -664,7 +693,13 @@
           "text": "Summons served, waiting on answer"
         }
       ],
-      "deadlines": [],
+      "deadlines": [
+        {
+          "due_date": "2025-11-11",
+          "description": "",
+          "resolved": false
+        }
+      ],
       "colleague_tasks": [],
       "case_number": "12CV-25-317",
       "county": "Cleburne",
@@ -681,7 +716,7 @@
       "providers": [],
       "top_priority": false,
       "archived": false,
-      "next_due": null,
+      "next_due": "2025-11-11",
       "external": {
         "filevine_id": null,
         "filevine_number": null,
@@ -738,12 +773,17 @@
       "status": "Pre-Filing",
       "attention": "waiting",
       "paralegal": "Sabrina",
-      "current_focus": "Drafted complaint",
+      "current_focus": "Redrafted complaint",
       "focus_log": [
         {
           "at": "2025-10-29T13:56:00.549000Z",
           "author": "DW",
           "text": "Drafted complaint"
+        },
+        {
+          "at": "2025-11-11T14:52:00.688000Z",
+          "author": "DW",
+          "text": "Redrafted complaint"
         }
       ],
       "deadlines": [],
@@ -777,7 +817,7 @@
       "case_type": "Medical Malpractice",
       "stage": "Pre-filing",
       "status": "Pre-Filing",
-      "attention": "needs_attention",
+      "attention": "waiting",
       "paralegal": "Sabrina",
       "current_focus": "Read over expert materials before chat with WB and NC. Run thought on CTD by WB.",
       "focus_log": [
@@ -828,9 +868,9 @@
       "case_type": "MVA",
       "stage": "Pre-filing",
       "status": "Pre-Filing",
-      "attention": "waiting",
+      "attention": "needs_attention",
       "paralegal": "Andrew",
-      "current_focus": "Completed demand draft, waiting on med billing",
+      "current_focus": "Billing received. Finalize demand",
       "focus_log": [
         {
           "at": "2025-10-29T13:53:08.021000Z",
@@ -841,6 +881,11 @@
           "at": "2025-10-31T16:17:33.086000Z",
           "author": "DW",
           "text": "Completed demand draft, waiting on med billing"
+        },
+        {
+          "at": "2025-11-12T20:33:47.744000Z",
+          "author": "DW",
+          "text": "Billing received. Finalize demand"
         }
       ],
       "deadlines": [],
@@ -858,7 +903,7 @@
       "claim_summary": "",
       "icd10": [],
       "providers": [],
-      "top_priority": false,
+      "top_priority": true,
       "archived": false,
       "next_due": null,
       "external": {
@@ -932,7 +977,7 @@
       "status": "Pre-Filing",
       "attention": "needs_attention",
       "paralegal": "Andrew",
-      "current_focus": "Have authorization for $30k. Call adj with WB",
+      "current_focus": "Called and emailed adjuster on 11/11 - received out of office reply for the day. Called 11/12; left voicemail.",
       "focus_log": [
         {
           "at": "2025-10-29T13:53:53.366000Z",
@@ -948,6 +993,16 @@
           "at": "2025-11-05T21:50:16.076000Z",
           "author": "DW",
           "text": "Have authorization for $30k. Call adj with WB"
+        },
+        {
+          "at": "2025-11-11T14:52:42.689000Z",
+          "author": "DW",
+          "text": "Call adjuster"
+        },
+        {
+          "at": "2025-11-12T20:47:07.207000Z",
+          "author": "DW",
+          "text": "Called and emailed adjuster on 11/11 - received out of office reply for the day. Called 11/12; left voicemail."
         }
       ],
       "deadlines": [],
@@ -981,9 +1036,9 @@
       "case_type": "Property Damage",
       "stage": "Pre-filing",
       "status": "Pre-Filing",
-      "attention": "waiting",
+      "attention": "needs_attention",
       "paralegal": "Sabrina",
-      "current_focus": "Reviewed. Ball in client's court I believe.",
+      "current_focus": "Guard looking for info on replacement Tommy Farrell reception desk and Cantrell Design chairs. Permission from WB to follow up on that directly?",
       "focus_log": [
         {
           "at": "2025-10-29T20:17:12.921000Z",
@@ -999,6 +1054,16 @@
           "at": "2025-11-05T21:46:54.124000Z",
           "author": "DW",
           "text": "Reviewed. Ball in client's court I believe."
+        },
+        {
+          "at": "2025-11-11T14:51:22.720000Z",
+          "author": "DW",
+          "text": "Guard looking for info on replacement Tommy Farrell reception desk and Cantrell Design chairs"
+        },
+        {
+          "at": "2025-11-12T21:24:39.568000Z",
+          "author": "DW",
+          "text": "Guard looking for info on replacement Tommy Farrell reception desk and Cantrell Design chairs. Permission from WB to follow up on that directly?"
         }
       ],
       "deadlines": [
@@ -1038,14 +1103,24 @@
       "case_type": "Probate",
       "stage": "Discovery",
       "status": "Active",
-      "attention": "",
+      "attention": "waiting",
       "paralegal": "",
-      "current_focus": "Resend contract after chat with TG",
+      "current_focus": "$7,500 retainer paid by Gail. Emailed Donna on other $7,500 with link to pay.",
       "focus_log": [
         {
           "at": "2025-11-05T21:59:53.213000Z",
           "author": "DW",
           "text": "Resend contract after chat with TG"
+        },
+        {
+          "at": "2025-11-11T14:49:41.585000Z",
+          "author": "DW",
+          "text": "Waiting on documents from former attorney"
+        },
+        {
+          "at": "2025-11-12T20:47:47.711000Z",
+          "author": "DW",
+          "text": "$7,500 retainer paid by Gail. Emailed Donna on other $7,500 with link to pay."
         }
       ],
       "deadlines": [],
@@ -1063,7 +1138,7 @@
       "claim_summary": "",
       "icd10": [],
       "providers": [],
-      "top_priority": true,
+      "top_priority": false,
       "archived": false,
       "next_due": null,
       "external": {
@@ -1081,12 +1156,17 @@
       "status": "Pre-Filing",
       "attention": "",
       "paralegal": "",
-      "current_focus": "Send form to ASP",
+      "current_focus": "Spoke with LD 11/10. Sending for police report of accident",
       "focus_log": [
         {
           "at": "2025-11-05T22:00:41.821000Z",
           "author": "DW",
           "text": "Send form to ASP"
+        },
+        {
+          "at": "2025-11-11T14:49:20.576000Z",
+          "author": "DW",
+          "text": "Spoke with LD 11/10. Sending for police report of accident"
         }
       ],
       "deadlines": [],
@@ -1095,6 +1175,57 @@
       "county": "",
       "division": "",
       "judge": "",
+      "primary_attorney": null,
+      "opposing_counsel": "",
+      "opposing_firm": "",
+      "client_address": "",
+      "client_phone": "",
+      "client_dob": null,
+      "claim_summary": "",
+      "icd10": [],
+      "providers": [],
+      "top_priority": false,
+      "archived": false,
+      "next_due": null,
+      "external": {
+        "filevine_id": null,
+        "filevine_number": null,
+        "linked_at": null
+      }
+    },
+    {
+      "id": "59dc4b96-3b92-42bf-a4d6-67ad061cffd3",
+      "client_name": "Larkin, James",
+      "case_name": "Larkin v. Pacheco et al.",
+      "case_type": "MVA",
+      "stage": "Discovery",
+      "status": "Active",
+      "attention": "needs_attention",
+      "paralegal": "",
+      "current_focus": "Need feedback from WB on drafted discovery",
+      "focus_log": [
+        {
+          "at": "2025-11-12T20:48:31.407000Z",
+          "author": "DW",
+          "text": "Drafted discovery sets - In Y drive"
+        },
+        {
+          "at": "2025-11-12T20:48:46.399000Z",
+          "author": "DW",
+          "text": "Drafted Motion for Extension of Time - in Y drive"
+        },
+        {
+          "at": "2025-11-12T21:25:15.536000Z",
+          "author": "DW",
+          "text": "Need feedback from WB on drafted discovery"
+        }
+      ],
+      "deadlines": [],
+      "colleague_tasks": [],
+      "case_number": "60CV-25-8928",
+      "county": "Pulaski",
+      "division": "14th",
+      "judge": "Johnson",
       "primary_attorney": null,
       "opposing_counsel": "",
       "opposing_firm": "",
